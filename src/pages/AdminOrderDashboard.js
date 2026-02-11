@@ -188,10 +188,12 @@
 // }
 
 
-import { useEffect, useState } from "react";
+
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState, useCallback, useMemo } from "react";
+
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -208,31 +210,29 @@ export default function AdminOrders() {
   const statusParam =
     new URLSearchParams(location.search).get("status") || "PENDING";
 
-  const authHeader = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
+const authHeader = useMemo(() => ({
+  headers: { Authorization: `Bearer ${token}` },
+}), [token]);
 
   // ================= FETCH ORDERS =================
-  const fetchOrders = async () => {
-    try {
-      const res = await axios.get(
-        `${API}/orders/admin`,
-        authHeader
-      );
+const fetchOrders = useCallback(async () => {
+  try {
+    const res = await axios.get(`${API}/orders/admin`, authHeader);
+    const filtered = res.data.filter(
+      (o) => o.status === statusParam
+    );
+    setOrders(filtered || []);
+  } catch (err) {
+    toast.error("Failed to load orders");
+  }
+}, [statusParam, authHeader]);
 
-      const filtered = res.data.filter(
-        (o) => o.status === statusParam
-      );
 
-      setOrders(filtered || []);
-    } catch (err) {
-      toast.error("Failed to load orders");
-    }
-  };
 
-  useEffect(() => {
-    fetchOrders();
-  }, [statusParam]);
+useEffect(() => {
+  fetchOrders();
+}, [fetchOrders]);
+
 
   // ================= SEARCH FILTER =================
   const filteredOrders = orders.filter((o) => {

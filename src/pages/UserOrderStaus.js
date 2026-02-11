@@ -10,9 +10,12 @@ export default function MyOrders() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+useEffect(() => {
+  fetchOrders();
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
 
   const fetchOrders = async () => {
     try {

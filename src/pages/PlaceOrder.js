@@ -279,12 +279,15 @@ export default function PlaceOrder() {
   const totalINR = usdt ? (usdt * rate).toFixed(2) : "--";
 
   // 🔥 Fetch LIVE RATE
-  useEffect(() => {
-    axios
-      .get(`${API}/admin/rate`)
-      .then((res) => setRate(res.data.rate))
-      .catch(() => toast.error("Failed to load rate"));
-  }, []);
+useEffect(() => {
+  axios
+    .get(`${API}/admin/rate`)
+    .then((res) => setRate(res.data.rate))
+    .catch(() => toast.error("Failed to load rate"));
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
 
   const placeOrder = async () => {
     if (!usdt) return toast.error("Enter USDT amount");

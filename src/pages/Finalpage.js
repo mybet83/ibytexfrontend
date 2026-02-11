@@ -3,8 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import HeaderUserMenu from "../components/HeaderUserMenu";
-import LiveChart from "../components/LiveChart";
-import LiveChat from "../components/LiveChat";
+
 
 const API = process.env.REACT_APP_API_URL;
 

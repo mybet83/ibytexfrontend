@@ -22,17 +22,20 @@ export default function AdminDashboard() {
   const [pendingCount, setPendingCount] = useState(0);
 
   // ================= INIT =================
-  useEffect(() => {
-    fetchRate();
-    fetchNews();
-    fetchPendingCount();
+useEffect(() => {
+  fetchRate();
+  fetchNews();
+  fetchPendingCount();
 
-    const interval = setInterval(() => {
-      fetchPendingCount(true);
-    }, 5000);
+  const interval = setInterval(() => {
+    fetchPendingCount(true);
+  }, 5000);
 
-    return () => clearInterval(interval);
-  }, []);
+  return () => clearInterval(interval);
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
 
   // ================= RATE =================
   const fetchRate = async () => {

@@ -15,9 +15,8 @@ const Footer = () => {
             Built for speed, security and simplicity.
           </p>
 
-          {/* Social Icons */}
           <div className="flex gap-4 mt-5 text-gray-500">
-            <i className="ri-facebook-fill hover:text-white cursor-pointer "></i>
+            <i className="ri-facebook-fill hover:text-white cursor-pointer"></i>
             <i className="ri-twitter-x-line hover:text-white cursor-pointer"></i>
             <i className="ri-telegram-fill hover:text-white cursor-pointer"></i>
             <i className="ri-youtube-fill hover:text-white cursor-pointer"></i>
@@ -52,27 +51,26 @@ const Footer = () => {
           </p>
 
           <div className="flex flex-col gap-3">
-            <a
-              href="#"
+            <button
+              type="button"
               className="inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10 transition"
             >
               Join Telegram
-            </a>
+            </button>
 
-            <a
-              href="#"
+            <button
+              type="button"
               className="inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10 transition"
             >
               Join WhatsApp
-            </a>
+            </button>
           </div>
         </div>
 
       </div>
 
-      {/* Bottom Bar */}
       <div className="border-t border-white/10 text-center py-5 text-sm text-gray-500">
-        © {new Date().getFullYear()} Your Platform. All rights reserved.
+        © {new Date().getFullYear()} ByteX. All rights reserved.
       </div>
     </footer>
   );
