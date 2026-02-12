@@ -178,6 +178,16 @@ useEffect(() => {
           >
             ✅ Successful Orders
           </button>
+          <button
+  onClick={() => navigate("/admin/users")}
+  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 
+     hover:from-blue-700 hover:to-blue-800 
+     px-6 py-3 rounded-xl font-semibold shadow-lg 
+     transition duration-300 text-sm sm:text-base"
+>
+  👤 User List
+</button>
+
         </div>
       </div>
 
