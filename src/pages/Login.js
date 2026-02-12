@@ -8,6 +8,9 @@ const API = process.env.REACT_APP_API_URL;
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
 
+  // ✅ NEW: loading state
+  const [loading, setLoading] = React.useState(false);
+
   const [loginInfo, setLoginInfo] = React.useState({
     email: "",
     password: "",
@@ -33,6 +36,8 @@ const Login = () => {
     }
 
     try {
+      setLoading(true); // ✅ START LOADING
+
       const response = await fetch(`${API}/auth/login`, {
         method: "POST",
         headers: {
@@ -61,6 +66,8 @@ const Login = () => {
       }
     } catch (error) {
       handleError("Server not responding");
+    } finally {
+      setLoading(false); // ✅ STOP LOADING
     }
   };
 
@@ -115,9 +122,40 @@ const Login = () => {
           {/* BUTTON */}
           <button
             type="submit"
-            className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition duration-300 shadow-lg hover:shadow-indigo-500/50"
+            disabled={loading}  // ✅ disable when loading
+            className={`w-full py-3 rounded-lg text-white font-semibold transition duration-300 shadow-lg 
+            ${loading 
+              ? "bg-gray-500 cursor-not-allowed" 
+              : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-500/50"
+            }`}
           >
-            Login
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="white"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="white"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Logging in...
+              </div>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
 

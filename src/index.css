@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.react-tel-input .flag-dropdown {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid #4b5563 !important;
+}
+
+.react-tel-input .selected-flag {
+  background: transparent !important;
+}
+
+.react-tel-input .country-list {
+  background-color: #0f172a !important; /* dark slate */
+  color: white !important;
+}
+
+.react-tel-input .country-list .country:hover {
+  background-color: #1e293b !important;
+}
+
+.react-tel-input .search-box {
+  background-color: #111827 !important;
+  color: white !important;
+}

@@ -2,11 +2,17 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utiles";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+
 
 const API = process.env.REACT_APP_API_URL;
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+
+  // ✅ NEW: loading state
+  const [loading, setLoading] = useState(false);
 
   const [signupInfo, setSignupInfo] = useState({
     name: "",
@@ -36,6 +42,8 @@ const Signup = () => {
     }
 
     try {
+      setLoading(true); // ✅ START LOADING
+
       const response = await fetch(`${API}/auth/signup`, {
         method: "POST",
         headers: {
@@ -64,6 +72,8 @@ const Signup = () => {
 
     } catch (err) {
       handleError(err.message);
+    } finally {
+      setLoading(false); // ✅ STOP LOADING
     }
   };
 
@@ -109,18 +119,27 @@ const Signup = () => {
           </div>
 
           {/* Phone */}
-          <div>
-            <label className="text-sm text-gray-300">Mobile Number</label>
-            <input
-              name="phone"
-              value={signupInfo.phone}
-              onChange={handleChange}
-              type="text"
-              placeholder="Enter mobile number"
-              className="mt-1 w-full px-4 py-3 rounded-lg bg-black/40 text-white border border-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 outline-none transition"
-              required
-            />
-          </div>
+         <div>
+  <label className="text-sm text-gray-300">Mobile Number</label>
+
+<PhoneInput
+  country={"in"}
+  enableSearch={true}
+  value={signupInfo.phone}
+  onChange={(phone) =>
+    setSignupInfo((prev) => ({
+      ...prev,
+      phone: "+" + phone,
+    }))
+  }
+  containerClass="w-full mt-1"
+  inputClass="!w-full !bg-black/40 !text-white !border !border-gray-600 !rounded-lg"
+  buttonClass="!bg-black/40 !border !border-gray-600"
+  dropdownClass="!bg-slate-900 !text-white"
+  searchClass="!bg-black !text-white"
+/>
+</div>
+
 
           {/* Telegram */}
           <div>
@@ -159,11 +178,43 @@ const Signup = () => {
             </button>
           </div>
 
+          {/* BUTTON */}
           <button
             type="submit"
-            className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition shadow-lg hover:shadow-indigo-500/50"
+            disabled={loading}
+            className={`w-full py-3 rounded-lg text-white font-semibold transition shadow-lg 
+            ${loading 
+              ? "bg-gray-500 cursor-not-allowed" 
+              : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-500/50"
+            }`}
           >
-            Create Account
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="white"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="white"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Creating Account...
+              </div>
+            ) : (
+              "Create Account"
+            )}
           </button>
 
         </form>
