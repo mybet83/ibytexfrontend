@@ -125,6 +125,10 @@ const Signup = () => {
 <PhoneInput
   country={"in"}
   enableSearch={true}
+  disableCountryCode={false}
+  disableDropdown={false}
+  countryCodeEditable={false}
+  enableLongNumbers={true}
   value={signupInfo.phone}
   onChange={(phone) =>
     setSignupInfo((prev) => ({
@@ -132,6 +136,12 @@ const Signup = () => {
       phone: "+" + phone,
     }))
   }
+  inputProps={{
+    name: "phone",
+    required: true,
+    autoFocus: false,
+    pattern: ".*"   // 🔥 THIS FIXES THE ERROR
+  }}
   containerClass="w-full mt-1"
   inputClass="!w-full !bg-black/40 !text-white !border !border-gray-600 !rounded-lg"
   buttonClass="!bg-black/40 !border !border-gray-600"
@@ -139,7 +149,6 @@ const Signup = () => {
   searchClass="!bg-black !text-white"
 />
 </div>
-
 
           {/* Telegram */}
           <div>
