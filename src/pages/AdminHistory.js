@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -16,6 +17,9 @@ export default function AdminHistory() {
   const [date, setDate] = useState("");
   const [historyData, setHistoryData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(today);
+    const today = new Date().toISOString().split("T")[0];
+
 
   // ================= FETCH HISTORY =================
   const fetchHistory = async () => {
@@ -36,6 +40,10 @@ export default function AdminHistory() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+  fetchHistory(today);
+}, []);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-slate-900 to-black text-white p-8">

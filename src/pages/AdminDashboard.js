@@ -26,6 +26,13 @@ export default function AdminDashboard() {
   totalSuccessfulInr: 0,
   totalOrders: 0,
 });
+const [stats, setStats] = useState({
+  totalUsdt: 0,
+  pendingPayment: 0,
+  successfulPayment: 0,
+  totalOrders: 0,
+});
+
 
 
   // ================= INIT =================
@@ -34,6 +41,7 @@ useEffect(() => {
   fetchNews();
   fetchPendingCount();
   fetchSummary();
+  fetchStats();
 
 
   const interval = setInterval(() => {
@@ -45,6 +53,19 @@ useEffect(() => {
 // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
+// ================= STATS =================
+const fetchStats = async () => {
+  try {
+    const res = await axios.get(
+      `${API}/orders/admin/today-stats`,
+      authHeader
+    );
+
+    setStats(res.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   // ================= RATE =================
   const fetchRate = async () => {
@@ -171,30 +192,36 @@ useEffect(() => {
       {/* Dashbord */}
       <div className="grid md:grid-cols-4 gap-6 mb-8">
   <div className="bg-white/10 p-6 rounded-xl">
+    <p className="text-gray-400">Total Rate</p>
+    <h2 className="text-2xl font-bold text-green-400">
+    {rate ? `₹${rate} / USDT` : "Loading..."}
+    </h2>
+  </div>
+  <div className="bg-white/10 p-6 rounded-xl">
     <p className="text-gray-400">Total USDT Received</p>
     <h2 className="text-2xl font-bold text-green-400">
-      {summary.totalUsdtReceived}
+     {stats.totalUsdt}
     </h2>
   </div>
 
   <div className="bg-white/10 p-6 rounded-xl">
     <p className="text-gray-400">Pending Payment</p>
     <h2 className="text-2xl font-bold text-yellow-400">
-      ₹{summary.totalPendingInr}
+      ₹{stats.pendingPayment}
     </h2>
   </div>
 
   <div className="bg-white/10 p-6 rounded-xl">
     <p className="text-gray-400">Successful Payment</p>
     <h2 className="text-2xl font-bold text-emerald-400">
-      ₹{summary.totalSuccessfulInr}
+      ₹{stats.successfulPayment}
     </h2>
   </div>
 
   <div className="bg-white/10 p-6 rounded-xl">
     <p className="text-gray-400">Total Orders</p>
     <h2 className="text-2xl font-bold text-indigo-400">
-      {summary.totalOrders}
+    {stats.totalOrders}
     </h2>
   </div>
 </div>
