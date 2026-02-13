@@ -327,7 +327,7 @@ const Signup = () => {
     <div className="min-h-screen bg-[#0b0e11] text-white flex flex-col ">
 
       {/* MAIN CONTENT */}
-      <div className="flex flex-1 items-center relative  px-6 py-12 justify-evenly">
+      <div className="flex flex-1 items-center relative  px-6 py-12 justify-evenly ">
 
         <div className="w-full max-w-7xl grid lg:grid-cols-2 gap-16 items-center">
 
@@ -368,16 +368,16 @@ const Signup = () => {
           </div>
 
           {/* ================= RIGHT SIDE FORM ================= */}
-          <div className="flex justify-center">
+          <div className="flex justify-center ">
 
-            <div className="w-full max-w-md bg-[#181a20] rounded-2xl p-8 shadow-2xl border border-gray-800">
+            <div className="w-full max-w-md bg-[#181a20] rounded-2xl p-8 shadow-2xl border border-gray-800 ">
 
               {/* Logo */}
-              <div className="text-center mb- flex">
+              <div className="text-center justify-center items-center flex max-sm:flex-col ">
                 <img
                   src="/logot.png"
                   alt="ibytex"
-                  className="w-16  mb-"
+                  className="w-16   max-sm:mx-auto"
                 />
               <div className="flex flex-col">
                   <h2 className="text-2xl font-bold">Welcome to Ibytex</h2>

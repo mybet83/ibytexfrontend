@@ -147,12 +147,14 @@ export default function Navbar() {
             Login
           </Link>
 
-          <Link
-            to="/signup"
-            className="px-4 py-1 rounded-full bg-indigo-600 hover:bg-indigo-300 text-white font-semibold  transition text-sm"
-          >
-            Get Started
-          </Link>
+         <Link
+  to="/signup"
+  className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold 
+             shadow-lg hover:scale-105 transition-all duration-300"
+>
+  Get Started
+</Link>
+
         </div>
 
         {/* Mobile Hamburger */}

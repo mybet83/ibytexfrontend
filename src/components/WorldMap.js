@@ -55,12 +55,14 @@ export default function WorldMap() {
         className="absolute inset-0 w-full h-full"
       >
         <defs>
-          <linearGradient id="purpleLine" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="transparent" />
-            <stop offset="30%" stopColor="#A855F7" />
-            <stop offset="70%" stopColor="#A855F7" />
-            <stop offset="100%" stopColor="transparent" />
-          </linearGradient>
+        <linearGradient id="goldenLine" x1="0%" y1="0%" x2="100%" y2="0%">
+  <stop offset="0%" stopColor="transparent" />
+  <stop offset="30%" stopColor="#F5C56B" />
+  <stop offset="60%" stopColor="#FFD700" />
+  <stop offset="80%" stopColor="#D4A017" />
+  <stop offset="100%" stopColor="transparent" />
+</linearGradient>
+
 
           <filter id="glow">
             <feGaussianBlur stdDeviation="4" result="blur" />
@@ -82,7 +84,8 @@ export default function WorldMap() {
               <motion.path
                 d={path}
                 fill="none"
-                stroke="url(#purpleLine)"
+ stroke="url(#goldenLine)"
+
                 strokeWidth="2"
                 filter="url(#glow)"
                 initial={{ pathLength: 0 }}
@@ -96,10 +99,10 @@ export default function WorldMap() {
               />
 
               {/* Start Dot */}
-              <circle cx={start.x} cy={start.y} r="3" fill="#C084FC" />
+              <circle cx={start.x} cy={start.y} r="3" fill="#09ABFF" />
 
               {/* Destination Dot */}
-              <circle cx={end.x} cy={end.y} r="3" fill="#C084FC" />
+              <circle cx={end.x} cy={end.y} r="3" fill="#09ABFF" />
 
               {/* 🔥 USDT Logo Popup */}
               <motion.g
@@ -113,7 +116,7 @@ export default function WorldMap() {
                 }}
               >
                 {/* USDT Circle */}
-                <circle cx={end.x} cy={end.y} r="10" fill="#26A17B" />
+                <circle cx={end.x} cy={end.y} r="10" fill="#09ABFF" />
 
                 {/* T Symbol */}
                 <text
@@ -132,7 +135,7 @@ export default function WorldMap() {
                   cx={end.x}
                   cy={end.y + 22}
                   r="8"
-                  fill="#8B5CF6"
+                  fill="#09ABFF"
                 />
 
                 <circle

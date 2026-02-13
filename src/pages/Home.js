@@ -203,12 +203,15 @@ const Home = () => {
 </div>
 
 
-        <Link
-          to="/signup"
-          className="inline-flex items-center gap-2 mt-8 px-7 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 transition shadow-xl"
-        >
-          Start Selling →
-        </Link>
+       <Link
+  to="/signup"
+  className="inline-block mt-10 px-8 py-3 rounded-full 
+             bg-gold-gradient text-black font-semibold
+             shadow-lg hover:scale-105 transition-all duration-300"
+>
+  Start Selling →
+</Link>
+
 
       </div>
 

@@ -192,7 +192,7 @@ const fetchStats = async () => {
       {/* Dashbord */}
       <div className="grid md:grid-cols-5 gap-6 mb-8">
   <div className="bg-white/10 p-6 rounded-xl">
-    <p className="text-gray-400">Total Rate</p>
+    <p className="text-gray-400">Today Rate</p>
     <h2 className="text-2xl font-bold text-green-400">
     {rate ? `₹${rate} / USDT` : "Loading..."}
     </h2>
