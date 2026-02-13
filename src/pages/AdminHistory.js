@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -14,22 +13,20 @@ export default function AdminHistory() {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const [date, setDate] = useState("");
+  // ✅ Define today FIRST
+  const today = new Date().toISOString().split("T")[0];
+
+  const [date, setDate] = useState(today); // default today
   const [historyData, setHistoryData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(today);
-    const today = new Date().toISOString().split("T")[0];
-
 
   // ================= FETCH HISTORY =================
-  const fetchHistory = async () => {
-    if (!date) return toast.error("Select date first");
-
+  const fetchHistory = async (selectedDate = date) => {
     try {
       setLoading(true);
 
       const res = await axios.get(
-        `${API}/orders/admin/history?date=${date}`,
+        `${API}/orders/admin/history?date=${selectedDate}`,
         authHeader
       );
 
@@ -40,10 +37,11 @@ export default function AdminHistory() {
       setLoading(false);
     }
   };
-  useEffect(() => {
-  fetchHistory(today);
-}, []);
 
+  // ✅ Auto load today history
+  useEffect(() => {
+    fetchHistory(today);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-slate-900 to-black text-white p-8">
@@ -71,7 +69,7 @@ export default function AdminHistory() {
           />
 
           <button
-            onClick={fetchHistory}
+            onClick={() => fetchHistory()}
             className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold"
           >
             {loading ? "Loading..." : "Get History"}
@@ -98,20 +96,20 @@ export default function AdminHistory() {
         </div>
       )}
 
-      {/* ORDERS LIST */}
+      {/* EMPTY */}
       {historyData && historyData.orders.length === 0 && (
         <div className="text-center text-gray-400 mt-10">
           No transactions found for this date
         </div>
       )}
 
+      {/* ORDERS */}
       {historyData && historyData.orders.map((o) => (
         <div
           key={o._id}
           className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 mb-8"
         >
 
-          {/* USER INFO */}
           <h3 className="text-indigo-400 font-semibold mb-4">
             👤 User Details
           </h3>
@@ -137,20 +135,12 @@ export default function AdminHistory() {
               <p>#{o.userId?.accountId}</p>
             </div>
 
-            {o.userId?.telegramId && (
-              <div>
-                <p className="text-gray-400">Telegram</p>
-                <p>@{o.userId?.telegramId}</p>
-              </div>
-            )}
-
             <div>
               <p className="text-gray-400">Order ID</p>
               <p className="break-all">{o._id}</p>
             </div>
           </div>
 
-          {/* TRANSACTION INFO */}
           <h3 className="text-green-400 font-semibold mb-4">
             💰 Transaction Details
           </h3>
@@ -190,7 +180,6 @@ export default function AdminHistory() {
           </div>
         </div>
       ))}
-
     </div>
   );
 }
