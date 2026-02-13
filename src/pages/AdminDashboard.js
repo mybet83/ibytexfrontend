@@ -20,12 +20,21 @@ export default function AdminDashboard() {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const [pendingCount, setPendingCount] = useState(0);
+  const [summary, setSummary] = useState({
+  totalUsdtReceived: 0,
+  totalPendingInr: 0,
+  totalSuccessfulInr: 0,
+  totalOrders: 0,
+});
+
 
   // ================= INIT =================
 useEffect(() => {
   fetchRate();
   fetchNews();
   fetchPendingCount();
+  fetchSummary();
+
 
   const interval = setInterval(() => {
     fetchPendingCount(true);
@@ -61,6 +70,21 @@ useEffect(() => {
       toast.error("Rate update failed ❌");
     }
   };
+
+  // ================= DASHBOARD SUMMARY =================
+
+  const fetchSummary = async () => {
+  try {
+    const res = await axios.get(
+      `${API}/orders/admin/dashboard-summary`,
+      authHeader
+    );
+    setSummary(res.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 
   // ================= NEWS =================
   const fetchNews = async () => {
@@ -144,6 +168,38 @@ useEffect(() => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-slate-900 to-black text-white p-8">
       <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
 
+      {/* Dashbord */}
+      <div className="grid md:grid-cols-4 gap-6 mb-8">
+  <div className="bg-white/10 p-6 rounded-xl">
+    <p className="text-gray-400">Total USDT Received</p>
+    <h2 className="text-2xl font-bold text-green-400">
+      {summary.totalUsdtReceived}
+    </h2>
+  </div>
+
+  <div className="bg-white/10 p-6 rounded-xl">
+    <p className="text-gray-400">Pending Payment</p>
+    <h2 className="text-2xl font-bold text-yellow-400">
+      ₹{summary.totalPendingInr}
+    </h2>
+  </div>
+
+  <div className="bg-white/10 p-6 rounded-xl">
+    <p className="text-gray-400">Successful Payment</p>
+    <h2 className="text-2xl font-bold text-emerald-400">
+      ₹{summary.totalSuccessfulInr}
+    </h2>
+  </div>
+
+  <div className="bg-white/10 p-6 rounded-xl">
+    <p className="text-gray-400">Total Orders</p>
+    <h2 className="text-2xl font-bold text-indigo-400">
+      {summary.totalOrders}
+    </h2>
+  </div>
+</div>
+
+
       {/* ORDER DASHBOARD */}
       <div className="bg-white/5 backdrop-blur-xl rounded-xl p-6 mb-6">
         <h2 className="text-2xl font-semibold mb-6 text-center">
@@ -187,6 +243,15 @@ useEffect(() => {
 >
   👤 User List
 </button>
+<button
+  onClick={() => navigate("/admin/history")}
+  className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-purple-700 
+     hover:from-purple-700 hover:to-purple-800 
+     px-6 py-3 rounded-xl font-semibold shadow-lg"
+>
+  📊 History
+</button>
+
 
         </div>
       </div>

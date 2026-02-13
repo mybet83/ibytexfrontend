@@ -53,6 +53,8 @@ import AdminOrderDashboard from "./pages/AdminOrderDashboard";
 import UserOrder from "./pages/PlaceOrder";
 import MyOrders from "./pages/UserOrderStaus";
 import AdminUsers from "./pages/AdminUsers";
+import AdminHistory from "./pages/AdminHistory";
+
 
 
 
@@ -82,6 +84,15 @@ function App() {
         <Route path="/userorder" element={<UserOrder />} />
         <Route path="/myorder" element={<MyOrders />} />
         <Route path="/finalpage" element={<Finalpage />} />
+        <Route
+  path="/admin/history"
+  element={
+    <AdminRoute>
+      <AdminHistory />
+    </AdminRoute>
+  }
+/>
+
         <Route
   path="/admin/users"
   element={
