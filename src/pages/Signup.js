@@ -300,7 +300,7 @@ const Signup = () => {
     try {
       setSendingOtp(true);
 
-      const res = await fetch(`${API}//auth/send-otp`, {
+      const res = await fetch(`${API}/api/auth/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: signupInfo.email }),
