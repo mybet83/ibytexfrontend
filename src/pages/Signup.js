@@ -5,7 +5,6 @@
 // import PhoneInput from "react-phone-input-2";
 // import "react-phone-input-2/lib/style.css";
 
-
 // const API = process.env.REACT_APP_API_URL;
 
 // const Signup = () => {
@@ -191,9 +190,9 @@
 //           <button
 //             type="submit"
 //             disabled={loading}
-//             className={`w-full py-3 rounded-lg text-white font-semibold transition shadow-lg 
-//             ${loading 
-//               ? "bg-gray-500 cursor-not-allowed" 
+//             className={`w-full py-3 rounded-lg text-white font-semibold transition shadow-lg
+//             ${loading
+//               ? "bg-gray-500 cursor-not-allowed"
 //               : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-500/50"
 //             }`}
 //           >
@@ -248,13 +247,6 @@
 
 // export default Signup;
 
-
-
-
-
-
-
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -275,8 +267,71 @@ const Signup = () => {
     phone: "",
     telegramId: "",
   });
-
   const navigate = useNavigate();
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
+
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  // ================= SEND OTP =================
+  const sendOtp = async () => {
+    if (!isValidEmail(signupInfo.email)) {
+      return handleError("Enter valid email first");
+    }
+
+    try {
+      setSendingOtp(true);
+
+      const res = await fetch(`${API}/api/auth/send-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: signupInfo.email }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        handleSuccess("OTP sent to your email");
+        setOtpSent(true);
+      } else {
+        handleError(data.message || "Failed to send OTP");
+      }
+    } catch {
+      handleError("Failed to send OTP");
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const verifyOtp = async () => {
+    if (!otp) return handleError("Enter OTP");
+
+    try {
+      const res = await fetch(`${API}/api/auth/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: signupInfo.email,
+          otp,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        handleSuccess("Email verified successfully ✅");
+        setOtpVerified(true);
+      } else {
+        handleError("Invalid OTP");
+      }
+    } catch {
+      handleError("OTP verification failed");
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -288,6 +343,10 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    if (!otpVerified) {
+      return handleError("Please verify your email first");
+    }
 
     const { name, email, password, phone } = signupInfo;
 
@@ -325,30 +384,21 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-[#0b0e11] text-white flex flex-col ">
-
       {/* MAIN CONTENT */}
       <div className="flex flex-1 items-center relative  px-6 py-12 justify-evenly ">
-
         <div className="w-full max-w-7xl grid lg:grid-cols-2 gap-16 items-center">
-
           {/* ================= LEFT SIDE ================= */}
           <div className="hidden lg:block">
-
             <h1 className="text-5xl font-bold leading-tight">
               Up to <span className="text-yellow-400">100 USD</span>
               <br /> Sign Up Rewards
             </h1>
 
             <div className="mt-">
-              <img
-                src="/signup.png"
-                alt="reward"
-                className="w-40"
-              />
+              <img src="/signup.png" alt="reward" className="w-40" />
             </div>
 
             <div className="mt-10 space-y-6 text-gray-400 text-sm">
-
               <div className="flex items-center gap-3">
                 <span>🏆</span>
                 <span>Trusted Crypto Exchange Platform</span>
@@ -363,15 +413,12 @@ const Signup = () => {
                 <span>🔒</span>
                 <span>Secure & Verified Trading System</span>
               </div>
-
             </div>
           </div>
 
           {/* ================= RIGHT SIDE FORM ================= */}
           <div className="flex justify-center ">
-
             <div className="w-full max-w-md bg-[#181a20] rounded-2xl p-8 shadow-2xl border border-gray-800 ">
-
               {/* Logo */}
               <div className="text-center justify-center items-center flex max-sm:flex-col ">
                 <img
@@ -379,16 +426,15 @@ const Signup = () => {
                   alt="ibytex"
                   className="w-16   max-sm:mx-auto"
                 />
-              <div className="flex flex-col">
+                <div className="flex flex-col">
                   <h2 className="text-2xl font-bold">Welcome to Ibytex</h2>
-                <p className="text-gray-400 text-sm mt-1">
-                  Create your account to start trading
-                </p>
-              </div>
+                  <p className="text-gray-400 text-sm mt-1">
+                    Create your account to start trading
+                  </p>
+                </div>
               </div>
 
               <form onSubmit={handleSignup} className="space-y-5">
-
                 {/* Name */}
                 <div>
                   <label className="text-sm text-gray-400">Full Name</label>
@@ -403,8 +449,10 @@ const Signup = () => {
                 </div>
 
                 {/* Email */}
+                {/* Email */}
                 <div>
                   <label className="text-sm text-gray-400">Email</label>
+
                   <input
                     name="email"
                     value={signupInfo.email}
@@ -413,6 +461,48 @@ const Signup = () => {
                     placeholder="Enter your email"
                     className="mt-1 w-full px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700 focus:border-yellow-400 outline-none"
                   />
+
+                  {/* SEND OTP BUTTON */}
+                  {!otpSent && (
+                    <button
+                      type="button"
+                      onClick={sendOtp}
+                      disabled={sendingOtp}
+                      className="mt-3 w-full bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded-lg"
+                    >
+                      {sendingOtp ? "Sending OTP..." : "Send OTP"}
+                    </button>
+                  )}
+
+                  {/* OTP INPUT AFTER SENDING */}
+                  {otpSent && !otpVerified && (
+                    <div className="mt-3">
+                      <label className="text-sm text-gray-400">Enter OTP</label>
+
+                      <input
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        type="text"
+                        placeholder="Enter 6 digit OTP"
+                        className="mt-1 w-full px-4 py-3 rounded-lg bg-[#0b0e11] border border-yellow-400 outline-none"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={verifyOtp}
+                        className="mt-2 w-full bg-green-500 hover:bg-green-600 text-black py-2 rounded-lg"
+                      >
+                        Verify OTP
+                      </button>
+                    </div>
+                  )}
+
+                  {/* VERIFIED MESSAGE */}
+                  {otpVerified && (
+                    <p className="text-green-400 text-sm mt-2">
+                      Email Verified ✅
+                    </p>
+                  )}
                 </div>
 
                 {/* Phone */}
@@ -491,19 +581,14 @@ const Signup = () => {
                 >
                   {loading ? "Creating Account..." : "Create Account"}
                 </button>
-
               </form>
 
               <p className="text-gray-400 text-sm text-center mt-6">
                 Already have an account?{" "}
-                <Link
-                  to="/login"
-                  className="text-yellow-400 hover:underline"
-                >
+                <Link to="/login" className="text-yellow-400 hover:underline">
                   Log In
                 </Link>
               </p>
-
             </div>
           </div>
         </div>
@@ -520,4 +605,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
