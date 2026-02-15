@@ -31,18 +31,95 @@
     -->
     <title>Ibytex</title>
   </head>
+  <style>
+    
+    #initial-loader {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  
+}
+
+
+  .loader-content {
+    text-align: center;
+  }
+
+  .loader-logo {
+    width: 90px;
+    margin-bottom: 20px;
+    animation: pulse 1.6s infinite ease-in-out;
+  }
+
+  .loader-text {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(
+      135deg,
+      #0072ff 0%,
+      #00bfff 40%,
+      #e6f7ff 55%,
+      #00bfff 70%,
+      #0050ff 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .loader-sub {
+    color: #aaa;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+  }
+</style>
+
+
+
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+  <!-- 🔥 INITIAL LOADER (Outside Root) -->
+  <div id="initial-loader">
+    <div class="loader-content">
+      <img src="%PUBLIC_URL%/logot.png" class="loader-logo" />
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+      <h1 class="loader-text">
+        Welcome to iBytex
+      </h1>
+
+      <p class="loader-sub">
+        Loading Secure Exchange Platform...
+      </p>
+    </div>
+  </div>
+
+  <!-- React Root -->
+  <div id="root"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const loader = document.getElementById("initial-loader");
+
+    // Safety timeout (in case React crashes)
+    setTimeout(() => {
+      if (loader) loader.style.opacity = "0";
+    }, 4000);
+  });
+</script>
+
+
+</body>
+
 </html>

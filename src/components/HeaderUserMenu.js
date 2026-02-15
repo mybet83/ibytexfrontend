@@ -18,7 +18,8 @@ const handleLogout = () => {
       {/* Button */}
       <button
         onClick={() => setOpen(!open)}
-        className="px-5 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 border-white transition shadow-lg flex items-center gap-2"
+        className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold 
+                   shadow-lg hover:scale-105 transition-all duration-300  flex items-center gap-2"
       >
         {user?.name || "User"}
        <User className="w-5 h-5 text-white" />

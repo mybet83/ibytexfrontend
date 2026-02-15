@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
-import HeaderUserMenu from "../components/HeaderUserMenu";
-
+import WorldMap from "../components/WorldMap";
+import Navbar from "../components/Navbar";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -13,8 +13,8 @@ const Finalpage = () => {
   const [news, setNews] = useState([]);
 
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  // ================= FETCH RATE =================
   const fetchRate = async () => {
     try {
       const res = await axios.get(`${API}/admin/rate`);
@@ -24,7 +24,6 @@ const Finalpage = () => {
     }
   };
 
-  // ================= FETCH NEWS =================
   const fetchNews = async () => {
     try {
       const res = await axios.get(`${API}/admin/news`);
@@ -39,7 +38,6 @@ const Finalpage = () => {
     fetchNews();
   }, []);
 
-  // Auto refresh rate every 5 sec
   useEffect(() => {
     const interval = setInterval(() => {
       fetchRate();
@@ -50,172 +48,176 @@ const Finalpage = () => {
   const totalAmount = usdt ? (usdt * rate).toFixed(2) : "--";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-slate-900 to-black text-white">
+  <div className="min-h-screen bg-black text-white relative overflow-hidden">
 
-      {/* NAVBAR */}
-      <header className="flex justify-between items-center px-6 py-2 backdrop-blur-sm sticky top-0 z-50">
-        <img src="/logot.png" alt="logo" className="w-28" />
-        <HeaderUserMenu />
-      </header>
+  {/* MAIN NAVBAR */}
+  <Navbar />
 
-      {/* HERO SECTION */}
-      <section className="min-h-full w-full flex items-center justify-center px-6 py-12">
-        <div className="max-w-6xl w-full grid md:grid-cols-2 gap-12 items-center">
 
-          {/* LEFT */}
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-              Welcome{" "}
-              <span className="text-indigo-400">
-                {JSON.parse(localStorage.getItem("user"))?.name || "Trader"}
-              </span>
-              👋
-            </h1>
+  {/* HERO SECTION */}
+{/* HERO SECTION PREMIUM */}
+<section className="relative min-h-screen flex items-center overflow-hidden px-6 lg:px-20 z-40">
 
-            <h2 className="mt-6 text-3xl md:text-4xl font-bold">
-              ByteX Crypto Exchange
+  {/* WORLD MAP BACKGROUND */}
+  <div className="absolute inset-0 -z-10 flex justify-end max-sm:bottom-40">
+
+    {/* Desktop 70% Width */}
+    <div className="hidden lg:block w-[70%] h-full">
+      <WorldMap />
+    </div>
+
+    {/* Mobile Full Width */}
+    <div className="block lg:hidden w-full h-full relative bottom-20">
+      <WorldMap />
+    </div>
+
+  </div>
+
+  {/* LEFT CONTENT */}
+  <div className="relative z-20 max-w-2xl">
+
+    <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+      Welcome Back,{" "}
+      <span className="text-yellow-400">
+        {user?.name || "Trader"}
+      </span>{" "}
+      👋
+    </h1>
+
+    <h2 className="mt-6 text-3xl lg:text-5xl font-bold">
+      Start Trading Instantly
+    </h2>
+
+    <p className="mt-6 text-gray-400 max-w-lg">
+      Manage your USDT transactions, monitor live prices and trade securely
+      on Ibytex Exchange.
+    </p>
+      
+   <div className="mt-8 w-fit bg-[#181a20]/90 backdrop-blur-xl px-8 py-5 rounded-2xl border border-white/10 shadow-xl">
+    <p className="text-gray-400 text-sm">Today USDT Price</p>
+    <p className="text-3xl font-bold text-green-400">
+      ₹ {rate || "Loading..."}
+    </p>
+  </div>
+  </div>
+      
+      {/* BOTTOM CENTER SECTION */}
+<div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-6">
+
+  {/* Live Price Card */}
+
+
+  {/* Start Trading Button */}
+  <div className="flex gap-4"> 
+  <button
+    onClick={() => navigate("/userorder")}
+    className="px-8 py-3 bg-yellow-400 text-black font-semibold rounded-full hover:scale-105 transition shadow-lg"
+  >
+    Start Trading →
+  </button>
+
+  {/* View Orders Button */}
+  <button
+    onClick={() => navigate("/myorder")}
+    className="px-8 py-3 border border-white/20 rounded-full hover:bg-white/10 transition"
+  >
+    View Orders
+  </button>
+  </div>
+
+</div>
+
+</section>
+  
+
+
+
+      {/* CALCULATOR SECTION */}
+      <section className="py-20 px-6 lg:px-20 bg-gradient-to-b from-black to-[#111827]">
+        <div className="max-w-6xl mx-auto">
+
+          <div className="bg-[#181a20] rounded-2xl p-10 border border-gray-800 shadow-xl">
+
+            <h2 className="text-3xl font-bold mb-2">
+              Calculate Your USDT Value
             </h2>
-
-            <p className="mt-4 text-lg text-gray-300">
-              Trusted USDT Seller & Buyer Platform
-            </p>
-
-            <p className="mt-3 text-gray-400 max-w-lg">
-              Buy and Sell USDT instantly with secure transactions,
-              real-time pricing, and manual verification for maximum safety.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              <button
-                onClick={() => navigate("/userorder")}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl font-semibold transition shadow-lg"
-              >
-                Start Trading
-              </button>
-
-              <button
-                onClick={() => navigate("/myorder")}
-                className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition"
-              >
-                View Orders
-              </button>
-            </div>
-          </div>
-
-          {/* RIGHT CARD */}
-          <div className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl border border-white/20 shadow-2xl">
-            <h3 className="text-xl font-semibold mb-6 text-indigo-400">
-              Live Market Overview
-            </h3>
-
-            <div className="space-y-6">
-              <div className="flex justify-between">
-                <span className="text-gray-400">USDT Price</span>
-                <span className="text-green-400 font-bold text-lg">
-                  {rate ? `₹ ${rate}` : "Loading..."}
-                </span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-400">Liquidity</span>
-                <span className="font-semibold">High</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-400">Transactions</span>
-                <span className="font-semibold">Instant</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-400">Security</span>
-                <span className="text-indigo-400 font-semibold">
-                  Verified
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CALCULATOR + NEWS */}
-      <div className="min-h-screen py-12 px-6">
-        <div className="max-w-6xl mx-auto w-full space-y-12">
-
-          {/* CALCULATOR */}
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-xl">
-            <h2 className="text-2xl font-bold mb-2">
-              Calculate How Much Price You Get
-            </h2>
-
-            <p className="text-gray-300 mb-6">
-              Instant & Secure USDT Selling
+            <p className="text-gray-400 mb-8">
+              Instant & Secure Selling Calculator
             </p>
 
             <div className="grid md:grid-cols-3 gap-6">
+
               <div>
-                <label className="text-sm text-gray-300">USDT Quantity</label>
+                <label className="text-sm text-gray-400">USDT Quantity</label>
                 <input
                   type="number"
                   value={usdt}
                   onChange={(e) => setUsdt(e.target.value)}
-                  className="mt-2 w-full px-4 py-3 rounded-lg bg-black/40 border border-gray-600 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="mt-2 w-full px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700 focus:border-yellow-400 outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-sm text-gray-300">
-                  Today Rate 1 USDT (₹)
+                <label className="text-sm text-gray-400">
+                  Today Rate
                 </label>
-                <div className="mt-2 px-4 py-3 rounded-lg bg-black/40 border border-gray-600">
+                <div className="mt-2 px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700">
                   ₹ {rate}
                 </div>
               </div>
 
               <div>
-                <label className="text-sm text-gray-300">
-                  You Receive Amount
+                <label className="text-sm text-gray-400">
+                  You Receive
                 </label>
-                <div className="mt-2 px-4 py-3 rounded-lg bg-black/40 border border-gray-600 font-semibold text-green-400">
+                <div className="mt-2 px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700 font-semibold text-green-400">
                   ₹ {totalAmount}
                 </div>
               </div>
+
             </div>
 
             <div className="flex gap-4 mt-8">
               <button
                 onClick={() => navigate("/userorder")}
-                className="flex-1 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 font-semibold transition"
+                className="flex-1 py-3 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-black font-semibold transition"
               >
                 Sell USDT
               </button>
 
               <button
                 onClick={() => navigate("/myorder")}
-                className="flex-1 py-3 rounded-lg bg-white/10 hover:bg-white/20 font-semibold transition"
+                className="flex-1 py-3 rounded-lg border border-white/20 hover:bg-white/10 font-semibold transition"
               >
                 My Orders
               </button>
             </div>
+
           </div>
 
-          {/* NEWS */}
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 h-[400px] overflow-y-auto">
-            <h3 className="text-lg font-semibold mb-4">
-              Crypto News
-            </h3>
-
-            <ul className="space-y-3 text-sm text-gray-300">
-              {news.length === 0 && <li>No news available</li>}
-
-              {news.map((n, i) => (
-                <li key={i} className="border-b border-white/10 pb-2">
-                  🔹 {n.text}
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
-      </div>
+      </section>
+
+      {/* NEWS SECTION */}
+      <section className="py-16 px-6 lg:px-20 bg-black">
+        <div className="max-w-5xl mx-auto bg-[#181a20] rounded-2xl p-8 border border-gray-800">
+
+          <h3 className="text-xl font-semibold mb-6 text-yellow-400">
+            Latest Crypto News
+          </h3>
+
+          <ul className="space-y-4 text-gray-300 text-sm max-h-[300px] overflow-y-auto">
+            {news.length === 0 && <li>No news available</li>}
+
+            {news.map((n, i) => (
+              <li key={i} className="border-b border-gray-700 pb-2">
+                🔹 {n.text}
+              </li>
+            ))}
+          </ul>
+
+        </div>
+      </section>
 
       <Footer />
     </div>

@@ -137,7 +137,8 @@ const getLogo = (symbol) => {
 
       <button
         onClick={() => setShowModal(true)}
-        className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 transition shadow-lg shadow-purple-600/30"
+     className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold 
+             shadow-lg hover:scale-105 transition-all duration-300"
       >
        All Markets
       </button>

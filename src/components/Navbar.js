@@ -1,7 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef,useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { ChevronDown } from "lucide-react"; // 👈 arrow icon
+import HeaderUserMenu from "./HeaderUserMenu";
+
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -30,6 +32,16 @@ export default function Navbar() {
 
     lastY.current = latest;
   });
+
+  const [user, setUser] = useState(null);
+
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    setUser(JSON.parse(storedUser));
+  }
+}, []);
+
 
   return (
     <motion.nav
@@ -96,10 +108,21 @@ export default function Navbar() {
             </motion.div>
           </div>
 
-          <Link to="/markets" className="hover:text-yellow-400 transition">
-            Markets
-          </Link>
 
+
+  <Link to="/home" className="hover:text-yellow-400 transition">
+  Markets
+</Link>
+
+    
+
+
+      <Link to="/about" className="hover:text-yellow-400 transition">
+  About Us
+</Link>
+          <Link to="/privacy" className="hover:text-yellow-400 transition">
+  Privacy Policy
+</Link>
           {/* Trade */}
           <div
             className="relative"
@@ -142,20 +165,30 @@ export default function Navbar() {
         </div>
 
         {/* Right Side */}
-        <div className="hidden lg:flex items-center gap-4">
-          <Link to="/login" className="text-gray-300 hover:text-white text-sm">
-            Login
-          </Link>
+        {/* Right Side */}
+<div className="hidden lg:flex items-center gap-4">
+  {user ? (
+    <HeaderUserMenu />
+  ) : (
+    <>
+      <Link
+        to="/login"
+        className="text-gray-300 hover:text-white text-sm transition"
+      >
+        Login
+      </Link>
 
-         <Link
-  to="/signup"
-  className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold 
-             shadow-lg hover:scale-105 transition-all duration-300"
->
-  Get Started
-</Link>
+      <Link
+        to="/signup"
+        className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold 
+                   shadow-lg hover:scale-105 transition-all duration-300"
+      >
+        Get Started
+      </Link>
+    </>
+  )}
+</div>
 
-        </div>
 
         {/* Mobile Hamburger */}
         <div
@@ -184,18 +217,36 @@ export default function Navbar() {
         transition={{ duration: 0.35 }}
         className="lg:hidden bg-[#0B0E11] overflow-hidden"
       >
-        <div className="flex flex-col px-6 py-6 gap-4 text-gray-300">
-          <Link to="/markets" onClick={() => setMobileOpen(false)}>Markets</Link>
-          <Link to="/trade" onClick={() => setMobileOpen(false)}>Trade</Link>
-          <Link to="/login" onClick={() => setMobileOpen(false)}>Login</Link>
-          <Link
-            to="/signup"
-            onClick={() => setMobileOpen(false)}
-            className="px-4 py-2 rounded-md bg-yellow-400 text-black text-center"
-          >
-            Get Started
-          </Link>
-        </div>
+     <div className="flex flex-col px-6 py-6 gap-4 text-gray-300">
+  <Link to="/markets" onClick={() => setMobileOpen(false)}>
+    Markets
+  </Link>
+
+  <Link to="/trade" onClick={() => setMobileOpen(false)}>
+    Trade
+  </Link>
+
+  {user ? (
+    <div onClick={() => setMobileOpen(false)}>
+      <HeaderUserMenu />
+    </div>
+  ) : (
+    <>
+      <Link to="/login" onClick={() => setMobileOpen(false)}>
+        Login
+      </Link>
+
+      <Link
+        to="/signup"
+        onClick={() => setMobileOpen(false)}
+        className="px-4 py-2 rounded-md bg-yellow-400 text-black text-center"
+      >
+        Get Started
+      </Link>
+    </>
+  )}
+</div>
+
       </motion.div>
     </motion.nav>
   );

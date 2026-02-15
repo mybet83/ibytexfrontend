@@ -1,19 +1,35 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import DottedMap from "dotted-map";
 
 export default function WorldMap() {
   const svgRef = useRef(null);
-  const map = new DottedMap({ height: 100, grid: "diagonal" });
+  const [svgMap, setSvgMap] = useState(null);
 
-  const svgMap = map.getSVG({
-    radius: 0.28,
-    color: "#8B5CF6",
-    shape: "circle",
-    backgroundColor: "transparent",
-  });
+  // ✅ Generate map AFTER first paint (non-blocking)
+  useEffect(() => {
+    const generateMap = () => {
+      const map = new DottedMap({ height: 100, grid: "diagonal" });
+
+      const svg = map.getSVG({
+        radius: 0.28,
+        color: "#8B5CF6",
+        shape: "circle",
+        backgroundColor: "transparent",
+      });
+
+      setSvgMap(svg);
+    };
+
+    // 🔥 Idle time pe generate karo (no freeze)
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(generateMap);
+    } else {
+      setTimeout(generateMap, 0);
+    }
+  }, []);
 
   const projectPoint = (lat, lng) => {
     const x = (lng + 180) * (800 / 360);
@@ -38,16 +54,17 @@ export default function WorldMap() {
   return (
     <div className="relative w-full h-full z-10">
 
-      {/* Bottom Glow */}
       <div className="absolute bottom-0 left-0 w-full h-[45%] bg-gradient-to-t from-purple-700/40 via-purple-900/30 to-transparent blur-3xl"></div>
 
-      {/* Map Base */}
-      <img
-        src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}
-        className="absolute inset-0 w-full h-full object-contain opacity-90"
-        alt="map"
-        draggable={false}
-      />
+      {/* ✅ Render only when ready */}
+      {svgMap && (
+        <img
+          src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}
+          className="absolute inset-0 w-full h-full object-contain opacity-90"
+          alt="map"
+          draggable={false}
+        />
+      )}
 
       <svg
         ref={svgRef}
@@ -55,14 +72,13 @@ export default function WorldMap() {
         className="absolute inset-0 w-full h-full"
       >
         <defs>
-        <linearGradient id="goldenLine" x1="0%" y1="0%" x2="100%" y2="0%">
-  <stop offset="0%" stopColor="transparent" />
-  <stop offset="30%" stopColor="#F5C56B" />
-  <stop offset="60%" stopColor="#FFD700" />
-  <stop offset="80%" stopColor="#D4A017" />
-  <stop offset="100%" stopColor="transparent" />
-</linearGradient>
-
+          <linearGradient id="goldenLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="transparent" />
+            <stop offset="30%" stopColor="#F5C56B" />
+            <stop offset="60%" stopColor="#FFD700" />
+            <stop offset="80%" stopColor="#D4A017" />
+            <stop offset="100%" stopColor="transparent" />
+          </linearGradient>
 
           <filter id="glow">
             <feGaussianBlur stdDeviation="4" result="blur" />
@@ -78,77 +94,70 @@ export default function WorldMap() {
           const end = projectPoint(route.end.lat, route.end.lng);
           const path = createCurvedPath(start, end);
 
-          return (
-            <g key={i}>
-              {/* Animated Line */}
-              <motion.path
-                d={path}
-                fill="none"
- stroke="url(#goldenLine)"
 
-                strokeWidth="2"
-                filter="url(#glow)"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: [0, 1, 1, 0] }}
-                transition={{
-                  duration: 5,
-                  delay: i * 0.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
+                
 
-              {/* Start Dot */}
-              <circle cx={start.x} cy={start.y} r="3" fill="#09ABFF" />
+return (
+  <g key={i}>
+    {/* Animated Line */}
+    <motion.path
+      d={path}
+      fill="none"
+      stroke="url(#goldenLine)"
+      strokeWidth="2"
+      filter="url(#glow)"
+      initial={{ pathLength: 0 }}
+      animate={{ pathLength: [0, 1, 1, 0] }}
+      transition={{
+        duration: 5,
+        delay: i * 0.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
 
-              {/* Destination Dot */}
-              <circle cx={end.x} cy={end.y} r="3" fill="#09ABFF" />
+    {/* Start Dot */}
+    <circle cx={start.x} cy={start.y} r="3" fill="#09ABFF" />
 
-              {/* 🔥 USDT Logo Popup */}
-              <motion.g
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: [0, 1, 1, 0], opacity: [0, 1, 1, 0] }}
-                transition={{
-                  duration: 5,
-                  delay: i * 0.5 + 2.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                {/* USDT Circle */}
-                <circle cx={end.x} cy={end.y} r="10" fill="#09ABFF" />
+    {/* End Dot */}
+    <circle cx={end.x} cy={end.y} r="3" fill="#09ABFF" />
 
-                {/* T Symbol */}
-                <text
-                  x={end.x}
-                  y={end.y + 4}
-                  textAnchor="middle"
-                  fontSize="10"
-                  fill="white"
-                  fontWeight="bold"
-                >
-                  T
-                </text>
+    {/* 🔥 USDT Popup (FIXED POSITION) */}
+    <motion.g
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: [0, 1, 1, 0], opacity: [0, 1, 1, 0] }}
+      transition={{
+        duration: 4,
+        delay: i * 0.5 + 1.8,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <circle cx={end.x} cy={end.y} r="10" fill="#09ABFF" />
 
-                {/* Buyer Icon Below */}
-                <circle
-                  cx={end.x}
-                  cy={end.y + 22}
-                  r="8"
-                  fill="#09ABFF"
-                />
+      <text
+        x={end.x}
+        y={end.y + 4}
+        textAnchor="middle"
+        fontSize="10"
+        fill="white"
+        fontWeight="bold"
+      >
+        T
+      </text>
 
-                <circle
-                  cx={end.x}
-                  cy={end.y + 22}
-                  r="12"
-                  stroke="#A855F7"
-                  strokeWidth="1"
-                  fill="none"
-                />
-              </motion.g>
-            </g>
-          );
+      <circle
+        cx={end.x}
+        cy={end.y}
+        r="16"
+   
+        strokeWidth="1.5"
+        fill="none"
+      />
+    </motion.g>
+  </g>
+);
+
         })}
       </svg>
     </div>

@@ -15,6 +15,18 @@ root.render(
   </React.StrictMode>
 );
 
+setTimeout(() => {
+  const loader = document.getElementById("initial-loader");
+  if (loader) {
+    loader.style.opacity = "0";
+    loader.style.transition = "opacity 0.5s ease";
+    setTimeout(() => {
+      loader.style.display = "none";
+    }, 500);
+  }
+}, 3000);
+
+
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
