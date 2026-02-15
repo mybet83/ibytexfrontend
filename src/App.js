@@ -20,6 +20,8 @@ import AdminHistory from "./pages/AdminHistory";
 import TermsConditions from "./pages/TermsConditions";
 import Layout from "./pages/Layout";
 
+
+
 function App() {
   return (
     <div className="App">
@@ -41,47 +43,88 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route path="/finalpage" element={<Finalpage />} />
-        <Route path="/userorder" element={<UserOrder />} />
-        <Route path="/myorder" element={<MyOrders />} />
-        <Route path="/adminorderdashboard" element={<AdminOrderDashboard />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        
+      
+       
+       
 
         {/* User Protected */}
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Finalpage />
-            </PrivateRoute>
-          }
-        />
+   {/* USER PROTECTED ROUTES */}
+<Route
+  path="/dashboard"
+  element={
+    <PrivateRoute>
+      <Finalpage />
+    </PrivateRoute>
+  }
+/>
 
-        {/* Admin */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/users"
-          element={
-            <AdminRoute>
-              <AdminUsers />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/history"
-          element={
-            <AdminRoute>
-              <AdminHistory />
-            </AdminRoute>
-          }
-        />
+<Route
+  path="/finalpage"
+  element={
+    <PrivateRoute>
+      <Finalpage />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/userorder"
+  element={
+    <PrivateRoute>
+      <UserOrder />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/myorder"
+  element={
+    <PrivateRoute>
+      <MyOrders />
+    </PrivateRoute>
+  }
+/>
+
+
+{/* ADMIN PROTECTED ROUTES */}
+<Route
+  path="/admin/dashboard"
+  element={
+    <AdminRoute>
+      <AdminDashboard />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/users"
+  element={
+    <AdminRoute>
+      <AdminUsers />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/history"
+  element={
+    <AdminRoute>
+      <AdminHistory />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/adminorderdashboard"
+  element={
+    <AdminRoute>
+      <AdminOrderDashboard />
+    </AdminRoute>
+  }
+/>
+
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/home" />} />

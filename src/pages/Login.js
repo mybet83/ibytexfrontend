@@ -192,7 +192,7 @@ const Login = () => {
               {/* Extra Links */}
               <p className="text-sm text-center mt-4">
                 <Link
-                  to="/forgot-password"
+                  to="/forgotpassword"
                   className="text-yellow-400 hover:underline"
                 >
                   Forgot password?

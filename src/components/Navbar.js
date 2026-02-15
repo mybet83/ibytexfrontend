@@ -1,5 +1,5 @@
 import { useState, useRef,useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { ChevronDown } from "lucide-react"; // 👈 arrow icon
 import HeaderUserMenu from "./HeaderUserMenu";
@@ -14,6 +14,16 @@ export default function Navbar() {
   const { scrollY } = useScroll();
   const lastY = useRef(0);
   const scrollTimeout = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+  if (location.pathname === "/home") {
+    localStorage.removeItem("user");
+    setUser(null);
+  }
+}, [location.pathname]);
+
+
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = lastY.current;
@@ -166,22 +176,19 @@ useEffect(() => {
 
         {/* Right Side */}
         {/* Right Side */}
+{/* Desktop Only */}
 <div className="hidden lg:flex items-center gap-4">
   {user ? (
     <HeaderUserMenu />
   ) : (
     <>
-      <Link
-        to="/login"
-        className="text-gray-300 hover:text-white text-sm transition"
-      >
+      <Link to="/login" className="text-gray-300 hover:text-white text-sm">
         Login
       </Link>
 
       <Link
         to="/signup"
-        className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold 
-                   shadow-lg hover:scale-105 transition-all duration-300"
+        className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold"
       >
         Get Started
       </Link>
@@ -190,64 +197,88 @@ useEffect(() => {
 </div>
 
 
-        {/* Mobile Hamburger */}
-        <div
-          className="lg:hidden flex flex-col gap-1 cursor-pointer"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          <motion.span
-            animate={{ rotate: mobileOpen ? 45 : 0, y: mobileOpen ? 6 : 0 }}
-            className="h-[2px] w-6 bg-white"
-          />
-          <motion.span
-            animate={{ opacity: mobileOpen ? 0 : 1 }}
-            className="h-[2px] w-6 bg-white"
-          />
-          <motion.span
-            animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? -6 : 0 }}
-            className="h-[2px] w-6 bg-white"
-          />
-        </div>
-      </div>
+
+{/* Mobile Menu Button */}
+<button
+  className="lg:hidden w-10 h-10 flex items-center justify-center relative z-[999]"
+  onClick={() => setMobileOpen(prev => !prev)}
+>
+  <div className="relative w-6 h-5">
+
+    <span
+      className={`absolute left-0 w-6 h-[2px] bg-white transition-all duration-300
+      ${mobileOpen
+        ? "top-1/2 -translate-y-1/2 rotate-45"
+        : "top-0"}
+      `}
+    ></span>
+
+    <span
+      className={`absolute left-0 w-6 h-[2px] bg-white transition-all duration-300
+      ${mobileOpen
+        ? "opacity-0"
+        : "top-1/2 -translate-y-1/2"}
+      `}
+    ></span>
+
+    <span
+      className={`absolute left-0 w-6 h-[2px] bg-white transition-all duration-300
+      ${mobileOpen
+        ? "top-1/2 -translate-y-1/2 -rotate-45"
+        : "bottom-0"}
+      `}
+    ></span>
+
+  </div>
+</button>
+
+
+</div>
+
+
+
+
+
 
       {/* Mobile Menu */}
-      <motion.div
-        initial={{ height: 0 }}
-        animate={{ height: mobileOpen ? "auto" : 0 }}
-        transition={{ duration: 0.35 }}
-        className="lg:hidden bg-[#0B0E11] overflow-hidden"
-      >
-     <div className="flex flex-col px-6 py-6 gap-4 text-gray-300">
-  <Link to="/markets" onClick={() => setMobileOpen(false)}>
-    Markets
-  </Link>
+     <motion.div
+  initial={{ height: 0 }}
+  animate={{ height: mobileOpen ? "auto" : 0 }}
+  transition={{ duration: 0.35 }}
+  className="lg:hidden bg-[#0B0E11] overflow-hidden"
+>
+  <div className="flex flex-col px-6 py-6 gap-4 text-gray-300">
 
-  <Link to="/trade" onClick={() => setMobileOpen(false)}>
-    Trade
-  </Link>
+    <Link to="/markets" onClick={() => setMobileOpen(false)}>
+      Markets
+    </Link>
 
-  {user ? (
-    <div onClick={() => setMobileOpen(false)}>
-      <HeaderUserMenu />
-    </div>
-  ) : (
-    <>
-      <Link to="/login" onClick={() => setMobileOpen(false)}>
-        Login
-      </Link>
+    <Link to="/trade" onClick={() => setMobileOpen(false)}>
+      Trade
+    </Link>
 
-      <Link
-        to="/signup"
-        onClick={() => setMobileOpen(false)}
-        className="px-4 py-2 rounded-md bg-yellow-400 text-black text-center"
-      >
-        Get Started
-      </Link>
-    </>
-  )}
-</div>
+    {user ? (
+      <div className="pt-4 border-t border-white/10">
+        <HeaderUserMenu mobile />
+      </div>
+    ) : (
+      <>
+        <Link to="/login" onClick={() => setMobileOpen(false)}>
+          Login
+        </Link>
 
-      </motion.div>
+        <Link
+          to="/signup"
+          onClick={() => setMobileOpen(false)}
+          className="px-4 py-2 rounded-md bg-yellow-400 text-black text-center"
+        >
+          Get Started
+        </Link>
+      </>
+    )}
+  </div>
+</motion.div>
+
     </motion.nav>
   );
 }
