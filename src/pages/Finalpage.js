@@ -73,16 +73,16 @@ const Finalpage = () => {
 
         {/* LEFT CONTENT */}
         <div className="relative z-20 max-w-2xl">
-          <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+          <h1 className="text-4xl lg:text-4xl font-bold leading-tight">
             Welcome Back,{" "}
             <span className="text-yellow-400">{user?.name || "Trader"}</span> 👋
           </h1>
 
-          <h2 className="mt-6 text-3xl lg:text-5xl font-bold">
+          <h2 className="mt-6 text-3xl lg:text-3xl font-bold">
             Start Trading Instantly
           </h2>
 
-          <p className="mt-6 text-gray-400 max-w-lg">
+          <p className="mt-6 text-gray-400 max-w-lg text-base">
             Manage your USDT transactions, monitor live prices and trade
             securely on Ibytex Exchange.
           </p>
@@ -94,7 +94,7 @@ const Finalpage = () => {
                   px-7 py-6 
                   shadow-2xl 
                   hover:border-purple-500/40 
-                  transition-all duration-300 w-[60%] mt-6 max-lg:w-[70%] max-sm:w-[90%]"
+                  transition-all duration-300 w-[70%] mt-6 max-lg:w-[70%] max-sm:w-[90%]"
           >
             {/* Header */}
             <div className="flex items-center gap-3 mb-3">

@@ -29,7 +29,15 @@ function App() {
 
       <Routes>
         {/* Redirect root */}
-        <Route path="/" element={<Navigate to="/home" />} />
+<Route
+  path="/"
+  element={
+    localStorage.getItem("token")
+      ? <Navigate to="/dashboard" />
+      : <Navigate to="/home" />
+  }
+/>
+
 
         {/* Layout Wrapper */}
         <Route element={<Layout />}>

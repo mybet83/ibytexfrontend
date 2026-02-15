@@ -328,7 +328,7 @@ useEffect(() => {
 
           <Link
             to="/signup"
-            className="inline-block mt-6 px-8 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 transition shadow-lg"
+            className="inline-block mt-6 px-8 py-3 rounded-full bg-gold-gradient text-black font-semibold transition shadow-lg"
           >
             Create Account Now
           </Link>

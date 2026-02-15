@@ -35,117 +35,134 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-slate-900 to-black text-white">
+  <div className="min-h-screen bg-[#0b0e11] text-white">
 
-      {/* HEADER */}
-      <div className="flex items-center justify-between px-6 py-6">
-        <img
-          src="/logot.png"
-          alt="logo"
-          className="w-28 object-contain drop-shadow-xl"
-        />
-
+    {/* HEADER */}
+    <div className="flex items-center justify-between px-10 py-8">
+      <div className="flex items-center gap-4">
+        <img src="/logot.png" alt="logo" className="w-10" />
         <h1 className="text-3xl font-bold">My Orders</h1>
-
-        <button
-          onClick={() => navigate("/finalpage")}
-          className="bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-xl font-semibold shadow-lg transition"
-        >
-          Back
-        </button>
       </div>
 
-      <div className="space-y-6 max-w-4xl mx-auto px-4 pb-12">
+      <button
+        onClick={() => navigate("/finalpage")}
+        className="bg-yellow-400 hover:bg-yellow-500 text-black px-5 py-2 rounded-lg font-semibold transition"
+      >
+        Back
+      </button>
+    </div>
 
-        {orders.length === 0 && (
-          <div className="text-gray-400 text-center mt-20">
-            You have no orders yet
-          </div>
-        )}
+    <div className="max-w-6xl mx-auto px-6 pb-16">
+
+      {orders.length === 0 && (
+        <div className="text-center text-gray-400 mt-32">
+          No orders placed yet.
+        </div>
+      )}
+
+      <div className="grid gap-8">
 
         {orders.map((o) => (
           <div
             key={o._id}
-            className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-xl hover:shadow-indigo-500/10 transition"
+            className="bg-[#181a20] rounded-2xl border border-gray-800 p-8 shadow-xl transition hover:border-yellow-400/30"
           >
 
-            {/* HEADER */}
-            <div className="flex justify-between items-center mb-4">
-              <div className="text-sm text-gray-300">
-                Order ID:
-                <span className="text-white break-all ml-2">
-                  {o._id}
-                </span>
+            {/* TOP ROW */}
+            <div className="flex justify-between items-center mb-6">
+
+              <div>
+                <p className="text-gray-400 text-sm">Order ID</p>
+                <p className="text-white text-sm break-all">{o._id}</p>
               </div>
 
               <span
-                className={`px-3 py-1 rounded-full text-xs font-semibold ${statusStyle(
-                  o.status
-                )}`}
+                className={`px-4 py-1 rounded-full text-xs font-semibold ${
+                  o.status === "PENDING"
+                    ? "bg-yellow-500/20 text-yellow-400"
+                    : o.status === "COMPLETED"
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-gray-500/20 text-gray-300"
+                }`}
               >
                 {o.status}
               </span>
             </div>
 
-            {/* AMOUNT INFO */}
-            <div className="grid md:grid-cols-3 gap-4 text-sm mb-6">
-              <div>
-                <p className="text-gray-400">USDT</p>
-                <p className="font-semibold text-lg">{o.usdtAmount}</p>
+            {/* AMOUNT SECTION */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+
+              <div className="bg-black/40 p-5 rounded-xl border border-gray-800">
+                <p className="text-gray-400 text-sm">USDT</p>
+                <p className="text-xl font-semibold">{o.usdtAmount}</p>
               </div>
 
-              <div>
-                <p className="text-gray-400">Rate</p>
-                <p className="font-semibold text-lg">₹ {o.rate}</p>
+              <div className="bg-black/40 p-5 rounded-xl border border-gray-800">
+                <p className="text-gray-400 text-sm">Rate</p>
+                <p className="text-xl font-semibold">₹ {o.rate}</p>
               </div>
 
-              <div>
-                <p className="text-gray-400">You Receive</p>
-                <p className="font-semibold text-lg text-green-400">
+              <div className="bg-black/40 p-5 rounded-xl border border-gray-800">
+                <p className="text-gray-400 text-sm">You Received</p>
+                <p className="text-xl font-semibold text-green-400">
                   ₹ {o.totalINR}
                 </p>
               </div>
+
             </div>
 
             {/* PAYMENT METHOD */}
-            <div className="text-sm mb-4">
-              <p className="text-gray-400 mb-2">Your Payment Method</p>
+            <div className="mb-6">
+              <p className="text-gray-400 text-sm mb-3">Payment Details</p>
 
-              <div className="bg-black/40 p-4 rounded-xl border border-white/10">
+              <div className="bg-black/30 p-5 rounded-xl border border-gray-800">
+
                 {o.paymentMethod === "UPI" && (
-                  <p>UPI ID: {o.userPaymentDetails?.upiId}</p>
+                  <p>
+                    <span className="text-gray-400">UPI ID:</span>{" "}
+                    <span className="text-white font-medium">
+                      {o.userPaymentDetails?.upiId}
+                    </span>
+                  </p>
                 )}
 
                 {o.paymentMethod === "BANK" && (
                   <>
-                    <p>Account: {o.userPaymentDetails?.accountNumber}</p>
-                    <p>IFSC: {o.userPaymentDetails?.ifsc}</p>
+                    <p>
+                      <span className="text-gray-400">Account:</span>{" "}
+                      <span className="text-white font-medium">
+                        {o.userPaymentDetails?.accountNumber}
+                      </span>
+                    </p>
+                    <p>
+                      <span className="text-gray-400">IFSC:</span>{" "}
+                      <span className="text-white font-medium">
+                        {o.userPaymentDetails?.ifsc}
+                      </span>
+                    </p>
                   </>
                 )}
               </div>
             </div>
 
-            {/* PENDING */}
+            {/* STATUS MESSAGE */}
             {o.status === "PENDING" && (
-              <div className="mt-4 text-yellow-400 text-sm bg-yellow-500/10 border border-yellow-500/30 p-3 rounded-lg">
-                ⏳ Payment under review. Please wait for admin confirmation.
+              <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-xl text-yellow-400 text-sm">
+                ⏳ Order is under admin verification. Please wait.
               </div>
             )}
 
-            {/* COMPLETED */}
             {o.status === "COMPLETED" && (
-              <div className="mt-4 bg-green-500/10 border border-green-500/30 p-4 rounded-xl">
-                <p className="text-green-400 font-semibold text-lg">
+              <div className="bg-green-500/10 border border-green-500/30 p-5 rounded-xl">
+                <p className="text-green-400 font-semibold text-lg mb-2">
                   ✅ Payment Successful
                 </p>
 
-                <p className="text-sm mt-2">
-                  <span className="text-gray-300">UTR Number:</span>{" "}
-                  <b className="text-white">{o.adminUtrNumber}</b>
-                </p>
-
-                <p className="text-xs text-gray-400 mt-1">
-                  Amount credited successfully to your account
+                <p className="text-sm">
+                  <span className="text-gray-400">UTR Number:</span>{" "}
+                  <span className="text-white font-medium">
+                    {o.adminUtrNumber}
+                  </span>
                 </p>
               </div>
             )}
@@ -155,5 +172,7 @@ useEffect(() => {
 
       </div>
     </div>
-  );
+  </div>
+);
+
 }
