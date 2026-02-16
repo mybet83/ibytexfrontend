@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 function LivePrices() {
 
   const initialMarkets = [
-    "BTCUSDT",
-    "ETHUSDT",
-    "BNBUSDT",
-    "SOLUSDT",
-   
-  ];
+  "BTCUSDT",
+  "ETHUSDT",
+  "BNBUSDT",
+  "SOLUSDT",
+  "XRPUSDT",
+  "ADAUSDT",
+  "DOGEUSDT",
+  "TRXUSDT",
+];
 
   const [selectedMarkets, setSelectedMarkets] = useState(initialMarkets);
   const [allMarkets, setAllMarkets] = useState([]);
@@ -125,7 +128,7 @@ const getLogo = (symbol) => {
   };
 
  return (
-<div className="px-6  relative overflow-hidden">
+<div className="px-4  relative overflow-hidden">
   
   {/* Soft Radial Background */}
   <div className="absolute inset-0  pointer-events-none"></div>
@@ -146,8 +149,9 @@ const getLogo = (symbol) => {
 
     {/* Main Cards */}
     {/* Main Cards */}
+<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-  <div className="grid lg:grid-cols-2 gap-12 items-start">
+
 
    {selectedMarkets.map((symbol) => {
   const market = prices[symbol];
@@ -220,7 +224,8 @@ const getLogo = (symbol) => {
                     key={symbol}
                     onClick={() => {
                       setSelectedMarkets((prev) => {
-                        const updated = [symbol, ...prev.slice(0, 5)];
+                       const updated = [symbol, ...prev.slice(0, 7)];
+
                         return [...new Set(updated)];
                       });
                       setShowModal(false);

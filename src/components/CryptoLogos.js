@@ -69,6 +69,12 @@ export default function CryptoMarquee() {
       name: "XRP",
       logo: "https://cryptologos.cc/logos/xrp-xrp-logo.png",
     },
+{
+  name: "PCI DSS Compliant",
+  logo: "/psi1.png",
+},
+
+
   ];
 
   return (
@@ -76,49 +82,52 @@ export default function CryptoMarquee() {
      
 
       <div className="marquee-wrapper">
-        <div className="marquee-track">
-  {[...logos, ...logos].map((item, index) => (
-    <div
-      key={index}
-      className="
-        flex items-center 
-        gap-2 sm:gap-4 
-        mx-6 sm:mx-12 
-        group whitespace-nowrap
-      "
-    >
-      <img
-        src={item.logo}
-        alt={item.name}
-        className="
-          h-8 w-8 
-          sm:h-12 sm:w-12 
-          object-contain 
-          opacity-90 
-          transition duration-300
-        "
-      />
+         <div className="marquee-track flex items-center">
 
-      <span
-        className="
-          text-[10px] 
-          sm:text-sm 
-          uppercase 
-          tracking-[0.15em] 
-          sm:tracking-[0.2em] 
-          font-bold 
-          bg-gradient-to-r 
-          from-yellow-600 via-orange-300 to-yellow-400 
-          bg-clip-text text-transparent
-        "
-      >
-        {item.name}
-      </span>
-    </div>
-  ))}
-</div>
+          {[...logos, ...logos].map((item, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-4 mx-12 whitespace-nowrap"
+            >
+              <img
+                src={item.logo}
+                alt={item.name}
+                className={`
+                  object-contain 
+                  opacity-90 
+                  transition duration-300
+                  ${
+                    item.name === "PCI DSS Compliant"
+                      ? "h-8 sm:h-12 w-auto max-w-[150px]"
+                      : "h-8 w-8 sm:h-12 sm:w-12"
+                  }
+                `}
+              />
+
+              <span
+                className="
+                  text-[10px] 
+                  sm:text-sm 
+                  uppercase 
+                  tracking-[0.15em] 
+                  sm:tracking-[0.2em] 
+                  font-bold 
+                  bg-gradient-to-r 
+                  from-yellow-600 via-orange-300 to-yellow-400 
+                  bg-clip-text text-transparent
+                "
+              >
+                {item.name}
+              </span>
+            </div>
+          ))}
+
+        </div>
 
       </div>
     </section>
   );
 }
+
+
+

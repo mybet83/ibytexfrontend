@@ -75,104 +75,62 @@ useEffect(() => {
         <img src="/logot.png" alt="logo" className="w-16" />
 
         {/* Desktop Menu */}
-      <div className="hidden lg:flex items-center gap-5 text-[12px] font-medium">
+<div className="hidden lg:flex items-center gap-8 text-[13px] font-medium tracking-wide">
 
+  {/* Crypto Trading */}
+  <div
+    className="relative"
+    onMouseEnter={() => setActiveDropdown("crypto")}
+    onMouseLeave={() => setActiveDropdown(null)}
+  >
+    <button className="flex items-center gap-1 hover:text-yellow-400 transition">
+      Crypto Trading
+      <motion.div
+        animate={{ rotate: activeDropdown === "crypto" ? 180 : 0 }}
+        transition={{ duration: 0.25 }}
+      >
+        <ChevronDown size={16} />
+      </motion.div>
+    </button>
 
-          {/* Buy Crypto */}
-          <div
-            className="relative"
-            onMouseEnter={() => setActiveDropdown("buy")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <button className="flex items-center gap-1 hover:text-yellow-400 transition">
-              Buy Crypto
-              <motion.div
-                animate={{ rotate: activeDropdown === "buy" ? 180 : 0 }}
-                transition={{ duration: 0.25 }}
-              >
-                <ChevronDown size={16} />
-              </motion.div>
-            </button>
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={
+        activeDropdown === "crypto"
+          ? { opacity: 1, y: 0 }
+          : { opacity: 0, y: -10 }
+      }
+      transition={{ duration: 0.2 }}
+      className={`absolute top-8 left-0 bg-[#1E2329] border border-white/5 rounded-lg shadow-xl p-5 w-56 ${
+        activeDropdown === "crypto" ? "visible" : "invisible"
+      }`}
+    >
+      <Link
+        to="/login"
+        className="block text-gray-400 hover:text-white transition"
+      >
+        Sell USDT
+      </Link>
 
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={
-                activeDropdown === "buy"
-                  ? { opacity: 1, y: 0 }
-                  : { opacity: 0, y: -10 }
-              }
-              transition={{ duration: 0.2 }}
-              className={`absolute top-7 left-0 bg-[#1E2329] border border-white/5 rounded-lg shadow-xl p-5 w-64 ${
-                activeDropdown === "buy" ? "visible" : "invisible"
-              }`}
-            >
-              <p className="text-gray-400 hover:text-white transition cursor-pointer">
-                Credit / Debit Card
-              </p>
-              <p className="text-gray-400 hover:text-white mt-3 transition cursor-pointer">
-                P2P Trading
-              </p>
-              <p className="text-gray-400 hover:text-white mt-3 transition cursor-pointer">
-                Bank Transfer
-              </p>
-            </motion.div>
-          </div>
-
-
+      <Link
+        to="/signup"
+        className="block text-gray-400 hover:text-white mt-3 transition"
+      >
+        Buy USDT
+      </Link>
+    </motion.div>
+  </div>
 
   <Link to="/home" className="hover:text-yellow-400 transition">
-  Markets
-</Link>
+    Markets
+  </Link>
 
-    
+  <Link to="/about" className="hover:text-yellow-400 transition">
+    About Us
+  </Link>
 
+</div>
 
-      <Link to="/about" className="hover:text-yellow-400 transition">
-  About Us
-</Link>
-          <Link to="/privacy" className="hover:text-yellow-400 transition">
-  Privacy Policy
-</Link>
-          {/* Trade */}
-          <div
-            className="relative"
-            onMouseEnter={() => setActiveDropdown("trade")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <button className="flex items-center gap-1 hover:text-yellow-400 transition">
-              Trade
-              <motion.div
-                animate={{ rotate: activeDropdown === "trade" ? 180 : 0 }}
-                transition={{ duration: 0.25 }}
-              >
-                <ChevronDown size={16} />
-              </motion.div>
-            </button>
-
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={
-                activeDropdown === "trade"
-                  ? { opacity: 1, y: 0 }
-                  : { opacity: 0, y: -10 }
-              }
-              transition={{ duration: 0.2 }}
-              className={`absolute top-7 left-0 bg-[#1E2329] border border-white/5 rounded-lg shadow-xl p-5 w-72 ${
-                activeDropdown === "trade" ? "visible" : "invisible"
-              }`}
-            >
-              <p className="text-gray-400 hover:text-white transition cursor-pointer">
-                Spot Trading
-              </p>
-              <p className="text-gray-400 hover:text-white mt-3 transition cursor-pointer">
-                Futures
-              </p>
-              <p className="text-gray-400 hover:text-white mt-3 transition cursor-pointer">
-                Margin
-              </p>
-            </motion.div>
-          </div>
-        </div>
 
         {/* Right Side */}
         {/* Right Side */}
@@ -241,7 +199,7 @@ useEffect(() => {
 
 
       {/* Mobile Menu */}
-     <motion.div
+<motion.div
   initial={{ height: 0 }}
   animate={{ height: mobileOpen ? "auto" : 0 }}
   transition={{ duration: 0.35 }}
@@ -249,35 +207,61 @@ useEffect(() => {
 >
   <div className="flex flex-col px-6 py-6 gap-4 text-gray-300">
 
-    <Link to="/markets" onClick={() => setMobileOpen(false)}>
+    {/* Markets */}
+    <Link to="/home" onClick={() => setMobileOpen(false)}>
       Markets
     </Link>
 
-    <Link to="/trade" onClick={() => setMobileOpen(false)}>
-      Trade
+    {/* About */}
+    <Link to="/about" onClick={() => setMobileOpen(false)}>
+      About Us
     </Link>
 
+    {/* Divider */}
+    <div className="pt-4 border-t border-white/10"></div>
+
+    {/* Crypto Trading Section */}
+    <p className="text-xs uppercase tracking-wider text-gray-500">
+      Crypto Trading
+    </p>
+
+    <Link to="/login" onClick={() => setMobileOpen(false)}>
+      Sell USDT
+    </Link>
+
+    <Link to="/signup" onClick={() => setMobileOpen(false)}>
+      Buy USDT
+    </Link>
+
+    {/* Divider */}
+    <div className="pt-4 border-t border-white/10"></div>
+
+    {/* User Section */}
     {user ? (
-      <div className="pt-4 border-t border-white/10">
+      <div className="pt-2">
         <HeaderUserMenu mobile />
       </div>
     ) : (
       <>
-        <Link to="/login" onClick={() => setMobileOpen(false)}>
+        <Link to="/login" onClick={() => setMobileOpen(false)} 
+         className="px-4 py-2 bg-transparent border border-gray-500 rounded-md text-gray-300 text-center font-semibold">
+        
           Login
         </Link>
 
         <Link
           to="/signup"
           onClick={() => setMobileOpen(false)}
-          className="px-4 py-2 rounded-md bg-yellow-400 text-black text-center"
+          className="px-4 py-2 rounded-md bg-yellow-400 text-black text-center font-semibold"
         >
           Get Started
         </Link>
       </>
     )}
+
   </div>
 </motion.div>
+
 
     </motion.nav>
   );

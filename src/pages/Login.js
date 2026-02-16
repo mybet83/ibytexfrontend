@@ -86,13 +86,6 @@ const Login = () => {
               </span>
             </h1>
 
-            <div className="mt-6">
-              <img
-                src="/signup.png"
-                alt="login"
-                className="w-56"
-              />
-            </div>
 
             <div className="mt-10 space-y-6 text-gray-400 text-sm">
 

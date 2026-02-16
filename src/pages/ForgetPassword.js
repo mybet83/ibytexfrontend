@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utiles";
@@ -9,14 +9,45 @@ const ForgotPassword = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
+
+  // OTP (6 digit separate boxes)
+  const [otp, setOtp] = useState(Array(6).fill(""));
+  const [timer, setTimer] = useState(0);
+
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
 
-  // STEP 1
+  // ================= PASSWORD STRENGTH =================
+  const checkPasswordStrength = (password) => {
+    if (password.length < 6) return "Weak";
+    if (password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/))
+      return "Strong";
+    return "Medium";
+  };
+
+  useEffect(() => {
+    if (newPassword) {
+      setPasswordStrength(checkPasswordStrength(newPassword));
+    }
+  }, [newPassword]);
+
+  // ================= OTP TIMER =================
+  useEffect(() => {
+    if (timer <= 0) return;
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  // ================= STEP 1 SEND OTP =================
   const sendOtp = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!email) return handleError("Please enter your email");
 
     try {
@@ -33,6 +64,7 @@ const ForgotPassword = () => {
       if (data.success) {
         handleSuccess(data.message);
         setStep(2);
+        setTimer(60);
       } else {
         handleError(data.message);
       }
@@ -43,10 +75,33 @@ const ForgotPassword = () => {
     }
   };
 
-  // STEP 2
+  // ================= OTP CHANGE =================
+  const handleOtpChange = (value, index) => {
+    if (!/^\d?$/.test(value)) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < 5) {
+      document.getElementById(`otp-${index + 1}`).focus();
+    }
+  };
+
+  // 🔥 BACKSPACE MOVE BACKWARD
+  const handleOtpKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      document.getElementById(`otp-${index - 1}`).focus();
+    }
+  };
+
+  // ================= STEP 2 VERIFY OTP =================
   const verifyOtp = async (e) => {
     e.preventDefault();
-    if (!otp) return handleError("Enter OTP");
+
+    const otpValue = otp.join("");
+    if (otpValue.length !== 6) return handleError("Enter complete OTP");
+    if (timer === 0) return handleError("OTP expired. Please resend.");
 
     try {
       setLoading(true);
@@ -54,7 +109,7 @@ const ForgotPassword = () => {
       const res = await fetch(`${API}/api/auth/verify-reset-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
+        body: JSON.stringify({ email, otp: otpValue }),
       });
 
       const data = await res.json();
@@ -72,10 +127,15 @@ const ForgotPassword = () => {
     }
   };
 
-  // STEP 3
+  // ================= STEP 3 RESET PASSWORD =================
   const resetPassword = async (e) => {
     e.preventDefault();
-    if (!newPassword) return handleError("Enter new password");
+
+    if (!newPassword || !confirmPassword)
+      return handleError("Please fill all fields");
+
+    if (newPassword !== confirmPassword)
+      return handleError("Passwords do not match");
 
     try {
       setLoading(true);
@@ -103,7 +163,6 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen bg-[#0b0e11] text-white flex">
-
       {/* LEFT SIDE */}
       <div className="hidden lg:flex w-1/2 items-center justify-center px-16">
         <div>
@@ -149,10 +208,9 @@ const ForgotPassword = () => {
               <button
                 disabled={loading}
                 className={`w-full py-3 rounded-lg font-semibold transition
-                ${
-                  loading
-                    ? "bg-gray-600"
-                    : "bg-yellow-400 hover:bg-yellow-500 text-black"
+                ${loading
+                  ? "bg-gray-600"
+                  : "bg-yellow-400 hover:bg-yellow-500 text-black"
                 }`}
               >
                 {loading ? "Sending OTP..." : "Send OTP"}
@@ -163,21 +221,45 @@ const ForgotPassword = () => {
           {/* STEP 2 */}
           {step === 2 && (
             <form onSubmit={verifyOtp} className="space-y-5">
-              <input
-                type="text"
-                placeholder="Enter 6 digit OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700 focus:border-yellow-400 outline-none"
-              />
+              <div className="flex justify-between gap-2">
+                {otp.map((digit, index) => (
+                  <input
+                    key={index}
+                    id={`otp-${index}`}
+                    type="text"
+                    maxLength="1"
+                    value={digit}
+                    onChange={(e) =>
+                      handleOtpChange(e.target.value, index)
+                    }
+                    onKeyDown={(e) =>
+                      handleOtpKeyDown(e, index)
+                    }
+                    className="w-12 h-12 text-center text-lg rounded-lg bg-[#0b0e11] border border-yellow-400 focus:outline-none"
+                  />
+                ))}
+              </div>
+
+              {timer > 0 ? (
+                <p className="text-gray-400 text-sm text-center">
+                  OTP valid for {timer}s
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={sendOtp}
+                  className="text-yellow-400 text-sm hover:underline text-center w-full"
+                >
+                  Resend OTP
+                </button>
+              )}
 
               <button
                 disabled={loading}
                 className={`w-full py-3 rounded-lg font-semibold transition
-                ${
-                  loading
-                    ? "bg-gray-600"
-                    : "bg-yellow-400 hover:bg-yellow-500 text-black"
+                ${loading
+                  ? "bg-gray-600"
+                  : "bg-yellow-400 hover:bg-yellow-500 text-black"
                 }`}
               >
                 {loading ? "Verifying..." : "Verify OTP"}
@@ -188,21 +270,68 @@ const ForgotPassword = () => {
           {/* STEP 3 */}
           {step === 3 && (
             <form onSubmit={resetPassword} className="space-y-5">
-              <input
-                type="password"
-                placeholder="Enter new password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700 focus:border-yellow-400 outline-none"
-              />
+
+              {/* New Password */}
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter new password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full px-4 py-3 pr-12 rounded-lg bg-[#0b0e11] border border-gray-700 focus:border-yellow-400 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 text-gray-400 text-sm"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
+
+              {/* Password Strength */}
+              {newPassword && (
+                <div>
+                  <div className="h-2 rounded-full bg-gray-700 overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-300 ${
+                        passwordStrength === "Weak"
+                          ? "w-1/3 bg-red-500"
+                          : passwordStrength === "Medium"
+                          ? "w-2/3 bg-yellow-400"
+                          : "w-full bg-green-500"
+                      }`}
+                    ></div>
+                  </div>
+                </div>
+              )}
+
+              {/* Confirm Password */}
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-3 pr-12 rounded-lg bg-[#0b0e11] border border-gray-700 focus:border-yellow-400 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowConfirmPassword(!showConfirmPassword)
+                  }
+                  className="absolute right-3 top-3 text-gray-400 text-sm"
+                >
+                  {showConfirmPassword ? "Hide" : "Show"}
+                </button>
+              </div>
 
               <button
                 disabled={loading}
                 className={`w-full py-3 rounded-lg font-semibold transition
-                ${
-                  loading
-                    ? "bg-gray-600"
-                    : "bg-green-500 hover:bg-green-600 text-white"
+                ${loading
+                  ? "bg-gray-600"
+                  : "bg-green-500 hover:bg-green-600 text-white"
                 }`}
               >
                 {loading ? "Updating..." : "Reset Password"}
@@ -216,6 +345,7 @@ const ForgotPassword = () => {
               Login
             </Link>
           </p>
+
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -19,27 +19,27 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminHistory from "./pages/AdminHistory";
 import TermsConditions from "./pages/TermsConditions";
 import Layout from "./pages/Layout";
-
+import ScrollToTop from "./components/ScrollToTop";
 
 
 function App() {
   return (
     <div className="App">
       <Toaster position="top-center" />
+      <ScrollToTop />
 
       <Routes>
+
         {/* Redirect root */}
-<Route
-  path="/"
-  element={
-    localStorage.getItem("token")
-      ? <Navigate to="/dashboard" />
-      : <Navigate to="/home" />
-  }
-/>
+        <Route
+          path="/"
+          element={
+            localStorage.getItem("token")
+              ? <Navigate to="/home" />
+              : <Navigate to="/home" />
+          }
+        />
 
-
-        {/* Layout Wrapper */}
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
@@ -47,95 +47,85 @@ function App() {
           <Route path="/terms" element={<TermsConditions />} />
         </Route>
 
-        {/* Public Pages */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        
-      
-       
-       
 
-        {/* User Protected */}
-   {/* USER PROTECTED ROUTES */}
-<Route
-  path="/dashboard"
-  element={
-    <PrivateRoute>
-      <Finalpage />
-    </PrivateRoute>
-  }
-/>
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Finalpage />
+            </PrivateRoute>
+          }
+        />
 
-<Route
-  path="/finalpage"
-  element={
-    <PrivateRoute>
-      <Finalpage />
-    </PrivateRoute>
-  }
-/>
+        <Route
+          path="/finalpage"
+          element={
+            <PrivateRoute>
+              <Finalpage />
+            </PrivateRoute>
+          }
+        />
 
-<Route
-  path="/userorder"
-  element={
-    <PrivateRoute>
-      <UserOrder />
-    </PrivateRoute>
-  }
-/>
+        <Route
+          path="/userorder"
+          element={
+            <PrivateRoute>
+              <UserOrder />
+            </PrivateRoute>
+          }
+        />
 
-<Route
-  path="/myorder"
-  element={
-    <PrivateRoute>
-      <MyOrders />
-    </PrivateRoute>
-  }
-/>
+        <Route
+          path="/myorder"
+          element={
+            <PrivateRoute>
+              <MyOrders />
+            </PrivateRoute>
+          }
+        />
 
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
 
-{/* ADMIN PROTECTED ROUTES */}
-<Route
-  path="/admin/dashboard"
-  element={
-    <AdminRoute>
-      <AdminDashboard />
-    </AdminRoute>
-  }
-/>
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <AdminUsers />
+            </AdminRoute>
+          }
+        />
 
-<Route
-  path="/admin/users"
-  element={
-    <AdminRoute>
-      <AdminUsers />
-    </AdminRoute>
-  }
-/>
+        <Route
+          path="/admin/history"
+          element={
+            <AdminRoute>
+              <AdminHistory />
+            </AdminRoute>
+          }
+        />
 
-<Route
-  path="/admin/history"
-  element={
-    <AdminRoute>
-      <AdminHistory />
-    </AdminRoute>
-  }
-/>
+        <Route
+          path="/adminorderdashboard"
+          element={
+            <AdminRoute>
+              <AdminOrderDashboard />
+            </AdminRoute>
+          }
+        />
 
-<Route
-  path="/adminorderdashboard"
-  element={
-    <AdminRoute>
-      <AdminOrderDashboard />
-    </AdminRoute>
-  }
-/>
-
-
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/home" />} />
+
       </Routes>
     </div>
   );
