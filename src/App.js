@@ -20,6 +20,9 @@ import AdminHistory from "./pages/AdminHistory";
 import TermsConditions from "./pages/TermsConditions";
 import Layout from "./pages/Layout";
 import ScrollToTop from "./components/ScrollToTop";
+import AdminWithdrawals from "./pages/AdminWithdrawals";
+import AdminActiveUsers from "./pages/AdminActiveUsers";
+
 
 
 function App() {
@@ -27,7 +30,7 @@ function App() {
     <div className="App">
       <Toaster position="top-center" />
       <ScrollToTop />
-
+     
       <Routes>
 
         {/* Redirect root */}
@@ -123,6 +126,17 @@ function App() {
             </AdminRoute>
           }
         />
+        
+        <Route
+          path="/admin/withdrawals"
+          element={
+            <AdminRoute>
+              <AdminWithdrawals/>
+            </AdminRoute>
+          }
+        />
+        <Route path="/admin/active-users" element={<AdminActiveUsers />} />
+        
 
         <Route path="*" element={<Navigate to="/home" />} />
 

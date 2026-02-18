@@ -95,3 +95,49 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.6s ease forwards;
 }
+
+
+
+
+/* REAL WATER STYLE LIQUID */
+.liquid-blob {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.9;
+  background: linear-gradient(
+    120deg,
+    #00f0ff,
+    #00ff9d,
+    #4f46e5,
+    #9333ea,
+    #00f0ff
+  );
+  background-size: 300% 300%;
+  animation: liquidMove 8s ease-in-out infinite;
+}
+
+/* Flowing water animation */
+@keyframes liquidMove {
+  0% {
+    background-position: 0% 50%;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    background-position: 50% 100%;
+    transform: scale(1.1) rotate(10deg);
+  }
+  50% {
+    background-position: 100% 50%;
+    transform: scale(1.2) rotate(-10deg);
+  }
+  75% {
+    background-position: 50% 0%;
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    background-position: 0% 50%;
+    transform: scale(1) rotate(0deg);
+  }
+}

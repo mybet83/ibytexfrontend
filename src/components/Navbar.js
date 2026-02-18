@@ -1,30 +1,39 @@
-import { useState, useRef,useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { ChevronDown } from "lucide-react"; // 👈 arrow icon
+import { ChevronDown } from "lucide-react";
 import HeaderUserMenu from "./HeaderUserMenu";
-
+import { ThemeContext } from "./ThemeContext";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [hidden, setHidden] = useState(false);
   const [atTop, setAtTop] = useState(true);
+  const [user, setUser] = useState(null);
+
+  const { dark, setDark } = useContext(ThemeContext);
 
   const { scrollY } = useScroll();
   const lastY = useRef(0);
   const scrollTimeout = useRef(null);
   const location = useLocation();
 
+  /* ================= LOGOUT ON HOME ================= */
   useEffect(() => {
-  if (location.pathname === "/home") {
-    localStorage.removeItem("user");
-    setUser(null);
-  }
-}, [location.pathname]);
+    if (location.pathname === "/home") {
+      localStorage.removeItem("user");
+      setUser(null);
+    }
+  }, [location.pathname]);
 
+  /* ================= LOAD USER ================= */
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, []);
 
-
+  /* ================= SCROLL NAVBAR ================= */
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = lastY.current;
     setAtTop(latest < 20);
@@ -43,226 +52,156 @@ export default function Navbar() {
     lastY.current = latest;
   });
 
-  const [user, setUser] = useState(null);
-
-useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    setUser(JSON.parse(storedUser));
-  }
-}, []);
-
-
   return (
     <motion.nav
       initial={{ y: 0 }}
       animate={{ y: hidden ? -80 : 0 }}
-      transition={{
-        type: "spring",
-        stiffness: 140,
-        damping: 22,
-      }}
+      transition={{ type: "spring", stiffness: 140, damping: 22 }}
       className={`fixed top-0 left-0 w-full z-50 ${
         atTop
           ? "bg-transparent"
-          : "bg-[#0B0E11]/90 backdrop-blur-xl border-b border-white/5"
+          : "bg-[#0B0E11]/90 dark:bg-[#0B0E11]/90 bg-white/90 backdrop-blur-xl border-b border-white/5"
       }`}
     >
-      {/* 👇 Height Reduced */}
-      <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-1">
+      <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-2">
 
         {/* Logo */}
         <img src="/logot.png" alt="logo" className="w-16" />
 
         {/* Desktop Menu */}
-<div className="hidden lg:flex items-center gap-8 text-[13px] font-medium tracking-wide">
+        <div className="hidden lg:flex items-center gap-8 text-[13px] font-medium tracking-wide">
 
-  {/* Crypto Trading */}
-  <div
-    className="relative"
-    onMouseEnter={() => setActiveDropdown("crypto")}
-    onMouseLeave={() => setActiveDropdown(null)}
-  >
-    <button className="flex items-center gap-1 hover:text-yellow-400 transition">
-      Crypto Trading
-      <motion.div
-        animate={{ rotate: activeDropdown === "crypto" ? 180 : 0 }}
-        transition={{ duration: 0.25 }}
-      >
-        <ChevronDown size={16} />
-      </motion.div>
-    </button>
+          {/* Crypto Trading */}
+          <div
+            className="relative"
+            onMouseEnter={() => setActiveDropdown("crypto")}
+            onMouseLeave={() => setActiveDropdown(null)}
+          >
+            <button className="flex items-center gap-1 hover:text-yellow-400 transition">
+              Crypto Trading
+              <motion.div
+                animate={{ rotate: activeDropdown === "crypto" ? 180 : 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <ChevronDown size={16} />
+              </motion.div>
+            </button>
 
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={
-        activeDropdown === "crypto"
-          ? { opacity: 1, y: 0 }
-          : { opacity: 0, y: -10 }
-      }
-      transition={{ duration: 0.2 }}
-      className={`absolute top-8 left-0 bg-[#1E2329] border border-white/5 rounded-lg shadow-xl p-5 w-56 ${
-        activeDropdown === "crypto" ? "visible" : "invisible"
-      }`}
-    >
-      <Link
-        to="/login"
-        className="block text-gray-400 hover:text-white transition"
-      >
-        Sell USDT
-      </Link>
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={
+                activeDropdown === "crypto"
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: -10 }
+              }
+              transition={{ duration: 0.2 }}
+              className={`absolute top-8 left-0 bg-[#1E2329] border border-white/5 rounded-lg shadow-xl p-5 w-56 ${
+                activeDropdown === "crypto" ? "visible" : "invisible"
+              }`}
+            >
+              <Link to="/login" className="block text-gray-400 hover:text-white">
+                Sell USDT
+              </Link>
 
-      <Link
-        to="/signup"
-        className="block text-gray-400 hover:text-white mt-3 transition"
-      >
-        Buy USDT
-      </Link>
-    </motion.div>
-  </div>
+              <Link to="/signup" className="block text-gray-400 hover:text-white mt-3">
+                Buy USDT
+              </Link>
+            </motion.div>
+          </div>
 
-  <Link to="/home" className="hover:text-yellow-400 transition">
-    Markets
-  </Link>
+          <Link to="/home" className="hover:text-yellow-400">
+            Markets
+          </Link>
 
-  <Link to="/about" className="hover:text-yellow-400 transition">
-    About Us
-  </Link>
+          <Link to="/about" className="hover:text-yellow-400">
+            About Us
+          </Link>
+        </div>
 
-</div>
+        {/* Right Side Desktop */}
+        <div className="hidden lg:flex items-center gap-4">
 
+          {/* THEME TOGGLE */}
+          <button
+            onClick={() => setDark(!dark)}
+            className="px-3 py-2 text-sm"
+          >
+            {dark ? "🌞 Light" : "🌙 Dark"}
+          </button>
 
-        {/* Right Side */}
-        {/* Right Side */}
-{/* Desktop Only */}
-<div className="hidden lg:flex items-center gap-4">
-  {user ? (
-    <HeaderUserMenu />
-  ) : (
-    <>
-      <Link to="/login" className="text-gray-300 hover:text-white text-sm">
-        Login
-      </Link>
+          {user ? (
+            <HeaderUserMenu />
+          ) : (
+            <>
+              <Link to="/login" className="text-gray-300 hover:text-white text-sm">
+                Login
+              </Link>
 
-      <Link
-        to="/signup"
-        className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold"
-      >
-        Get Started
-      </Link>
-    </>
-  )}
-</div>
+              <Link
+                to="/signup"
+                className="px-5 py-2 rounded-full bg-yellow-400 text-black font-semibold"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
+        </div>
 
-
-
-{/* Mobile Menu Button */}
-<button
-  className="lg:hidden w-10 h-10 flex items-center justify-center relative z-[999]"
-  onClick={() => setMobileOpen(prev => !prev)}
->
-  <div className="relative w-6 h-5">
-
-    <span
-      className={`absolute left-0 w-6 h-[2px] bg-white transition-all duration-300
-      ${mobileOpen
-        ? "top-1/2 -translate-y-1/2 rotate-45"
-        : "top-0"}
-      `}
-    ></span>
-
-    <span
-      className={`absolute left-0 w-6 h-[2px] bg-white transition-all duration-300
-      ${mobileOpen
-        ? "opacity-0"
-        : "top-1/2 -translate-y-1/2"}
-      `}
-    ></span>
-
-    <span
-      className={`absolute left-0 w-6 h-[2px] bg-white transition-all duration-300
-      ${mobileOpen
-        ? "top-1/2 -translate-y-1/2 -rotate-45"
-        : "bottom-0"}
-      `}
-    ></span>
-
-  </div>
-</button>
-
-
-</div>
-
-
-
-
-
+        {/* Mobile Button */}
+        <button
+          className="lg:hidden w-10 h-10 flex items-center justify-center"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          ☰
+        </button>
+      </div>
 
       {/* Mobile Menu */}
-<motion.div
-  initial={{ height: 0 }}
-  animate={{ height: mobileOpen ? "auto" : 0 }}
-  transition={{ duration: 0.35 }}
-  className="lg:hidden bg-[#0B0E11] overflow-hidden"
->
-  <div className="flex flex-col px-6 py-6 gap-4 text-gray-300">
+      <motion.div
+        initial={{ height: 0 }}
+        animate={{ height: mobileOpen ? "auto" : 0 }}
+        transition={{ duration: 0.35 }}
+        className="lg:hidden bg-[#0B0E11] dark:bg-[#0B0E11] bg-white overflow-hidden"
+      >
+        <div className="flex flex-col px-6 py-6 gap-4 text-gray-300">
 
-    {/* Markets */}
-    <Link to="/home" onClick={() => setMobileOpen(false)}>
-      Markets
-    </Link>
+          <Link to="/home" onClick={() => setMobileOpen(false)}>
+            Markets
+          </Link>
 
-    {/* About */}
-    <Link to="/about" onClick={() => setMobileOpen(false)}>
-      About Us
-    </Link>
+          <Link to="/about" onClick={() => setMobileOpen(false)}>
+            About Us
+          </Link>
 
-    {/* Divider */}
-    <div className="pt-4 border-t border-white/10"></div>
+          {/* THEME TOGGLE MOBILE */}
+          <button
+            onClick={() => setDark(!dark)}
+            className="px-3 py-2  text-left"
+          >
+            {dark ? "🌞 Light Mode" : "🌙 Dark Mode"}
+          </button>
 
-    {/* Crypto Trading Section */}
-    <p className="text-xs uppercase tracking-wider text-gray-500">
-      Crypto Trading
-    </p>
+          {user ? (
+            <HeaderUserMenu mobile />
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="px-4 py-2 border border-gray-500 rounded-md text-center"
+              >
+                Login
+              </Link>
 
-    <Link to="/login" onClick={() => setMobileOpen(false)}>
-      Sell USDT
-    </Link>
-
-    <Link to="/signup" onClick={() => setMobileOpen(false)}>
-      Buy USDT
-    </Link>
-
-    {/* Divider */}
-    <div className="pt-4 border-t border-white/10"></div>
-
-    {/* User Section */}
-    {user ? (
-      <div className="pt-2">
-        <HeaderUserMenu mobile />
-      </div>
-    ) : (
-      <>
-        <Link to="/login" onClick={() => setMobileOpen(false)} 
-         className="px-4 py-2 bg-transparent border border-gray-500 rounded-md text-gray-300 text-center font-semibold">
-        
-          Login
-        </Link>
-
-        <Link
-          to="/signup"
-          onClick={() => setMobileOpen(false)}
-          className="px-4 py-2 rounded-md bg-yellow-400 text-black text-center font-semibold"
-        >
-          Get Started
-        </Link>
-      </>
-    )}
-
-  </div>
-</motion.div>
-
-
+              <Link
+                to="/signup"
+                className="px-4 py-2 rounded-md bg-yellow-400 text-black text-center font-semibold"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
+        </div>
+      </motion.div>
     </motion.nav>
   );
 }
