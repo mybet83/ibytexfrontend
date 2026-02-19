@@ -572,6 +572,12 @@ useEffect(() => {
                     <p className="text-sm text-gray-400 mt-1">
                       {new Date(w.createdAt).toLocaleString()}
                     </p>
+
+                      {w.status === "APPROVED" && w.adminUtrNumber && (
+      <p className="text-blue-400 text-sm mt-1">
+        UTR Number: {w.adminUtrNumber}
+      </p>
+    )}
                   </div>
 
                   <div

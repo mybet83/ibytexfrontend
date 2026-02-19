@@ -61,13 +61,15 @@ const WalletPage = ({ setActivePage }) => {
         date: o.createdAt,
       }));
 
-      const withdrawActivity = withdrawRes.data.map((w) => ({
-        id: w._id,
-        type: "WITHDRAW",
-        amount: w.amount,
-        status: w.status,
-        date: w.createdAt,
-      }));
+const withdrawActivity = withdrawRes.data.map((w) => ({
+  id: w._id,
+  type: "WITHDRAW",
+  amount: w.amount,
+  status: w.status,
+  date: w.createdAt,
+  utrNumber: w.adminUtrNumber || null,   // ✅ ADD THIS
+}));
+
 
       const combined = [...sellActivity, ...withdrawActivity]
         .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -189,12 +191,21 @@ const WalletPage = ({ setActivePage }) => {
                       ? `Sold ${item.amount} USDT`
                       : `Withdraw ₹ ${item.amount}`}
                   </p>
+                  {item.type === "WITHDRAW" && item.utrNumber && (
+  <p className="text-xs text-blue-400 mt-1">
+    UTR: {item.utrNumber}
+  </p>
+)}
+
+
 
                   {item.type === "SELL" && (
                     <p className="text-green-400 text-sm">
                       ₹ {item.inr}
                     </p>
                   )}
+
+       
 
                   <p className="text-xs text-gray-400">
                     {new Date(item.date).toLocaleString()}
@@ -215,6 +226,7 @@ const WalletPage = ({ setActivePage }) => {
                 </span>
               </div>
             ))}
+            
           </div>
         )}
       </div>

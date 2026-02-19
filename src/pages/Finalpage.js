@@ -1,308 +1,8 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import { useNavigate , Link } from "react-router-dom";
-// import Footer from "../components/Footer";
-// import WorldMap from "../components/WorldMap";
-// import Navbar from "../components/Navbar";
-// import CryptoLogos from "../components/CryptoLogos";
-// import LivePrices from "../components/LivePrices";
-// import Counter from "../components/Counter";
 
-// const API = process.env.REACT_APP_API_URL;
-
-// const Finalpage = () => {
-//   const [rate, setRate] = useState(0);
-//   const [usdt, setUsdt] = useState("");
-//   const [news, setNews] = useState([]);
-
-//   const navigate = useNavigate();
-//   const user = JSON.parse(localStorage.getItem("user"));
-
-//   const fetchRate = async () => {
-//     try {
-//       const res = await axios.get(`${API}/admin/rate`);
-//       setRate(res.data.rate || 0);
-//     } catch (err) {
-//       console.error("Rate fetch failed");
-//     }
-//   };
-
-//   const fetchNews = async () => {
-//     try {
-//       const res = await axios.get(`${API}/admin/news`);
-//       setNews(res.data || []);
-//     } catch (err) {
-//       console.error("News fetch failed");
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchRate();
-//     fetchNews();
-//   }, []);
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       fetchRate();
-//     }, 5000);
-//     return () => clearInterval(interval);
-//   }, []);
-
-//   const totalAmount = usdt ? (usdt * rate).toFixed(2) : "--";
-
-//   return (
-//     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-//       {/* MAIN NAVBAR */}
-//       <Navbar />
-
-//       {/* HERO SECTION */}
-//       {/* HERO SECTION PREMIUM */}
-//       <section className="relative min-h-screen flex items-center overflow-hidden px-6 lg:px-20 z-40">
-//         {/* WORLD MAP BACKGROUND */}
-//         <div className="absolute inset-0 -z-10 flex justify-end max-sm:bottom-40">
-//           {/* Desktop 70% Width */}
-//           <div className="hidden lg:block w-[70%] h-full">
-//             <WorldMap />
-//           </div>
-
-//           {/* Mobile Full Width */}
-//           <div className="block lg:hidden w-full h-full relative bottom-20">
-//             <WorldMap />
-//           </div>
-//         </div>
-
-//         {/* LEFT CONTENT */}
-//         <div className="relative z-20 max-w-2xl">
-//           <h1 className="text-4xl lg:text-4xl font-bold leading-tight">
-//             Welcome Back,{" "}
-//             <span className="text-yellow-400">{user?.name || "Trader"}</span> 👋
-//           </h1>
-
-//           <h2 className="mt-6 text-3xl lg:text-3xl font-bold">
-//             Start Trading Instantly
-//           </h2>
-
-//           <p className="mt-6 text-gray-400 max-w-lg text-base">
-//             Manage your USDT transactions, monitor live prices and trade
-//             securely on Ibytex Exchange.
-//           </p>
-
-//           <div
-//             className="relative bg-[#0f172a]/80 backdrop-blur-xl
-//                   border border-purple-500/20
-//                   rounded-3xl
-//                   px-7 py-6
-//                   shadow-2xl
-//                   hover:border-purple-500/40
-//                   transition-all duration-300 w-[70%] mt-6 max-lg:w-[70%] max-sm:w-[90%]"
-//           >
-//             {/* Header */}
-//             <div className="flex items-center gap-3 mb-3">
-//               {/* Logo circle */}
-//               <div
-//                 className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-600
-//                       flex items-center justify-center shadow-lg"
-//               >
-//                 <img
-//                   src="https://cryptologos.cc/logos/tether-usdt-logo.png"
-//                   alt="usdt"
-//                   className="w-6 h-6"
-//                 />
-//               </div>
-
-//               <span className="text-sm text-gray-400 tracking-wide">
-//                 Today USDT Price
-//               </span>
-
-//               {/* Price */}
-//               <div
-//                 className="text-3xl font-bold tracking-tight
-//                     bg-gradient-to-r from-green-400 to-emerald-500
-//                     bg-clip-text text-transparent"
-//               >
-//                 {rate ? `₹ ${rate}` : "Loading..."}
-//               </div>
-//             </div>
-
-//             {/* Subtle underline */}
-//             <div className="mt-4 h-[2px] w-full bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-30"></div>
-//           </div>
-//         </div>
-
-//         {/* BOTTOM CENTER SECTION */}
-//         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-6">
-//           {/* Live Price Card */}
-
-//           {/* Start Trading Button */}
-//           <div
-//             className="flex flex-col md:flex-row gap-4 mt-6 w-full
-//                 items-end md:items-start"
-//           >
-//             <button
-//               onClick={() => navigate("/userorder")}
-//               className="w-full md:w-auto px-8 py-3 bg-yellow-400 text-black
-//                font-semibold rounded-full hover:scale-105
-//                transition shadow-lg"
-//             >
-//               Sell USDT Now →
-//             </button>
-
-//             <button
-//               onClick={() => navigate("/myorder")}
-//               className="w-full md:w-auto px-8 py-3 border border-white/20
-//                rounded-full hover:bg-white/10 transition"
-//             >
-//               View Orders History
-//             </button>
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* CALCULATOR SECTION */}
-//       {/* CALCULATOR + NEWS SECTION */}
-//       <section className="py-20 px-6 lg:px-20 ">
-//         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
-//           {/* LEFT – CALCULATOR */}
-//           <div className="bg-[#181a20] rounded-2xl p-8 border border-gray-800 shadow-xl">
-//             <h2 className="text-2xl font-bold mb-2 text-yellow-400">
-//               Calculate Your USDT Value
-//             </h2>
-//             <p className="text-gray-400 mb-6 text-sm">
-//               Instant & Secure Selling Calculator
-//             </p>
-
-//             <div className="space-y-5">
-//               <div>
-//                 <label className="text-sm text-gray-400">USDT Quantity</label>
-//                 <input
-//                   type="number"
-//                   placeholder="Minimum 1 USDT"
-//                   value={usdt}
-//                   onChange={(e) => setUsdt(e.target.value)}
-//                   className="mt-2 w-full px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700 focus:border-yellow-400 outline-none"
-//                 />
-//               </div>
-
-//               <div>
-//                 <label className="text-sm text-gray-400">Today Rate</label>
-//                 <div className="mt-2 px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700">
-//                   ₹ {rate}
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <label className="text-sm text-gray-400">You Receive</label>
-//                 <div className="mt-2 px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700 font-semibold text-green-400">
-//                   ₹ {totalAmount}
-//                 </div>
-//               </div>
-
-//               <div className="flex gap-4 pt-4">
-//                 <button
-//                   onClick={() => navigate("/userorder")}
-//                   className="flex-1 py-3 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-black font-semibold transition"
-//                 >
-//                   Sell USDT
-//                 </button>
-
-//                 <button
-//                   onClick={() => navigate("/myorder")}
-//                   className="flex-1 py-3 rounded-lg border border-white/20 hover:bg-white/10 font-semibold transition"
-//                 >
-//                   My Orders
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* RIGHT – NEWS */}
-//           <div className="bg-[#181a20] rounded-2xl p-8 border border-gray-800 shadow-xl">
-//             <h3 className="text-xl font-semibold mb-6 text-yellow-400">
-//               Today Crypto News
-//             </h3>
-//             <p className="text-base  text-center text-gray-400 opacity-0 max-md:opacity-100">
-//               Scroll For More News ⬇
-//             </p>
-
-//             <ul className="space-y-4 text-gray-300 text-sm max-h-[350px] overflow-y-auto pr-2">
-//               {news.length === 0 && <li>No news available</li>}
-
-//               {news.map((n, i) => (
-//                 <li key={i} className="border-b border-gray-700 pb-3">
-//                   🔹 {n.text}
-//                 </li>
-//               ))}
-//             </ul>
-//             <p className="text-base  text-center text-yellow-400 max-md:hidden ">
-//               Scroll For More News ⬆
-//             </p>
-//           </div>
-//         </div>
-//       </section>
-
-//       <CryptoLogos />
-
-//         <div className="relative px-20 py-20 max-lg:px-5 " >
-//             <LivePrices />
-//           </div>
-
-//                     <section className="px-6 lg:px-20 py-20 max-lg:py-12 text-center">
-//         <h3 className="text-3xl font-bold text-center">Trusted by Numbers</h3>
-//         <p className="text-gray-400 text-center mt-2">
-//           Real growth, real users, real transactions
-//         </p>
-
-//         <div className="grid md:grid-cols-3 gap-10  py-10 max-lg:p">
-//           {/* Card 1 */}
-//           <div className="max-md:bg-white/10 max-md:backdrop-blur-xl max-md:rounded-xl max-md:p-6 max-md:border max-md:border-white/20 max-md:hover:border-[#09ABFF] max-md:transition">
-//             <h2 className="text-4xl lg:text-5xl font-bold text-white">
-//               $<Counter end={200} suffix="M+" />
-//             </h2>
-//             <p className="text-gray-400 mt-2">Total Trades</p>
-//           </div>
-
-//           {/* Card 2 */}
-//           <div className="max-md:bg-white/10 max-md:backdrop-blur-xl max-md:rounded-xl max-md:p-6 max-md:border max-md:border-white/20 max-md:hover:border-[#09ABFF] max-md:transition">
-//             <h2 className="text-4xl lg:text-5xl font-bold text-white">
-//               <Counter end={10} suffix="M+" />
-//             </h2>
-//             <p className="text-gray-400 mt-2">Our Users</p>
-//           </div>
-
-//           {/* Card 3 */}
-//           <div className="max-md:bg-white/10 max-md:backdrop-blur-xl max-md:rounded-xl max-md:p-6 max-md:border max-md:border-white/20 max-md:hover:border-[#09ABFF] max-md:transition">
-//             <h2 className="text-4xl lg:text-5xl font-bold text-white">
-//               <Counter end={1.5} suffix="M+" />
-//             </h2>
-//             <p className="text-gray-400 mt-2">Daily EVG Exchange</p>
-//           </div>
-//         </div>
-//       </section>
-
-//                 <section className="px-6 lg:px-20 py-20">
-//                   <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-12 border border-black/20 text-center">
-//                     <h3 className="text-3xl font-bold">Ready to Sell Your USDT?</h3>
-//                     <p className="text-gray-300 mt-3">
-//                       Join thousands of users who trust us with their crypto transactions.
-//                     </p>
-
-//                     <Link
-//                       to="/userorder"
-//                       className="inline-block mt-6 px-12 py-3 rounded-full  bg-gold-gradient text-black font-semibold"
-//                     >
-//                      Sell USDT Now
-//                     </Link>
-//                   </div>
-//                 </section>
-
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default Finalpage;
 
 import React, { useState } from "react";
+import CountUp from "react-countup";
+
 import { useEffect } from "react";
 import axios from "axios";
 import PlaceOrder from "./PlaceOrder";
@@ -437,6 +137,7 @@ const DashboardLayout = () => {
         inr: o.totalINR,
         status: o.status,
         date: o.createdAt,
+        adminNotes: o.adminNotes || "",
       }));
 
       const withdrawals = withdrawRes.data.map((w) => ({
@@ -445,6 +146,7 @@ const DashboardLayout = () => {
         amount: w.amount,
         status: w.status,
         date: w.createdAt,
+        adminUtrNumber: w.adminUtrNumber,
       }));
 
       const combined = [...orders, ...withdrawals];
@@ -510,28 +212,58 @@ const DashboardLayout = () => {
 
   /* ================= BTC ================= */
 
-  const StatCard = ({ title, value, green, badge }) => (
-    <div className="bg-[#111827] p-6 rounded-2xl border border-gray-800">
+
+
+const StatCard = ({ title, value, green, badge }) => {
+  const numericValue = Number(
+    String(value).replace(/[^0-9.-]+/g, "")
+  );
+
+  const hasRupee = String(value).includes("₹");
+  const hasUSDT = String(value).includes("USDT");
+
+  return (
+    <div className="relative bg-white/5 backdrop-blur-xl 
+                    border border-white/10 
+                    p-6 rounded-2xl 
+                    transition-all duration-300 
+                    hover:-translate-y-1 
+                    hover:shadow-[0_0_30px_rgba(255,215,0,0.15)]">
+
       {/* TITLE + BADGE */}
-      <div className="flex items-center gap-2">
-        <p className="text-gray-400 text-sm">{title}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-gray-400 text-sm tracking-wide">{title}</p>
 
         {badge && (
-          <span className="text-[10px] px-2 py-0.5 bg-red-500 text-white rounded-full animate-pulse">
+          <span className="text-[10px] px-2 py-1 
+                           bg-red-500 text-white 
+                           rounded-full animate-pulse">
             {badge}
           </span>
         )}
       </div>
 
-      {/* VALUE */}
-      <h2
-        className={`text-3xl font-bold mt-2 ${green ? "text-emerald-400" : ""}`}
-      >
-        {value}
+      {/* VALUE WITH COUNTUP */}
+      <h2 className={`text-3xl font-bold mt-4 tracking-tight 
+        ${green ? "text-emerald-400" : "text-white"}`}>
+
+        {hasRupee && "₹ "}
+        
+        <CountUp
+          end={numericValue}
+          duration={1.8}
+          separator=","
+        />
+
+        {hasUSDT && " USDT"}
       </h2>
     </div>
   );
+};
 
+
+        
+        
   return (
     <div className="h-screen flex bg-[#0b0f19] text-white overflow-hidden">
       {/* MOBILE HEADER */}
@@ -701,10 +433,34 @@ const DashboardLayout = () => {
       >
         {activePage === "dashboard" && (
           <>
-            <h1 className="text-2xl font-bold mb-2">Dashboard</h1>
-            <p className="text-gray-400 mb-8">Welcome back, {user?.name} 👋</p>
+            {/* TOP BANNER */}
+            <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-yellow-400/10 to-emerald-400/10 border border-yellow-500/20 backdrop-blur-xl flex justify-between items-center">
+              <div>
+                <h1 className="text-2xl font-bold">
+                  Welcome Back, {user?.name} 👋
+                </h1>
+                <p className="text-gray-400 text-sm mt-1">
+                  Trade Smart. Trade Secure.
+                </p>
+              </div>
 
-            <div className="grid md:grid-cols-4 gap-6 mb-8">
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 text-xs bg-red-500 rounded-full animate-pulse">
+                  LIVE
+                </span>
+                <span className="text-xl font-bold text-emerald-400">
+                  ₹ {rate}
+                </span>
+              </div>
+            </div>
+
+            {/* MARKET TICKER */}
+            <div className="overflow-hidden whitespace-nowrap mb-8 border-y border-gray-800 py-2 text-sm text-yellow-400 animate-marquee">
+              🚀 BTC +2.4% | ETH +1.8% | USDT Stable | BNB +3.1% | SOL +5.4%
+            </div>
+
+            {/* STAT CARDS */}
+            <div className="grid md:grid-cols-4 gap-6 mb-10">
               <StatCard
                 title="Live USDT Rate"
                 value={`₹ ${rate}`}
@@ -714,36 +470,28 @@ const DashboardLayout = () => {
 
               <StatCard title="Today USDT Trade" value={`${todayTrade} USDT`} />
 
-              <div
-                onClick={() => setActivePage("orders")}
-                className="cursor-pointer"
-              >
-                <StatCard
-                  title="Available Balance"
-                  value={`₹ ${formatNumber(availableBalance)}`}
-                  green
-                />
-              </div>
+              <StatCard
+                title="Available Balance"
+              value={`₹ ${Number(availableBalance).toLocaleString()}`}
 
-              <div
-                onClick={() => setActivePage("withdraw")}
-                className="cursor-pointer"
-              >
-                <StatCard
-                  title="Total Withdrawn"
-                  value={`₹ ${formatNumber(approvedWithdraw)}`}
-                />
-              </div>
+                green
+              />
+
+              <StatCard
+                title="Total Withdrawn"
+             value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
+
+              />
             </div>
 
-            {/* RECENT ORDERS */}
+            {/* RECENT ACTIVITY */}
             <div className="mt-12">
-              <div className="flex justify-between items-center mt-10 mb-4">
+              <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold">Recent Activity</h2>
 
                 <button
                   onClick={() => setActivePage("orders")}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold hover:scale-105 transition-all"
                 >
                   View All Orders →
                 </button>
@@ -752,77 +500,117 @@ const DashboardLayout = () => {
               {recentActivity.length === 0 ? (
                 <p className="text-gray-400">No recent activity</p>
               ) : (
-                <div className="space-y-5">
+                <div className="space-y-6">
                   {recentActivity.map((item) => (
                     <div
                       key={item.id}
-                      className="bg-[#111827] border border-gray-800 rounded-2xl p-6 flex justify-between items-center hover:border-yellow-500/30 transition-all duration-300"
+                      className="group relative overflow-hidden rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#111827]/80 to-[#0f172a]/80 border border-white/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(234,179,8,0.2)]"
                     >
-                      {/* LEFT SIDE */}
-                      <div className="flex items-start gap-4">
-                        {/* ICON */}
-                        <div
-                          className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold
-          ${
-            item.type === "SELL"
-              ? "bg-green-500/10 text-green-400"
-              : "bg-yellow-500/10 text-yellow-400"
-          }`}
-                        >
-                          {item.type === "SELL" ? "S" : "W"}
-                        </div>
+                      {/* LEFT COLOR STRIP */}
+                      <div
+                        className={`absolute left-0 top-0 h-full w-1 ${
+                          item.type === "SELL"
+                            ? "bg-emerald-400"
+                            : "bg-yellow-400"
+                        }`}
+                      />
 
-                        {/* TEXT CONTENT */}
-                        <div>
-                          <h3 className="text-lg font-semibold">
-                            {item.type === "SELL"
-                              ? `Sold ${item.amount} USDT`
-                              : `Withdraw ₹ ${item.amount}`}
-                          </h3>
+                      <div className="relative p-8 flex justify-between items-center">
+                        {/* LEFT SECTION */}
+                        <div className="flex  gap-6 flex-1">
+                          {/* ICON */}
+                          <div
+                            className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold ${
+                              item.type === "SELL"
+                                ? "bg-emerald-500/10 text-emerald-400"
+                                : "bg-yellow-500/10 text-yellow-400"
+                            }`}
+                          >
+                            {item.type === "SELL" ? "S" : "W"}
+                          </div>
 
-                          {item.type === "SELL" && (
-                            <p className="text-green-400 font-medium text-sm mt-1">
-                              ₹ {item.inr}
-                            </p>
-                          )}
+                          {/* CONTENT BLOCK */}
+                          <div className="flex flex-col gap-2 w-full max-w-xl">
+                            {/* TITLE */}
+                            <h3 className="text-lg font-semibold tracking-wide">
+                              {item.type === "SELL"
+                                ? `Sold ${item.amount} USDT`
+                                : `Withdraw ₹ ${item.amount}`}
+                            </h3>
 
-                          <p className="text-xs text-gray-400 mt-2">
-                            {new Date(item.date).toLocaleString()}
-                          </p>
+                            {/* AMOUNT */}
+                            {item.type === "SELL" && (
+                              <div className="text-emerald-400 font-medium text-sm">
+                               How Much Amount Recived ₹ {item.inr}
+                              </div>
+                            )}
 
-                          {/* STATUS BADGE */}
-                          <div className="mt-3">
-                            <span
-                              className={`text-xs px-3 py-1 rounded-full font-medium ${
-                                item.status === "COMPLETED" ||
-                                item.status === "APPROVED"
-                                  ? "bg-green-500/20 text-green-400"
-                                  : item.status === "REJECTED"
-                                    ? "bg-red-500/20 text-red-400"
-                                    : "bg-yellow-500/20 text-yellow-400"
-                              }`}
-                            >
-                              {item.status}
-                            </span>
+                            {/* ADMIN NOTE */}
+                            {item.adminNotes && item.adminNotes !== "" && (
+                              <div className="mt-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 px-4 py-3 w-fit min-w-[220px]">
+                                <p className="text-yellow-400 text-xs font-semibold mb-1">
+                                  Admin Note
+                                </p>
+                                <p className="text-sm text-gray-300">
+                                  {item.adminNotes}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* WITHDRAW UTR NUMBER */}
+{item.type === "WITHDRAW" && item.adminUtrNumber && (
+  <div className="mt-3 rounded-xl border border-cyan-500/30 bg-cyan-500/5 px-4 py-3 w-fit min-w-[220px]">
+    <p className="text-cyan-400 text-xs font-semibold mb-1">
+      Transaction UTR
+    </p>
+    <p className="text-sm text-gray-300 tracking-wide">
+      {item.adminUtrNumber}
+    </p>
+  </div>
+)}
+
+
+                            {/* DATE + STATUS ROW */}
+                           
                           </div>
                         </div>
-                      </div>
 
-                      {/* RIGHT SIDE BUTTON */}
-                      <button
-                        onClick={() =>
-                          setActivePage(
-                            item.type === "SELL" ? "orders" : "withdraw",
-                          )
-                        }
-                        className="px-6 py-2 rounded-xl font-semibold text-black transition-all duration-300 hover:scale-105"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #F5C56B 0%, #D4A017 100%)",
-                        }}
-                      >
-                        {item.type === "SELL" ? "View Order" : "View Withdraw"}
-                      </button>
+                        {/* RIGHT BUTTON */}
+                        <div className="ml-6 relative flex flex-col justify-end items-end">
+                          <button
+                            onClick={() =>
+                              setActivePage(
+                                item.type === "SELL" ? "orders" : "withdraw",
+                              )
+                            }
+                            className="px-6 py-2 rounded-2xl font-semibold text-black bg-gradient-to-r from-yellow-400 to-yellow-600 hover:scale-105 transition-all duration-300 shadow-lg"
+                          >
+                            View →
+                          </button>
+                           <div className="flex items-center  gap-4 mt-3">
+                              {/* DATE */}
+                              <p className="text-xs text-gray-400">
+                                {new Date(item.date).toLocaleString()}
+                              </p>
+
+                              {/* STATUS */}
+                              <span
+                                className={`px-4 py-1 text-xs rounded-full font-semibold tracking-wide ${
+                                  item.status === "COMPLETED" ||
+                                  item.status === "APPROVED"
+                                    ? "bg-emerald-500/20 text-emerald-400"
+                                    : item.status === "REJECTED"
+                                      ? "bg-red-500/20 text-red-400"
+                                      : item.status === "FAILED"
+                                        ? "bg-orange-500/20 text-orange-400"
+                                        : "bg-yellow-500/20 text-yellow-400"
+                                }`}
+                              >
+                                {item.status}
+                              </span>
+                            </div>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -844,52 +632,45 @@ const DashboardLayout = () => {
 
       {/* ================= SUPPORT ASSISTANT ================= */}
 
-{/* FLOATING BUTTON */}
-<div className="fixed bottom-6 right-6 z-50">
-  <button
-    onClick={() => setSupportOpen(true)}
-    className="w-14 h-14 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg flex items-center justify-center text-black text-2xl hover:scale-110 transition-all duration-300"
-  >
-    💬
-  </button>
-</div>
+      {/* FLOATING BUTTON */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={() => setSupportOpen(true)}
+          className="w-14 h-14 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg flex items-center justify-center text-black text-2xl hover:scale-110 transition-all duration-300"
+        >
+          💬
+        </button>
+      </div>
 
-{/* POPUP MODAL */}
-{supportOpen && (
-  <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-    <div className="bg-[#111827] p-8 rounded-2xl border border-gray-700 w-[90%] max-w-md text-center relative">
+      {/* POPUP MODAL */}
+      {supportOpen && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-[#111827] p-8 rounded-2xl border border-gray-700 w-[90%] max-w-md text-center relative">
+            <button
+              onClick={() => setSupportOpen(false)}
+              className="absolute top-3 right-4 text-gray-400 hover:text-white text-xl"
+            >
+              ✕
+            </button>
 
-      <button
-        onClick={() => setSupportOpen(false)}
-        className="absolute top-3 right-4 text-gray-400 hover:text-white text-xl"
-      >
-        ✕
-      </button>
+            <h2 className="text-xl font-bold mb-4 text-yellow-400">
+              Customer Support
+            </h2>
 
-      <h2 className="text-xl font-bold mb-4 text-yellow-400">
-        Customer Support
-      </h2>
+            <p className="text-gray-300 mb-6">Custom Support Msg in Telegram</p>
 
-      <p className="text-gray-300 mb-6">
-        Custom Support Msg in Telegram
-      </p>
-
-      <a
-        href="https://t.me/ibytex_Pays"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold hover:scale-105 transition-all duration-300 inline-block"
-      >
-        Open Telegram Support
-      </a>
-
+            <a
+              href="https://t.me/ibytex_Pays"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold hover:scale-105 transition-all duration-300 inline-block"
+            >
+              Open Telegram Support
+            </a>
+          </div>
+        </div>
+      )}
     </div>
-    
-  </div>
-)} 
-
-    </div>
-    
   );
 };
 
@@ -950,6 +731,38 @@ const SettingsPage = ({ user }) => (
 );
 
 export default DashboardLayout;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // import React, { useState, useEffect } from "react";
 // import axios from "axios";

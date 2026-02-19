@@ -134,20 +134,21 @@ export default function AdminWithdrawals() {
 
             <div>
               <p className="text-gray-400">Amount</p>
-              <p className="text-green-400 font-bold">{r.amount} USDT</p>
+              <p className="text-green-400 font-bold text-xl">₹ {r.amount}</p>
             </div>
 
             <div>
               <p className="text-gray-400">Requested On</p>
               <p>{new Date(r.createdAt).toLocaleString()}</p>
             </div>
-
-            {r.status === "APPROVED" && (
-              <div>
-                <p className="text-gray-400">UTR Number</p>
-                <p className="text-green-400">{r.utrNumber}</p>
-              </div>
-            )}
+{r.status === "APPROVED" && (
+  <div>
+    <p className="text-gray-400 text-sm mt-2">UTR Number</p>
+    <p className="text-green-400 font-semibold">
+      {r.adminUtrNumber || "Not Available"}
+    </p>
+  </div>
+)}
           </div>
 
           {r.status === "PENDING" && (
