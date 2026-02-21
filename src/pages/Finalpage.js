@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import CountUp from "react-countup";
 
@@ -10,7 +8,7 @@ import PaymentMethod from "../components/PayoutMethods";
 import UserOrderStaus from "./UserOrderStaus";
 import WithdrawPageComponent from "./WithdrawPage";
 import WalletPage from "../components/WalletPage";
-import Footer from "../components/Footer";
+import SettingsPage from "../components/SettingsPage";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -212,58 +210,50 @@ const DashboardLayout = () => {
 
   /* ================= BTC ================= */
 
+  const StatCard = ({ title, value, green, badge }) => {
+    const numericValue = Number(String(value).replace(/[^0-9.-]+/g, ""));
 
+    const hasRupee = String(value).includes("₹");
+    const hasUSDT = String(value).includes("USDT");
 
-const StatCard = ({ title, value, green, badge }) => {
-  const numericValue = Number(
-    String(value).replace(/[^0-9.-]+/g, "")
-  );
-
-  const hasRupee = String(value).includes("₹");
-  const hasUSDT = String(value).includes("USDT");
-
-  return (
-    <div className="relative bg-white/5 backdrop-blur-xl 
+    return (
+      <div className="relative bg-white/5 backdrop-blur-xl 
                     border border-white/10 
                     p-6 rounded-2xl 
                     transition-all duration-300 
                     hover:-translate-y-1 
-                    hover:shadow-[0_0_30px_rgba(255,215,0,0.15)]">
+                    hover:shadow-[0_0_30px_rgba(255,215,0,0.15)]"
+      >
+        {/* TITLE + BADGE */}
+        <div className="flex items-center justify-between">
+          <p className="text-gray-400 text-sm tracking-wide">{title}</p>
 
-      {/* TITLE + BADGE */}
-      <div className="flex items-center justify-between">
-        <p className="text-gray-400 text-sm tracking-wide">{title}</p>
-
-        {badge && (
-          <span className="text-[10px] px-2 py-1 
+          {badge && (
+            <span
+              className="text-[10px] px-2 py-1 
                            bg-red-500 text-white 
-                           rounded-full animate-pulse">
-            {badge}
-          </span>
-        )}
+                           rounded-full animate-pulse"
+            >
+              {badge}
+            </span>
+          )}
+        </div>
+
+        {/* VALUE WITH COUNTUP */}
+        <h2
+          className={`text-3xl font-bold mt-4 tracking-tight 
+        ${green ? "text-emerald-400" : "text-white"}`}
+        >
+          {hasRupee && "₹ "}
+
+          <CountUp end={numericValue} duration={1.8} separator="," />
+
+          {hasUSDT && " USDT"}
+        </h2>
       </div>
+    );
+  };
 
-      {/* VALUE WITH COUNTUP */}
-      <h2 className={`text-3xl font-bold mt-4 tracking-tight 
-        ${green ? "text-emerald-400" : "text-white"}`}>
-
-        {hasRupee && "₹ "}
-        
-        <CountUp
-          end={numericValue}
-          duration={1.8}
-          separator=","
-        />
-
-        {hasUSDT && " USDT"}
-      </h2>
-    </div>
-  );
-};
-
-
-        
-        
   return (
     <div className="h-screen flex bg-[#0b0f19] text-white overflow-hidden">
       {/* MOBILE HEADER */}
@@ -393,7 +383,6 @@ const StatCard = ({ title, value, green, badge }) => {
               >
                 🚪 Logout
               </button>
-
               <div className="px-4 py-3 mt-2 border-t border-gray-700">
                 <div className="bg-[#0f172a] rounded-lg p-3 space-y-2 border border-gray-800">
                   <div className="text-xs">
@@ -434,30 +423,40 @@ const StatCard = ({ title, value, green, badge }) => {
         {activePage === "dashboard" && (
           <>
             {/* TOP BANNER */}
-            <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-yellow-400/10 to-emerald-400/10 border border-yellow-500/20 backdrop-blur-xl flex justify-between items-center">
-              <div>
-                <h1 className="text-2xl font-bold">
-                  Welcome Back, {user?.name} 👋
-                </h1>
-                <p className="text-gray-400 text-sm mt-1">
-                  Trade Smart. Trade Secure.
-                </p>
-              </div>
+       <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl">
 
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 text-xs bg-red-500 rounded-full animate-pulse">
-                  LIVE
-                </span>
-                <span className="text-xl font-bold text-emerald-400">
-                  ₹ {rate}
-                </span>
-              </div>
-            </div>
+  {/* Glow Background */}
+  <div className="absolute -top-20 -left-20 w-72 h-72 bg-yellow-400/20 blur-[120px] rounded-full"></div>
+  <div className="absolute bottom-0 right-0 w-72 h-72 bg-emerald-400/20 blur-[120px] rounded-full"></div>
+
+  <div className="relative z-10">
+    <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-emerald-400 bg-clip-text text-transparent">
+      Welcome Back, {user?.name} 👋
+    </h1>
+    <p className="text-gray-400 text-sm mt-1">
+      Trade Smart. Trade Secure.
+    </p>
+  </div>
+
+  <div className="relative z-10 flex flex-col items-end">
+    <span className="text-xs text-gray-400 mb-1">Live USDT Price</span>
+
+    <div className="flex items-center gap-3">
+      <span className="px-3 py-1 text-xs bg-red-500 rounded-full animate-pulse shadow-lg">
+        LIVE
+      </span>
+
+      <span className="text-2xl font-bold text-emerald-400 drop-shadow-lg">
+        ₹ {rate}
+      </span>
+    </div>
+  </div>
+</div>
 
             {/* MARKET TICKER */}
-            <div className="overflow-hidden whitespace-nowrap mb-8 border-y border-gray-800 py-2 text-sm text-yellow-400 animate-marquee">
-              🚀 BTC +2.4% | ETH +1.8% | USDT Stable | BNB +3.1% | SOL +5.4%
-            </div>
+           
+
+            <div className="mb-8"></div>
 
             {/* STAT CARDS */}
             <div className="grid md:grid-cols-4 gap-6 mb-10">
@@ -472,15 +471,13 @@ const StatCard = ({ title, value, green, badge }) => {
 
               <StatCard
                 title="Available Balance"
-              value={`₹ ${Number(availableBalance).toLocaleString()}`}
-
+                value={`₹ ${Number(availableBalance).toLocaleString()}`}
                 green
               />
 
               <StatCard
                 title="Total Withdrawn"
-             value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
-
+                value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
               />
             </div>
 
@@ -541,7 +538,7 @@ const StatCard = ({ title, value, green, badge }) => {
                             {/* AMOUNT */}
                             {item.type === "SELL" && (
                               <div className="text-emerald-400 font-medium text-sm">
-                               How Much Amount Recived ₹ {item.inr}
+                                How Much Amount Recived ₹ {item.inr}
                               </div>
                             )}
 
@@ -558,20 +555,19 @@ const StatCard = ({ title, value, green, badge }) => {
                             )}
 
                             {/* WITHDRAW UTR NUMBER */}
-{item.type === "WITHDRAW" && item.adminUtrNumber && (
-  <div className="mt-3 rounded-xl border border-cyan-500/30 bg-cyan-500/5 px-4 py-3 w-fit min-w-[220px]">
-    <p className="text-cyan-400 text-xs font-semibold mb-1">
-      Transaction UTR
-    </p>
-    <p className="text-sm text-gray-300 tracking-wide">
-      {item.adminUtrNumber}
-    </p>
-  </div>
-)}
-
+                            {item.type === "WITHDRAW" &&
+                              item.adminUtrNumber && (
+                                <div className="mt-3 rounded-xl border border-cyan-500/30 bg-cyan-500/5 px-4 py-3 w-fit min-w-[220px]">
+                                  <p className="text-cyan-400 text-xs font-semibold mb-1">
+                                    Transaction UTR
+                                  </p>
+                                  <p className="text-sm text-gray-300 tracking-wide">
+                                    {item.adminUtrNumber}
+                                  </p>
+                                </div>
+                              )}
 
                             {/* DATE + STATUS ROW */}
-                           
                           </div>
                         </div>
 
@@ -587,28 +583,28 @@ const StatCard = ({ title, value, green, badge }) => {
                           >
                             View →
                           </button>
-                           <div className="flex items-center  gap-4 mt-3">
-                              {/* DATE */}
-                              <p className="text-xs text-gray-400">
-                                {new Date(item.date).toLocaleString()}
-                              </p>
+                          <div className="flex items-center  gap-4 mt-3">
+                            {/* DATE */}
+                            <p className="text-xs text-gray-400">
+                              {new Date(item.date).toLocaleString()}
+                            </p>
 
-                              {/* STATUS */}
-                              <span
-                                className={`px-4 py-1 text-xs rounded-full font-semibold tracking-wide ${
-                                  item.status === "COMPLETED" ||
-                                  item.status === "APPROVED"
-                                    ? "bg-emerald-500/20 text-emerald-400"
-                                    : item.status === "REJECTED"
-                                      ? "bg-red-500/20 text-red-400"
-                                      : item.status === "FAILED"
-                                        ? "bg-orange-500/20 text-orange-400"
-                                        : "bg-yellow-500/20 text-yellow-400"
-                                }`}
-                              >
-                                {item.status}
-                              </span>
-                            </div>
+                            {/* STATUS */}
+                            <span
+                              className={`px-4 py-1 text-xs rounded-full font-semibold tracking-wide ${
+                                item.status === "COMPLETED" ||
+                                item.status === "APPROVED"
+                                  ? "bg-emerald-500/20 text-emerald-400"
+                                  : item.status === "REJECTED"
+                                    ? "bg-red-500/20 text-red-400"
+                                    : item.status === "FAILED"
+                                      ? "bg-orange-500/20 text-orange-400"
+                                      : "bg-yellow-500/20 text-yellow-400"
+                              }`}
+                            >
+                              {item.status}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -722,318 +718,4 @@ const Payment = () => (
   </div>
 );
 
-const SettingsPage = ({ user }) => (
-  <div>
-    <h1 className="text-2xl font-bold mb-6">Settings</h1>
-    <p>Email: {user?.email}</p>
-    <p>Account ID: {user?.accountId}</p>
-  </div>
-);
-
 export default DashboardLayout;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// import { motion, AnimatePresence } from "framer-motion";
-// import CountUp from "react-countup";
-// import PlaceOrder from "./PlaceOrder";
-// import PaymentMethod from "../components/PayoutMethods";
-// import UserOrderStaus from "./UserOrderStaus";
-// import WithdrawPageComponent from "./WithdrawPage";
-
-// const API = process.env.REACT_APP_API_URL;
-
-// const DashboardLayout = () => {
-//   const [sidebarOpen, setSidebarOpen] = useState(true);
-//   const [profileOpen, setProfileOpen] = useState(false);
-//   const [activePage, setActivePage] = useState("dashboard");
-//   const [rate, setRate] = useState(0);
-//   const [orders, setOrders] = useState([]);
-//   const [todayTrade, setTodayTrade] = useState(0);
-//   const [totalSold, setTotalSold] = useState(0);
-//   const [approvedWithdraw, setApprovedWithdraw] = useState(0);
-//   const [recentActivity, setRecentActivity] = useState([]);
-
-//   const availableBalance = totalSold - approvedWithdraw;
-//   const user = JSON.parse(localStorage.getItem("user"));
-
-//   /* ================= FETCH LOGIC (UNCHANGED) ================= */
-
-//   const fetchUserOrders = async () => {
-//     const token = localStorage.getItem("token");
-
-//     const res = await axios.get(`${API}/orders/my`, {
-//       headers: { Authorization: `Bearer ${token}` },
-//     });
-
-//     const allOrders = res.data || [];
-//     setOrders(allOrders);
-
-//     const completed = allOrders.filter((o) => o.status === "COMPLETED");
-
-//     const totalINR = completed.reduce(
-//       (acc, curr) =>
-//         acc + Number(curr.usdtAmount || 0) * Number(curr.rate || 0),
-//       0
-//     );
-
-//     setTotalSold(totalINR);
-
-//     const today = new Date().toDateString();
-//     const todayCompleted = completed.filter(
-//       (o) => new Date(o.updatedAt).toDateString() === today
-//     );
-
-//     const todayTotalUSDT = todayCompleted.reduce(
-//       (acc, curr) => acc + Number(curr.usdtAmount || 0),
-//       0
-//     );
-
-//     setTodayTrade(todayTotalUSDT);
-//   };
-
-//   const fetchRate = async () => {
-//     const res = await axios.get(`${API}/admin/rate`);
-//     setRate(res.data.rate || 0);
-//   };
-
-//   const fetchApprovedWithdrawals = async () => {
-//     const token = localStorage.getItem("token");
-
-//     const res = await axios.get(`${API}/api/withdrawal/my`, {
-//       headers: { Authorization: `Bearer ${token}` },
-//     });
-
-//     const approved = res.data.filter((w) => w.status === "APPROVED");
-
-//     const total = approved.reduce(
-//       (acc, curr) => acc + Number(curr.amount),
-//       0
-//     );
-
-//     setApprovedWithdraw(total);
-//   };
-
-//   const fetchRecentActivity = async () => {
-//     const token = localStorage.getItem("token");
-
-//     const [ordersRes, withdrawRes] = await Promise.all([
-//       axios.get(`${API}/orders/my`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       }),
-//       axios.get(`${API}/api/withdrawal/my`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       }),
-//     ]);
-
-//     const orders = ordersRes.data.map((o) => ({
-//       id: o._id,
-//       type: "SELL",
-//       amount: o.usdtAmount,
-//       inr: o.totalINR,
-//       status: o.status,
-//       date: o.createdAt,
-//     }));
-
-//     const withdrawals = withdrawRes.data.map((w) => ({
-//       id: w._id,
-//       type: "WITHDRAW",
-//       amount: w.amount,
-//       status: w.status,
-//       date: w.createdAt,
-//     }));
-
-//     const combined = [...orders, ...withdrawals];
-
-//     const sorted = combined.sort(
-//       (a, b) => new Date(b.date) - new Date(a.date)
-//     );
-
-//     setRecentActivity(sorted.slice(0, 4));
-//   };
-
-//   const refreshDashboardData = () => {
-//     fetchUserOrders();
-//     fetchApprovedWithdrawals();
-//     fetchRecentActivity();
-//   };
-
-//   const WithdrawPage = () => (
-//     <WithdrawPageComponent onWithdrawSuccess={refreshDashboardData} />
-//   );
-
-//   /* ================= INITIAL LOAD ================= */
-
-//   useEffect(() => {
-//     fetchRate();
-//     fetchUserOrders();
-//     fetchApprovedWithdrawals();
-//     fetchRecentActivity();
-//   }, []);
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       refreshDashboardData();
-//       fetchRate();
-//     }, 6000);
-//     return () => clearInterval(interval);
-//   }, []);
-
-//   /* ================= UI ================= */
-
-//   return (
-//     <div className="h-screen flex bg-[#0b0f19] text-white overflow-hidden relative">
-
-//       {/* BACKGROUND GLOW */}
-//       <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-yellow-500/10 blur-[150px] rounded-full"></div>
-//       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-emerald-500/10 blur-[150px] rounded-full"></div>
-
-//       {/* SIDEBAR */}
-//       <div className="w-64 bg-[#0f172a] border-r border-white/10 backdrop-blur-xl p-5 space-y-6">
-//         <h1 className="text-xl font-bold text-yellow-400">IBYTEX</h1>
-
-//         <SidebarItem label="Dashboard" onClick={() => setActivePage("dashboard")} />
-//         <SidebarItem label="Withdraw" onClick={() => setActivePage("withdraw")} />
-//         <SidebarItem label="Orders" onClick={() => setActivePage("orders")} />
-//         <SidebarItem label="Payment" onClick={() => setActivePage("payment-method")} />
-//       </div>
-
-//       {/* MAIN */}
-//       <div className="flex-1 overflow-y-auto p-6 relative z-10">
-
-//         {activePage === "dashboard" && (
-//           <>
-//             <h1 className="text-2xl font-bold mb-1">Dashboard</h1>
-//             <p className="text-gray-400 mb-6">Welcome back, {user?.name}</p>
-
-//             {/* STATS */}
-//             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-
-//               <StatCard title="Live USDT Rate" value={rate} green badge="LIVE" />
-
-//               <StatCard title="Today Trade" value={todayTrade} />
-
-//               <StatCard title="Available Balance" value={availableBalance} green />
-
-//               <StatCard title="Total Withdrawn" value={approvedWithdraw} />
-
-//             </div>
-
-//             {/* RECENT ACTIVITY */}
-//             <div className="mt-6">
-//               <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-
-//               <div className="space-y-3">
-//                 <AnimatePresence>
-//                   {recentActivity.map((item) => (
-//                     <motion.div
-//                       key={item.id}
-//                       initial={{ opacity: 0, y: 20 }}
-//                       animate={{ opacity: 1, y: 0 }}
-//                       whileHover={{ scale: 1.01 }}
-//                       className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-4 flex justify-between items-center"
-//                     >
-//                       <div>
-//                         <p className="font-semibold">
-//                           {item.type === "SELL"
-//                             ? `Sold ${item.amount} USDT`
-//                             : `Withdraw ₹ ${item.amount}`}
-//                         </p>
-
-//                         <p className="text-xs text-gray-400 mt-1">
-//                           {new Date(item.date).toLocaleString()}
-//                         </p>
-//                       </div>
-
-//                       <button
-//                         onClick={() =>
-//                           setActivePage(item.type === "SELL" ? "orders" : "withdraw")
-//                         }
-//                         className="px-4 py-2 rounded-lg font-semibold text-black text-sm"
-//                         style={{
-//                           background:
-//                             "linear-gradient(135deg,#F5C56B 0%,#D4A017 100%)",
-//                         }}
-//                       >
-//                         View
-//                       </button>
-//                     </motion.div>
-//                   ))}
-//                 </AnimatePresence>
-//               </div>
-//             </div>
-//           </>
-//         )}
-
-//         {activePage === "withdraw" && <WithdrawPage />}
-//         {activePage === "orders" && <UserOrderStaus />}
-//         {activePage === "payment-method" && <PaymentMethod />}
-//       </div>
-//     </div>
-//   );
-// };
-
-// /* ================= COMPONENTS ================= */
-
-// const SidebarItem = ({ label, onClick }) => (
-//   <div
-//     onClick={onClick}
-//     className="cursor-pointer px-3 py-2 rounded-lg hover:bg-white/5 transition"
-//   >
-//     {label}
-//   </div>
-// );
-
-// const StatCard = ({ title, value, green, badge }) => (
-//   <motion.div
-//     whileHover={{ y: -5 }}
-//     className="bg-white/5 backdrop-blur-xl border border-white/10 p-4 rounded-xl"
-//   >
-//     <div className="flex items-center gap-2">
-//       <p className="text-gray-400 text-xs uppercase">{title}</p>
-//       {badge && (
-//         <span className="text-[9px] px-2 py-0.5 bg-red-500 rounded-full animate-pulse">
-//           {badge}
-//         </span>
-//       )}
-//     </div>
-
-//     <h2 className={`text-2xl font-bold mt-2 ${green ? "text-emerald-400" : ""}`}>
-//       ₹ <CountUp end={value} duration={1} separator="," />
-//     </h2>
-//   </motion.div>
-// );
-
-// export default DashboardLayout;

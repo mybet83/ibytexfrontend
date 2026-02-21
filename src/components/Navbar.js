@@ -60,7 +60,7 @@ export default function Navbar() {
       className={`fixed top-0 left-0 w-full z-50 ${
         atTop
           ? "bg-transparent"
-          : "bg-[#0B0E11]/90 dark:bg-[#0B0E11]/90 bg-white/90 backdrop-blur-xl border-b border-white/5"
+          : "bg-[#0B0E11]/90 dark:bg-[#0B0E11]/90 backdrop-blur-xl border-b border-white/5"
       }`}
     >
       <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-2">
@@ -122,12 +122,7 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-4">
 
           {/* THEME TOGGLE */}
-          <button
-            onClick={() => setDark(!dark)}
-            className="px-3 py-2 text-sm"
-          >
-            {dark ? "🌞 Light" : "🌙 Dark"}
-          </button>
+        
 
           {user ? (
             <HeaderUserMenu />
@@ -139,7 +134,7 @@ export default function Navbar() {
 
               <Link
                 to="/signup"
-                className="px-5 py-2 rounded-full bg-yellow-400 text-black font-semibold"
+                className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold"
               >
                 Get Started
               </Link>
@@ -149,7 +144,7 @@ export default function Navbar() {
 
         {/* Mobile Button */}
         <button
-          className="lg:hidden w-10 h-10 flex items-center justify-center"
+          className="lg:hidden w-10 h-10 flex items-center justify-center text-2xl"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           ☰
@@ -161,7 +156,7 @@ export default function Navbar() {
         initial={{ height: 0 }}
         animate={{ height: mobileOpen ? "auto" : 0 }}
         transition={{ duration: 0.35 }}
-        className="lg:hidden bg-[#0B0E11] dark:bg-[#0B0E11] bg-white overflow-hidden"
+        className="lg:hidden bg-[#0B0E11] dark:bg-[#0B0E11] overflow-hidden"
       >
         <div className="flex flex-col px-6 py-6 gap-4 text-gray-300">
 

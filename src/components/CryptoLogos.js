@@ -78,7 +78,7 @@ export default function CryptoMarquee() {
   ];
 
   return (
-    <section className="bg-black py-16 overflow-hidden">
+    <section className="py-16 overflow-hidden">
      
 
       <div className="marquee-wrapper">

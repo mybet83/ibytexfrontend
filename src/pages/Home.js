@@ -1,22 +1,29 @@
 "use client";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Counter from "../components/Counter";
 import LivePrices from "../components/LivePrices";
 import Navbar from "../components/Navbar";
 import CryptoLogos from "../components/CryptoLogos";
 import HeroSequence from "../components/HeroSequence";
-import WorldMapSection from "../components/WorldMapSection";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import Tilt from "react-parallax-tilt";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import { HiCheckCircle } from "react-icons/hi";
+// import WorldMapSection from "../components/WorldMapSection";
 import {
   HiShieldCheck,
   HiDocumentText,
   HiSupport,
-  HiCreditCard
+  HiCreditCard,
 } from "react-icons/hi";
+import { SparklesCore } from "../components/ui/sparkles";
 
 const API = process.env.REACT_APP_API_URL;
+
 
 const Home = () => {
   const [rate, setRate] = useState(0);
@@ -54,7 +61,7 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       fetchRate();
-    }, 1000);
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -78,272 +85,639 @@ const Home = () => {
       text: "PCI DSS certified",
     },
   ];
+const navigate = useNavigate();
+
+function AnimatedCounter({ end }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const duration = 1500;
+    const increment = end / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        start = end;
+        clearInterval(timer);
+      }
+      setCount(start.toFixed(1));
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [end]);
+
+
+  return <>{count}</>;
+  
+}
+
+ const particlesInit = async (engine) => {
+    await loadFull(engine);
+  };
 
   return (
-    <div className=" relative z-10 min-h-screen bg-gradient-to-br bg-black text-white">
+    <div className=" relative z-10 min-h-screen bg-white text-black dark:bg-black dark:text-white">
       <Navbar />
 
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0 -z-10 flex justify-end max-sm:bottom-40">
-          {/* Desktop 70% Width */}
-          <div className="hidden lg:block w-[70%] h-full">
-            <WorldMapSection />
-          </div>
+   <section className="relative min-h-screen flex items-center justify-center overflow-hidden 
+bg-white dark:bg-black transition-colors duration-500">
 
-          {/* Mobile Full Width */}
-          <div className="block lg:hidden w-full h-full relative bottom-20 ">
-            <WorldMapSection />
-          </div>
-        </div>
+  {/* Background Glow Effects */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute top-0 left-0 w-[500px] h-[500px] 
+    bg-blue-600/20 blur-[140px] rounded-full"></div>
 
-        {/* Content Container */}
-        <div className="relative z-10 w-full px-6 lg:px-20">
-          <div className="grid lg:grid-cols-2 items-center">
-            {/* LEFT 40% CONTENT */}
-            <div className="max-w-xl max-sm:max-w-lg">
-              <div className="relative min-h-[180px]">
-                <HeroSequence />
-              </div>
-              {/* usdt rate section  */}
-              <div className="mt-8 relative w-full max-w-md">
-                {/* Glow background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 blur-2xl opacity-40 rounded-3xl"></div>
-
-                <div
-                  className="relative bg-[#0f172a]/80 backdrop-blur-xl 
-                  border border-purple-500/20 
-                  rounded-3xl 
-                  px-7 py-6 
-                  shadow-2xl 
-                  hover:border-purple-500/40 
-                  transition-all duration-300"
-                >
-                  {/* Header */}
-                 <div className="flex items-center gap-3 mb-3">
-
-  {/* Logo circle */}
-  <div
-    className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 
-    flex items-center justify-center shadow-lg relative"
-  >
-    <img
-      src="https://cryptologos.cc/logos/tether-usdt-logo.png"
-      alt="usdt"
-      className="w-6 h-6"
-    />
-
-    {/* Blinking Live Dot */}
-    
+    <div className="absolute bottom-0 right-0 w-[500px] h-[500px] 
+    bg-yellow-500/20 blur-[140px] rounded-full"></div>
   </div>
 
+  <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+
+    {/* Main Heading */}
+    <h1 className="text-5xl md:text-7xl font-bold 
+    text-black dark:text-white leading-tight">
+
+      Buy & Sell USDT  
+
+      <span className="block italic font-light 
+      bg-gradient-to-r from-yellow-400 to-blue-400 
+      bg-clip-text text-transparent mt-2">
+        Securely & Instantly
+      </span>
+    </h1>
+
+    {/* Subtitle */}
+    <p className="mt-6 text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+      Trade digital assets with competitive rates and lightning-fast processing.
+      Trusted by thousands of users worldwide.
+    </p>
+
+    {/* CTA Button */}
+    <div className="mt-12 flex justify-center gap-5">
+    <button onClick={() => navigate("/login")} className="
+      px-12 py-13 rounded-full
+      bg-gold-gradient dark:bg-white
+      text-white dark:text-black
+      font-medium
+      hover:scale-105 transition-all duration-300 shadow-xl">
+           Sell Now →
+      </button> 
+
+<div className="flex items-center gap-4 mt-2">
+
+  {/* Logo with Glow Ring */}
+  <div className="relative">
+    <div className="absolute inset-0 
+    bg-gradient-to-r from-green-400 to-emerald-500 
+    blur-lg opacity-40 rounded-full"></div>
+
+    <div className="
+      relative w-10 h-10 rounded-full
+      bg-gradient-to-br from-green-400 to-emerald-600
+      flex items-center justify-center
+      shadow-md
+    ">
+      <img
+        src="https://cryptologos.cc/logos/tether-usdt-logo.png"
+        alt="usdt"
+        className="w-6 h-6"
+      />
+    </div>
+  </div>
+
+  {/* Text Section */}
   <div className="flex flex-col">
 
     <div className="flex items-center gap-2">
-
-      <span className="text-sm text-gray-400 tracking-wide">
-        Today USDT Price
+      <span className="text-xs text-gray-400">
+        Today USDT Rate
       </span>
 
-      {/* LIVE Badge */}
-      <span className="text-[10px] px-2 py-0.5 bg-red-500 text-white rounded-full animate-pulse">
-        LIVE
+      {/* Live Dot */}
+      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+    </div>
+
+    <div className="flex items-center gap-2 mt-1">
+
+      <span className="text-gray-400 text-4xl">₹</span>
+
+      <span className="
+        text-4xl font-bold
+        bg-gradient-to-r from-green-400 to-emerald-500
+        bg-clip-text text-transparent justify-end items-end text-end
+      ">
+        {rate ? rate : "—"}
       </span>
 
     </div>
+  </div>
 
-    {/* Price */}
-    <div
-      className="text-3xl font-bold tracking-tight relative items-end
-      bg-gradient-to-r from-green-400 to-emerald-500 
-      bg-clip-text text-transparent"
-    >
-      {rate ? `₹ ${rate}` : "Loading..."}
+</div>
     </div>
+
+    {/* ================= RATE CARD ================= */}
+
 
   </div>
-</div>
 
+</section>
 
-                  {/* Subtle underline */}
-                  <div className="mt-4 h-[2px] w-full bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-30"></div>
-                </div>
-              </div>
-
-              <Link
-                to="/signup"
-                className="inline-block mt-10 px-8 py-3 rounded-full 
-             bg-gold-gradient text-black font-semibold
-             shadow-lg hover:scale-105 transition-all duration-300"
-              >
-                Start Selling →
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="mt-10">
-             <CryptoLogos />
-      </div>
+         <div className="relative">
+         <CryptoLogos />
+         </div>
 
       {/* Live Markets + News Section */}
-      <section className="px-6 py-3 max-lg:py-14">
+      <section className="px-20 py-3 max-lg:py-4 max-lg:px-5 ">
         <LivePrices />
       </section>
 
       {/* Why Choose Us */}
-      <section className="px-6 lg:px-20  py-20 max-lg:py-10 bg-black relative overflow-hidden">
-        {/* Background Glow */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20 blur-3xl opacity-40"></div>
+   <section className="relative py-12 bg-black overflow-hidden">
 
-        <div className="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-          {/* LEFT - Team Image */}
-          <div className="relative group">
-            <img
-              src="/person.png" // 👈 rename your uploaded image to team.jpg
-              alt="iBytex Team"
-              className="rounded-2xl shadow-2xl border border-white/10"
-            />
+  {/* Subtle Background Glow */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute top-0 left-1/3 w-[400px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full"></div>
+    <div className="absolute bottom-0 right-1/3 w-[400px] h-[400px] bg-green-500/10 blur-[120px] rounded-full"></div>
+  </div>
 
-            {/* Overlay Glow */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-blue-500/10 to-purple-500/10"></div>
-          </div>
+  <div className="relative max-w-7xl mx-auto px-6 lg:px-20">
 
-          {/* RIGHT - Content */}
-          <div>
-            <h3 className="text-4xl font-bold mb-4 bg-[linear-gradient(135deg,#FFD700_0%,#00BFFF_100%)] bg-clip-text text-transparent">
-              Why Choose iBytex?
-            </h3>
+    {/* Heading */}
+    <div className="text-center mb-20">
+      <h2 className="text-5xl font-bold text-white">
+        Built on <span className="block italic font-light 
+      bg-gradient-to-r from-yellow-400 to-blue-400 
+      bg-clip-text text-transparent mt-2">
+          Trust & Transparency
+        </span>
+      </h2>
+      <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
+        We combine enterprise-grade infrastructure with regulatory compliance
+        to ensure every transaction is secure, traceable and protected.
+      </p>
+    </div>
 
-            <p className="text-gray-400 mb-8 leading-7">
-              Backed by a professional financial team and a secure
-              infrastructure, iBytex ensures fast USDT transactions with full
-              transparency and reliability.
-            </p>
+    <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-            <div className="space-y-6">
-              <div className="flex gap-4 items-start">
-                <div className="text-2xl">⚡</div>
-                <div>
-                  <h4 className="text-lg font-semibold text-white">
-                    Lightning Fast Processing
-                  </h4>
-                  <p className="text-gray-400 text-sm">
-                    Orders processed within minutes with instant confirmations.
-                  </p>
-                </div>
-              </div>
+      {/* LEFT SIDE – PROOF CARDS */}
+      <div className="space-y-8">
 
-              <div className="flex gap-4 items-start">
-                <div className="text-2xl">🔒</div>
-                <div>
-                  <h4 className="text-lg font-semibold text-white">
-                    Bank-Grade Security
-                  </h4>
-                  <p className="text-gray-400 text-sm">
-                    Encrypted transactions, AML compliance & secure wallet
-                    systems.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 items-start">
-                <div className="text-2xl">🌍</div>
-                <div>
-                  <h4 className="text-lg font-semibold text-white">
-                    Global Trusted Platform
-                  </h4>
-                  <p className="text-gray-400 text-sm">
-                    Serving thousands of verified users worldwide.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 items-start">
-                <div className="text-2xl">💬</div>
-                <div>
-                  <h4 className="text-lg font-semibold text-white">
-                     Dedicated Customer Support
-                  </h4>
-                  <p className="text-gray-400 text-sm">
-                    Our professional support team is available around the clock
-                    to assist you with transactions, verification, and queries.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Card 1 */}
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-blue-400/40 transition">
+          <h3 className="text-xl font-semibold text-white mb-2">
+            🔐 Bank-Level Encryption
+          </h3>
+          <p className="text-gray-400 text-sm">
+            All transactions are secured with AES-256 encryption and monitored
+            with real-time fraud detection systems.
+          </p>
         </div>
-      </section>
 
-      <section className="px-6 lg:px-12 max-lg:py-12 text-center">
-        <h3 className="text-3xl font-bold text-center">Trusted by Numbers</h3>
-        <p className="text-gray-400 text-center mt-2">
-          Real growth, real users, real transactions
-        </p>
-
-        <div className="grid md:grid-cols-3 gap-10  py-10 max-lg:p">
-          {/* Card 1 */}
-          <div className="max-md:bg-white/10 max-md:backdrop-blur-xl max-md:rounded-xl max-md:p-6 max-md:border max-md:border-white/20 max-md:hover:border-[#09ABFF] max-md:transition">
-            <h2 className="text-4xl lg:text-5xl font-bold text-white">
-              $<Counter end={200} suffix="M+" />
-            </h2>
-            <p className="text-gray-400 mt-2">Total Trades</p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="max-md:bg-white/10 max-md:backdrop-blur-xl max-md:rounded-xl max-md:p-6 max-md:border max-md:border-white/20 max-md:hover:border-[#09ABFF] max-md:transition">
-            <h2 className="text-4xl lg:text-5xl font-bold text-white">
-              <Counter end={10} suffix="M+" />
-            </h2>
-            <p className="text-gray-400 mt-2">Our Users</p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="max-md:bg-white/10 max-md:backdrop-blur-xl max-md:rounded-xl max-md:p-6 max-md:border max-md:border-white/20 max-md:hover:border-[#09ABFF] max-md:transition">
-            <h2 className="text-4xl lg:text-5xl font-bold text-white">
-              $<Counter end={1.5} suffix="M+" />
-            </h2>
-            <p className="text-gray-400 mt-2">Daily EVG Exchange</p>
-          </div>
+        {/* Card 2 */}
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-green-400/40 transition">
+          <h3 className="text-xl font-semibold text-white mb-2">
+            📊 Real-Time Market Execution
+          </h3>
+          <p className="text-gray-400 text-sm">
+            USDT conversions happen instantly at live rates — no hidden spreads,
+            no artificial delays.
+          </p>
         </div>
-      </section>
 
-      {/* CTA */}
-     <section className="relative py-20">
-      <div className="max-w-8xl mx-auto px-6 lg:px-20 py-10">
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-
-          {items.map((item, index) => (
-            <div
-              key={index}
-              className="
-                group flex items-center gap-4
-                px-6 py-4
-                rounded-xl
-               
-              "
-            >
-              <div
-                className="
-                  text-yellow-400 text-2xl
-                  transition duration-300
-                  group-hover:scale-110
-                "
-              >
-                {item.icon}
-              </div>
-
-              <p className="text-sm md:text-base text-gray-300 font-medium tracking-wide">
-                {item.text}
-              </p>
-            </div>
-          ))}
-
+        {/* Card 3 */}
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-yellow-400/40 transition">
+          <h3 className="text-xl font-semibold text-white mb-2">
+            🛡 Fully AML & KYC Compliant
+          </h3>
+          <p className="text-gray-400 text-sm">
+            We follow strict Anti-Money Laundering and Know Your Customer
+            guidelines to maintain platform integrity.
+          </p>
         </div>
+
       </div>
-    </section>
+
+      {/* RIGHT SIDE – LIVE TRUST METRICS */}
+      <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12">
+
+        <h3 className="text-2xl font-semibold text-white mb-8">
+          Platform Performance
+        </h3>
+
+        <div className="space-y-8">
+
+          <div>
+            <div className="flex justify-between text-sm text-gray-400 mb-2">
+              <span>Transaction Success Rate</span>
+              <span>99.98%</span>
+            </div>
+            <div className="w-full bg-white/10 h-2 rounded-full">
+              <div className="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full w-[99%]"></div>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex justify-between text-sm text-gray-400 mb-2">
+              <span>Average Processing Time</span>
+              <span>2–5 Minutes</span>
+            </div>
+            <div className="w-full bg-white/10 h-2 rounded-full">
+              <div className="bg-gradient-to-r from-blue-400 to-cyan-500 h-2 rounded-full w-[85%]"></div>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex justify-between text-sm text-gray-400 mb-2">
+              <span>Customer Satisfaction</span>
+              <span>4.9 / 5</span>
+            </div>
+            <div className="w-full bg-white/10 h-2 rounded-full">
+              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full w-[95%]"></div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Compliance Badges */}
+        <div className="flex flex-wrap gap-4 mt-10">
+
+          <div className="px-4 py-2 bg-white/10 border border-white/10 rounded-lg text-xs text-gray-300">
+            ISO 27001 Certified
+          </div>
+
+          <div className="px-4 py-2 bg-white/10 border border-white/10 rounded-lg text-xs text-gray-300">
+            AML Verified
+          </div>
+
+          <div className="px-4 py-2 bg-white/10 border border-white/10 rounded-lg text-xs text-gray-300">
+            PCI DSS Secure
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section className="relative py-12 overflow-hidden">
+
+  {/* Background Glow */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600/10 blur-[140px] rounded-full"></div>
+    <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-green-500/10 blur-[140px] rounded-full"></div>
+  </div>
+
+  <div className="relative z-10 max-w-6xl mx-auto px-6">
+
+    {/* Heading */}
+    <div className="text-center mb-20">
+      <h2 className="text-5xl font-bold text-white">
+        How iBytex Works
+      </h2>
+      <p className="text-gray-400 mt-4 text-xl block italic font-light 
+      bg-gradient-to-r from-yellow-400 to-blue-400 
+      bg-clip-text text-transparent ">
+        Convert USDT to INR in 3 seamless steps
+      </p>
+    </div>
+
+    <div className="relative">
+
+      {/* Vertical Timeline Line */}
+      <div className="hidden md:block absolute left-1/2 top-0 h-full w-[2px] 
+      bg-gradient-to-b from-blue-500 via-green-500 to-yellow-500 opacity-40"></div>
+
+      <div className="space-y-24">
+
+        {/* STEP 01 */}
+        <div className="relative md:grid md:grid-cols-2 md:gap-16 items-center">
+
+          {/* Left Content */}
+          <div className="md:text-right">
+            <span className="text-6xl font-bold text-white/30">
+              01
+            </span>
+            <h3 className="text-2xl font-semibold text-white mt-4">
+              Deposit USDT
+            </h3>
+            <p className="text-gray-400 mt-3">
+              Send USDT via TRC20 securely to your wallet address.
+            </p>
+          </div>
+
+          {/* Right Card */}
+          <div className="relative mt-10 md:mt-0 group">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-cyan-400/20 blur-xl opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+            <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 hover:border-blue-400/40 transition duration-300">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center text-white text-3xl shadow-lg">
+                ⬇
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        {/* STEP 02 */}
+      <div className="relative flex flex-col md:grid md:grid-cols-2 md:gap-16 items-center">
+
+          {/* Left Card */}
+         <div className="relative order-2 md:order-1 group mt-10 md:mt-0 w-full">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500/20 to-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+            <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 hover:border-green-400/40 transition duration-300">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-3xl shadow-lg">
+                🔄
+              </div>
+            </div>
+          </div>
+
+          {/* Right Content */}
+   <div className="order-1 md:order-2 md:text-left w-full">
+            <span className="text-6xl font-bold text-white/30">
+              02
+            </span>
+            <h3 className="text-2xl font-semibold text-white mt-4">
+              Instant Conversion
+            </h3>
+            <p className="text-gray-400 mt-3">
+              Your USDT is converted at live market rates with zero hidden fees.
+            </p>
+          </div>
+        </div>
+
+
+        {/* STEP 03 */}
+        <div className="relative md:grid md:grid-cols-2 md:gap-16 items-center">
+
+          {/* Left Content */}
+          <div className="md:text-right">
+            <span className="text-6xl font-bold text-white/30">
+              03
+            </span>
+            <h3 className="text-2xl font-semibold text-white mt-4">
+              Receive INR
+            </h3>
+            <p className="text-gray-400 mt-3">
+              Funds are transferred directly to your bank account or UPI instantly.
+            </p>
+          </div>
+
+          {/* Right Card */}
+          <div className="relative mt-10 md:mt-0 group">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-400/20 to-orange-400/20 blur-xl opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+            <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 hover:border-yellow-400/40 transition duration-300">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white text-3xl shadow-lg">
+                💳
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+     {/* ================= TRUSTED BY NUMBERS ================= */}
+
+
+{/* ================= WORLD CLASS TRUST SECTION ================= */}
+
+{/* ================= ULTRA NEXT LEVEL TRUST SECTION ================= */}
+<section className="relative py-12 overflow-hidden bg-black">
+
+  {/* Animated Grid Background */}
+  <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+
+  {/* Particle Effect */}
+ <Particles
+  className="absolute inset-0"
+  init={particlesInit}
+  options={{
+    background: { color: { value: "transparent" } },
+    fpsLimit: 60,
+    particles: {
+    
+      size: { value: 2 },
+      move: { speed: 0.3 },
+      opacity: { value: 0.3 },
+      links: { enable: false },
+    },
+    detectRetina: true,
+  }}
+/>
+
+  <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 text-center">
+
+    {/* Heading */}
+    <motion.h2
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: true }}
+      className="text-6xl font-bold text-white mb-8"
+    >
+      Trusted by the{" "}
+      <span className="">
+        World
+      </span>
+    </motion.h2>
+
+    <p className="text-gray-400 max-w-2xl mx-auto mb-20 text-lg block italic font-light 
+      bg-gradient-to-r from-yellow-400 to-blue-400 
+      bg-clip-text text-transparent mt-2">
+      Real-time growth metrics powering next-generation crypto exchange infrastructure.
+    </p>
+
+    {/* Stats Grid */}
+    <div className="grid md:grid-cols-3 gap-12">
+
+      {[
+        { prefix: "$", end: 200, suffix: "M+", label: "Total Trade", gradient: "from-yellow-400 to-orange-500" },
+        { prefix: "", end: 10, suffix: "M+", label: "Active Users", gradient: "from-blue-400 to-cyan-400" },
+        { prefix: "$", end: 1.5, suffix: "M+", label: "Daily Avg Exchange", gradient: "from-green-400 to-emerald-500" }
+      ].map((item, index) => (
+        
+        <Tilt
+          key={index}
+          tiltMaxAngleX={10}
+          tiltMaxAngleY={10}
+          glareEnable={true}
+          glareMaxOpacity={0.2}
+          className="group"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.2 }}
+            viewport={{ once: true }}
+            className="relative p-[2px] rounded-3xl"
+          >
+
+            {/* Animated Border Sweep */}
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/20 to-transparent 
+            bg-[length:200%_100%] animate-[borderSweep_3s_linear_infinite] opacity-0 group-hover:opacity-100"></div>
+
+            {/* Card */}
+            <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-14 text-center transition duration-500 group-hover:scale-[1.05]">
+
+              {/* Floating Number */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 4 }}
+                className={`text-5xl font-bold bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent`}
+              >
+                {item.prefix}
+                <AnimatedCounter end={item.end} />
+                {item.suffix}
+              </motion.div>
+
+              <div className="w-16 h-[2px] bg-white/10 mx-auto my-6"></div>
+
+              <p className="text-gray-400 uppercase tracking-widest text-sm">
+                {item.label}
+              </p>
+
+            </div>
+
+          </motion.div>
+        </Tilt>
+
+      ))}
+
+    </div>
+
+  </div>
+</section>
+
+  
+  
+  
+
+
+{/* ================= ULTRA PREMIUM TRUST SECTION ================= */}
+<section className="relative py-24 overflow-hidden">
+
+  {/* Background Glow */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-600/10 blur-[140px] rounded-full"></div>
+    <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-yellow-500/10 blur-[140px] rounded-full"></div>
+  </div>
+
+  <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-20">
+
+    {/* Heading */}
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+      className="text-center mb-16"
+    >
+      <h3 className="text-4xl md:text-5xl font-bold text-white">
+        Security & Trust
+      </h3>
+      <p className="text-gray-400 mt-4">
+        Built with enterprise-grade infrastructure and compliance standards
+      </p>
+    </motion.div>
+
+    {/* Feature Grid */}
+    <div className="grid md:grid-cols-4 gap-8">
+
+      {items.map((item, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          viewport={{ once: true }}
+          className="group relative rounded-2xl p-[1px]"
+        >
+
+          {/* Animated Gradient Border */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r 
+          from-yellow-400 via-orange-500 to-yellow-400
+          bg-[length:200%_200%] animate-[gradientMove_4s_linear_infinite]
+          opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
+
+          {/* Card */}
+          <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 
+          rounded-2xl p-6 flex items-center gap-4
+          transition-all duration-300
+          group-hover:scale-[1.05]">
+
+            {/* Icon Box */}
+            <div className="w-12 h-12 rounded-xl 
+            bg-gradient-to-br from-yellow-400 to-orange-500
+            flex items-center justify-center text-black text-xl shadow-lg">
+              {item.icon}
+            </div>
+
+            {/* Text */}
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-gray-300 group-hover:text-white transition duration-300">
+                {item.text}
+              </span>
+
+              {/* Animated Checkmark */}
+              <HiCheckCircle className="text-green-400 text-lg mt-1 
+              opacity-0 translate-y-2 
+              group-hover:opacity-100 group-hover:translate-y-0 
+              transition duration-300" />
+            </div>
+
+          </div>
+        </motion.div>
+      ))}
+    </div>
+
+    {/* Trust Badges */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: true }}
+      className="flex flex-wrap justify-center gap-8 mt-20"
+    >
+
+      <div className="bg-white/5 backdrop-blur-xl border border-white/10 
+      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-blue-400/40 transition">
+        🛡 ISO 27001 Certified
+      </div>
+
+      <div className="bg-white/5 backdrop-blur-xl border border-white/10 
+      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-green-400/40 transition">
+        🔍 AML & KYC Verified
+      </div>
+
+      <div className="bg-white/5 backdrop-blur-xl border border-white/10 
+      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-yellow-400/40 transition">
+        🔐 PCI DSS Secure
+      </div>
+
+      <div className="bg-white/5 backdrop-blur-xl border border-white/10 
+      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-purple-400/40 transition">
+        🌍 Global Compliance Ready
+      </div>
+
+    </motion.div>
+
+  </div>
+</section>
+
+
+
+
+
+
+
       <Footer />
     </div>
   );

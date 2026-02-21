@@ -7,7 +7,21 @@ html {
   scroll-behavior: smooth;
 }
 
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
 
+@keyframes borderSweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 .react-tel-input .flag-dropdown {
   background: rgba(0, 0, 0, 0.4) !important;
   border: 1px solid #4b5563 !important;
@@ -118,36 +132,3 @@ body {
   animation: liquidMove 8s ease-in-out infinite;
 }
 
-/* Flowing water animation */
-@keyframes liquidMove {
-  0% {
-    background-position: 0% 50%;
-    transform: scale(1) rotate(0deg);
-  }
-  25% {
-    background-position: 50% 100%;
-    transform: scale(1.1) rotate(10deg);
-  }
-  50% {
-    background-position: 100% 50%;
-    transform: scale(1.2) rotate(-10deg);
-  }
-  75% {
-    background-position: 50% 0%;
-    transform: scale(1.1) rotate(5deg);
-  }
-  100% {
-    background-position: 0% 50%;
-    transform: scale(1) rotate(0deg);
-  }
-}
-
-
-@keyframes marquee {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
-}
-
-.animate-marquee {
-  animation: marquee 15s linear infinite;
-}
