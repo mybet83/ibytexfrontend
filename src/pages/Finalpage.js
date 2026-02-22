@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import CountUp from "react-countup";
-
 import { useEffect } from "react";
 import axios from "axios";
 import PlaceOrder from "./PlaceOrder";
@@ -9,6 +8,15 @@ import UserOrderStaus from "./UserOrderStaus";
 import WithdrawPageComponent from "./WithdrawPage";
 import WalletPage from "../components/WalletPage";
 import SettingsPage from "../components/SettingsPage";
+import {
+  HiHome,
+  HiCash,
+  HiArrowDown,
+  HiArrowUp,
+  HiCube,
+  HiCreditCard,
+  HiCog
+} from "react-icons/hi";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -325,43 +333,43 @@ const DashboardLayout = () => {
         <nav className="p-4 space-y-3 flex-1">
           <SidebarItem
             label="Dashboard"
-            icon="🏠"
+             icon={<HiHome />}
             open={sidebarOpen}
             onClick={() => setActivePage("dashboard")}
           />
           <SidebarItem
             label="Wallet"
-            icon="💼"
+             icon={<HiCash />}
             open={sidebarOpen}
             onClick={() => setActivePage("wallet")}
           />
           <SidebarItem
-            label="Deposit"
-            icon="⬇"
+            label="Sell USDT"
+             icon={<HiArrowDown />}
             open={sidebarOpen}
             onClick={() => setActivePage("deposit")}
           />
           <SidebarItem
-            label="Withdraw"
-            icon="⬆"
+            label="Withdrawal"
+              icon={<HiArrowUp />}
             open={sidebarOpen}
             onClick={() => setActivePage("withdraw")}
           />
           <SidebarItem
             label="Orders"
-            icon="📦"
+            icon={<HiCube />}
             open={sidebarOpen}
             onClick={() => setActivePage("orders")}
           />
           <SidebarItem
             label="Payment Method"
-            icon="📦"
+            icon={<HiCreditCard />}
             open={sidebarOpen}
             onClick={() => setActivePage("payment-method")}
           />
           <SidebarItem
             label="Settings"
-            icon="⚙"
+            icon={<HiCog />}
             open={sidebarOpen}
             onClick={() => setActivePage("settings")}
           />
@@ -431,39 +439,47 @@ flex justify-around items-center
 py-2 z-50"
       >
         <BottomItem
-          icon="🏠"
+                icon={<HiHome />}
           label="Home"
           active={activePage === "dashboard"}
           onClick={() => setActivePage("dashboard")}
         />
 
         <BottomItem
-          icon="💼"
+          icon={<HiCash/>}
           label="Wallet"
           active={activePage === "wallet"}
           onClick={() => setActivePage("wallet")}
         />
 
         <BottomItem
-          icon="⬇"
-          label="Deposit"
+             icon={<HiArrowUp/>}
+          label="Sell USDT"
           active={activePage === "deposit"}
           onClick={() => setActivePage("deposit")}
         />
 
         <BottomItem
-          icon="⬆"
-          label="Withdraw"
+     
+            icon={<HiArrowDown/>}
+          label="Withdrawal"
           active={activePage === "withdraw"}
           onClick={() => setActivePage("withdraw")}
         />
-
         <BottomItem
-          icon="⚙"
-          label="Settings"
-          active={activePage === "settings"}
-          onClick={() => setActivePage("settings")}
-        />
+            label="Orders"
+            icon={<HiCube />}
+            open={sidebarOpen}
+            onClick={() => setActivePage("orders")}
+          />
+          <BottomItem
+            label="Payout"
+            icon={<HiCreditCard />}
+            open={sidebarOpen}
+            onClick={() => setActivePage("payment-method")}
+          />
+
+      
       </div>
 
       {/* OVERLAY MOBILE */}
@@ -487,11 +503,12 @@ py-2 z-50"
             {/* TOP BANNER */}
             <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl max-md:flex-col">
               {/* Glow Background */}
-              <div className="absolute -top-20 -left-20 w-72 h-72 bg-yellow-400/20 blur-[120px] rounded-full"></div>
-              <div className="absolute bottom-0 right-0 w-72 h-72 bg-emerald-400/20 blur-[120px] rounded-full"></div>
+               <div className="absolute bottom-0 right-0 w-72 h-72 bg-gold-gradient blur-[120px] rounded-full"></div>
+              <div className="absolute -top-20 -left-20 w-72 h-72 bg-blue-hero   blur-[120px] rounded-full"></div>
+             
 
               <div className="relative z-10">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-emerald-400 bg-clip-text text-transparent max-md:text-[1.5rem]">
+                <h1 className="text-3xl font-bold text-white font-sn bg-clip-text text-transparent max-md:text-[1.5rem]">
                   Welcome Back, {user?.name} 👋
                 </h1>
                 <p className="text-gray-400 text-sm mt-1">
@@ -538,7 +555,7 @@ py-2 z-50"
               />
 
               <StatCard
-                title="Total Withdrawn"
+                title="Locked Withdrawn"
                 value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
               />
             </div>
@@ -802,23 +819,27 @@ const StatCard = ({ title, value, green }) => (
 );
 
 const DepositPage = () => (
-  <div>
-    <h1 className="text-2xl font-bold mb-6">Deposit</h1>
-    <PlaceOrder />
-  </div>
+ <PlaceOrder/>
 );
 
 const OrdersPage = () => (
-  <div>
-    <h1 className="text-2xl font-bold mb-6">Orders</h1>
-    <UserOrderStaus />
-  </div>
+<UserOrderStaus/>
 );
 const Payment = () => (
-  <div>
-    <h1 className="text-2xl font-bold mb-6">Payment Method</h1>
+
     <PaymentMethod />
-  </div>
+
 );
 
 export default DashboardLayout;
+
+
+
+
+
+
+
+
+
+
+
