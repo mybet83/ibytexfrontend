@@ -22,19 +22,7 @@ html {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-html, body {
 
-  background: #000;
-}
-body {
-  background-color: #000 !important;
-  color: #fff;
-}
-
-#root {
-  background-color: #000;
-  min-height: 100vh;
-}
 .react-tel-input .flag-dropdown {
   background: rgba(0, 0, 0, 0.4) !important;
   border: 1px solid #4b5563 !important;
