@@ -43,6 +43,8 @@
 
 "use client";
 
+import {motion} from 'framer-motion'
+
 export default function CryptoMarquee() {
   const logos = [
     {
@@ -81,7 +83,18 @@ export default function CryptoMarquee() {
     <section className="py-16 overflow-hidden max-md:py-8">
      
 
-      <div className="marquee-wrapper">
+      <motion.div
+                initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+      className="marquee-wrapper">
          <div className="marquee-track flex items-center">
 
           {[...logos, ...logos].map((item, index) => (
@@ -124,7 +137,7 @@ export default function CryptoMarquee() {
 
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }

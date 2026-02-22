@@ -133,7 +133,15 @@ bg-white dark:bg-black transition-colors duration-500">
     bg-yellow-500/20 blur-[140px] rounded-full"></div>
   </div>
 
-  <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+  <motion.div
+     initial={{ opacity: 0, y: 80 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{
+    delay: 3, // 🔥 4 second delay
+    duration: 2,
+    ease: [0.22, 1, 0.36, 1],
+  }}
+  className="relative z-10 max-w-5xl mx-auto px-6 text-center">
 
     {/* Main Heading */}
     <h1 className="text-5xl md:text-7xl font-bold 
@@ -155,7 +163,7 @@ bg-white dark:bg-black transition-colors duration-500">
     </p>
 
     {/* CTA Button */}
-    <div className="mt-12 flex justify-center gap-5 max-md:flex-col-reverse max-md:justify-center max-md:mx-auto max-md:items-center max-md:mt-14">
+    <div className="mt-12 flex justify-center gap-5 max-md:flex-col-reverse max-md:justify-center max-md:mx-auto max-md:items-center max-md:mt-8">
     <button onClick={() => navigate("/login")} className="
       px-12 py-13 rounded-full
       bg-gold-gradient dark:bg-white
@@ -220,7 +228,7 @@ bg-white dark:bg-black transition-colors duration-500">
     {/* ================= RATE CARD ================= */}
 
 
-  </div>
+  </motion.div>
 
 </section>
 
@@ -247,7 +255,18 @@ bg-white dark:bg-black transition-colors duration-500">
   <div className="relative max-w-7xl mx-auto px-6 lg:px-20">
 
     {/* Heading */}
-    <div className="text-center mb-20 max-md:mb-10">
+    <motion.div
+             initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+    className="text-center mb-20 max-md:mb-10">
       <h2 className="text-5xl font-bold text-white max-md:text-[2.5rem]">
         Built on <span className="block italic font-light 
       bg-gradient-to-r from-yellow-400 to-blue-400 
@@ -259,7 +278,7 @@ bg-white dark:bg-black transition-colors duration-500">
         We combine enterprise-grade infrastructure with regulatory compliance
         to ensure every transaction is secure, traceable and protected.
       </p>
-    </div>
+    </motion.div>
 
     <div className="grid lg:grid-cols-2 gap-16 items-center max-md:gap-6">
 
@@ -267,7 +286,18 @@ bg-white dark:bg-black transition-colors duration-500">
       <div className="space-y-8 max-md:space-y-6">
 
         {/* Card 1 */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-blue-400/40 transition">
+        <motion.div
+                  initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-blue-400/40 transition">
           <h3 className="text-xl font-semibold text-white mb-2">
             🔐 Bank-Level Encryption
           </h3>
@@ -275,10 +305,21 @@ bg-white dark:bg-black transition-colors duration-500">
             All transactions are secured with AES-256 encryption and monitored
             with real-time fraud detection systems.
           </p>
-        </div>
+        </motion.div>
 
         {/* Card 2 */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-green-400/40 transition">
+        <motion.div 
+                 initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-green-400/40 transition">
           <h3 className="text-xl font-semibold text-white mb-2">
             📊 Real-Time Market Execution
           </h3>
@@ -286,10 +327,21 @@ bg-white dark:bg-black transition-colors duration-500">
             USDT conversions happen instantly at live rates — no hidden spreads,
             no artificial delays.
           </p>
-        </div>
+        </motion.div>
 
         {/* Card 3 */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-yellow-400/40 transition">
+        <motion.div
+                  initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-yellow-400/40 transition">
           <h3 className="text-xl font-semibold text-white mb-2">
             🛡 Fully AML & KYC Compliant
           </h3>
@@ -297,12 +349,24 @@ bg-white dark:bg-black transition-colors duration-500">
             We follow strict Anti-Money Laundering and Know Your Customer
             guidelines to maintain platform integrity.
           </p>
-        </div>
+        </motion.div>
 
       </div>
 
       {/* RIGHT SIDE – LIVE TRUST METRICS */}
-      <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12">
+      <motion.div
+                initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+      
+      className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12 max-md:p-6">
 
         <h3 className="text-2xl font-semibold text-white mb-8">
           Platform Performance
@@ -359,14 +423,14 @@ bg-white dark:bg-black transition-colors duration-500">
 
         </div>
 
-      </div>
+      </motion.div>
 
     </div>
   </div>
 </section>
 
 
-<section className="relative py-12 overflow-hidden max-md:py-8">
+<section className="relative py-12 overflow-hidden max-md:pt-8 max-md:pb-4">
 
   {/* Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
@@ -377,7 +441,18 @@ bg-white dark:bg-black transition-colors duration-500">
   <div className="relative z-10 max-w-6xl mx-auto px-6">
 
     {/* Heading */}
-    <div className="text-center mb-20">
+    <motion.div
+              initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+    className="text-center mb-20 max-md:mb-10">
       <h2 className="text-5xl font-bold text-white max-md:text-[2rem]">
         How iBytex Works
       </h2>
@@ -386,7 +461,7 @@ bg-white dark:bg-black transition-colors duration-500">
       bg-clip-text text-transparent ">
         Convert USDT to INR in 3 seamless steps
       </p>
-    </div>
+    </motion.div>
 
     <div className="relative">
 
@@ -413,7 +488,19 @@ bg-white dark:bg-black transition-colors duration-500">
           </div>
 
           {/* Right Card */}
-          <div className="relative mt-10 md:mt-0 group">
+          <motion.div
+                    initial={{ opacity: 0, x: 120 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+          
+          className="relative mt-10 md:mt-0 group">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-cyan-400/20 blur-xl opacity-0 group-hover:opacity-100 transition duration-500"></div>
 
             <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 hover:border-blue-400/40 transition duration-300">
@@ -421,7 +508,7 @@ bg-white dark:bg-black transition-colors duration-500">
                 ⬇
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
 
@@ -429,7 +516,18 @@ bg-white dark:bg-black transition-colors duration-500">
       <div className="relative flex flex-col md:grid md:grid-cols-2 md:gap-16 items-center">
 
           {/* Left Card */}
-         <div className="relative order-2 md:order-1 group mt-10 md:mt-0 w-full">
+          <motion.div
+                    initial={{ opacity: 0, x: -120 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+         className="relative order-2 md:order-1 group mt-10 md:mt-0 w-full">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500/20 to-emerald-400/20 blur-xl opacity-0 group-hover:opacity-100 transition duration-500"></div>
 
             <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 hover:border-green-400/40 transition duration-300">
@@ -437,7 +535,7 @@ bg-white dark:bg-black transition-colors duration-500">
                 🔄
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Content */}
    <div className="order-1 md:order-2 md:text-left w-full">
@@ -471,7 +569,20 @@ bg-white dark:bg-black transition-colors duration-500">
           </div>
 
           {/* Right Card */}
-          <div className="relative mt-10 md:mt-0 group">
+          <motion.div
+            
+            initial={{ opacity: 0, x: 120 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+          
+          className="relative mt-10 md:mt-0 group">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-400/20 to-orange-400/20 blur-xl opacity-0 group-hover:opacity-100 transition duration-500"></div>
 
             <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-10 hover:border-yellow-400/40 transition duration-300">
@@ -479,7 +590,7 @@ bg-white dark:bg-black transition-colors duration-500">
                 💳
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
       </div>
@@ -520,10 +631,16 @@ bg-white dark:bg-black transition-colors duration-500">
 
     {/* Heading */}
     <motion.h2
-      initial={{ opacity: 0, y: 40 }}
+   initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
       className="text-6xl font-bold text-white mb-8 max-md:text-[2rem]"
     >
       Trusted by the{" "}
@@ -532,11 +649,23 @@ bg-white dark:bg-black transition-colors duration-500">
       </span>
     </motion.h2>
 
-    <p className="text-gray-400 max-w-2xl mx-auto mb-20 text-lg block italic font-light 
+    <motion.p
+      
+   initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+    className="text-gray-400 max-w-2xl mx-auto mb-20 text-lg block italic font-light 
       bg-gradient-to-r from-yellow-400 to-blue-400 
       bg-clip-text text-transparent mt-2 max-md:mb-10">
       Real-time growth metrics powering next-generation crypto exchange infrastructure.
-    </p>
+    </motion.p>
 
     {/* Stats Grid */}
     <div className="grid lg:grid-cols-3 gap-12 max-lg:grid-cols-2 max-md:grid-cols-1 max-md:gap-6">
@@ -556,10 +685,17 @@ bg-white dark:bg-black transition-colors duration-500">
           className="group"
         >
           <motion.div
-            initial={{ opacity: 0, y: 80 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.2 }}
-            viewport={{ once: true }}
+           
+   initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
             className="relative p-[2px] rounded-3xl"
           >
 
@@ -605,7 +741,7 @@ bg-white dark:bg-black transition-colors duration-500">
 
 
 {/* ================= ULTRA PREMIUM TRUST SECTION ================= */}
-<section className="relative py-24 overflow-hidden max-md:py-8 max-md:mb-12">
+<section className="relative py-24 overflow-hidden max-md:pb-8 max-md:mb-12 max-md:pt-[1rem] ">
 
   {/* Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
@@ -617,10 +753,17 @@ bg-white dark:bg-black transition-colors duration-500">
 
     {/* Heading */}
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+     
+   initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: true }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
       className="text-center mb-16 max-md:mb-10"
     >
       <h3 className="text-4xl md:text-5xl font-bold text-white max-md:text-[2rem]">
@@ -638,11 +781,17 @@ bg-white dark:bg-black transition-colors duration-500">
 
       {items.map((item, index) => (
         <motion.div
-          key={index}
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-          viewport={{ once: true }}
+        
+   initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
           className="group relative rounded-2xl p-[1px]"
         >
 
@@ -685,10 +834,17 @@ bg-white dark:bg-black transition-colors duration-500">
 
     {/* Trust Badges */}
     <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
+ 
+   initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
       className="flex flex-wrap justify-center gap-8 mt-20 max-md:mt-10 max-md:justify-center max-md:grid max-md:grid-cols-2"
     >
 

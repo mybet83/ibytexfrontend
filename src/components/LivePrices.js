@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
 
 function LivePrices() {
 
@@ -98,7 +100,19 @@ function LivePrices() {
     <div className="relative px-6 py-16 overflow-hidden max-sm:px-0 max-md:py-8 ">
 
       {/* Header */}
-    <div className="relative z-10 mb-14 max-sm:mb-6 max-md:flex max-md:flex-col-reverse max-md:mb-6">
+    <motion.div
+          initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+    
+    className="relative z-10 mb-14 max-sm:mb-6 max-md:flex max-md:flex-col-reverse max-md:mb-6">
 
   {/* Button Right Side */}
   <div className="absolute right-0 top-0 max-md:relative max-md:flex max-md:justify-end max-md:items-end max-md:text-end max-md:mt-6">
@@ -125,10 +139,21 @@ function LivePrices() {
     </p>
   </div>
 
-</div>
+</motion.div>
 
       {/* Cards */}
-      <div className="relative z-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-sm:grid-cols-2">
+      <motion.div
+               initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+      className="relative z-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-sm:grid-cols-2">
         {selectedMarkets.map((symbol) => {
           const market = prices[symbol];
           const isUp = market?.percent >= 0;
@@ -139,7 +164,7 @@ function LivePrices() {
               className="bg-[#0b1220] border border-white/10 rounded-2xl p-6 max-sm:p-3 
                          hover:scale-[1.04] transition duration-300 shadow-xl"
             >
-              <div className="flex justify-between items-center mb-5">
+              <div className="flex justify-between items-center mb-5 max-md:mb-3">
                 <div className="flex items-center gap-3 max-sm:gap-1">
                   <img
                     src={getLogo(symbol)}
@@ -163,7 +188,7 @@ function LivePrices() {
                 ${market?.price?.toFixed(2) || "..."}
               </div>
 
-              <div className={`text-sm font-semibold mb-4 max-sm:text-[10px] ${
+              <div className={`text-sm font-semibold mb-4 max-sm:text-[10px] max-md:mb-2 ${
                 isUp ? "text-green-400" : "text-red-400"
               }`}>
                 {isUp ? "▲" : "▼"} {market?.percent?.toFixed(2) || "0.00"}%
@@ -173,7 +198,7 @@ function LivePrices() {
             </div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Modal */}
       {showModal && (

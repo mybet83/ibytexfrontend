@@ -194,6 +194,22 @@ const DashboardLayout = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const BottomItem = ({ icon, label, onClick, active }) => (
+  <button
+    onClick={onClick}
+    className={`flex flex-col items-center text-xs 
+    transition-all duration-200
+    ${active ? "text-yellow-400" : "text-gray-400"}`}
+  >
+    <span className="text-xl">{icon}</span>
+    <span className="mt-1">{label}</span>
+
+    {active && (
+      <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mt-1"></div>
+    )}
+  </button>
+);
+
   // Dashboard live refresh
 
   const formatNumber = (num) => {
@@ -404,6 +420,49 @@ const DashboardLayout = () => {
         </div>
       </div>
 
+      {/* ================= MOBILE BOTTOM NAV ================= */}
+<div className="md:hidden fixed bottom-0 left-0 w-full 
+bg-[#111827] border-t border-gray-800 
+flex justify-around items-center 
+py-2 z-50">
+
+  <BottomItem
+    icon="🏠"
+    label="Home"
+    active={activePage === "dashboard"}
+    onClick={() => setActivePage("dashboard")}
+  />
+
+  <BottomItem
+    icon="💼"
+    label="Wallet"
+    active={activePage === "wallet"}
+    onClick={() => setActivePage("wallet")}
+  />
+
+  <BottomItem
+    icon="⬇"
+    label="Deposit"
+    active={activePage === "deposit"}
+    onClick={() => setActivePage("deposit")}
+  />
+
+  <BottomItem
+    icon="⬆"
+    label="Withdraw"
+    active={activePage === "withdraw"}
+    onClick={() => setActivePage("withdraw")}
+  />
+
+  <BottomItem
+    icon="⚙"
+    label="Settings"
+    active={activePage === "settings"}
+    onClick={() => setActivePage("settings")}
+  />
+
+</div>
+
       {/* OVERLAY MOBILE */}
       {sidebarOpen && (
         <div
@@ -415,7 +474,7 @@ const DashboardLayout = () => {
       {/* MAIN */}
       <div
         className={`
-        flex-1 overflow-y-auto transition-all duration-300
+        flex-1 overflow-y-auto transition-all duration-300  pb-20 md:pb-6
         ${sidebarOpen ? "md:ml" : "md:ml"}
         pt-16 md:pt-8 p-6
         `}
@@ -629,7 +688,7 @@ const DashboardLayout = () => {
       {/* ================= SUPPORT ASSISTANT ================= */}
 
       {/* FLOATING BUTTON */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-[5.5rem] right-6 z-50">
         <button
           onClick={() => setSupportOpen(true)}
           className="w-14 h-14 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg flex items-center justify-center text-black text-2xl hover:scale-110 transition-all duration-300"
@@ -640,7 +699,7 @@ const DashboardLayout = () => {
 
       {/* POPUP MODAL */}
       {supportOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 ">
           <div className="bg-[#111827] p-8 rounded-2xl border border-gray-700 w-[90%] max-w-md text-center relative">
             <button
               onClick={() => setSupportOpen(false)}
