@@ -117,10 +117,11 @@ function AnimatedCounter({ end }) {
   };
 
   return (
-    <div className=" relative z-10 min-h-screen bg-white text-black dark:bg-black dark:text-white">
+    <div className=" relative z-10 min-h-screen bg-white text-black dark:bg-black dark:text-white ">
       <Navbar />
 
-   <section className="relative min-h-screen flex items-center justify-center overflow-hidden 
+   <section className="relative min-h-screen flex items-center justify-center overflow-hidden max-md:min-h-[auto] py-24 
+max-md:pt-[10rem] max-md:pb-[6rem]
 bg-white dark:bg-black transition-colors duration-500">
 
   {/* Background Glow Effects */}
@@ -136,31 +137,31 @@ bg-white dark:bg-black transition-colors duration-500">
 
     {/* Main Heading */}
     <h1 className="text-5xl md:text-7xl font-bold 
-    text-black dark:text-white leading-tight">
+    text-black dark:text-white leading-tight max-md:text-[2.5rem]">
 
       Buy & Sell USDT  
 
       <span className="block italic font-light 
       bg-gradient-to-r from-yellow-400 to-blue-400 
-      bg-clip-text text-transparent mt-2">
+      bg-clip-text text-transparent mt-2 max-md:text-[2rem]">
         Securely & Instantly
       </span>
     </h1>
 
     {/* Subtitle */}
-    <p className="mt-6 text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+    <p className="mt-6 text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto max-md:text-[1rem]">
       Trade digital assets with competitive rates and lightning-fast processing.
       Trusted by thousands of users worldwide.
     </p>
 
     {/* CTA Button */}
-    <div className="mt-12 flex justify-center gap-5">
+    <div className="mt-12 flex justify-center gap-5 max-md:flex-col-reverse max-md:justify-center max-md:mx-auto max-md:items-center max-md:mt-14">
     <button onClick={() => navigate("/login")} className="
       px-12 py-13 rounded-full
       bg-gold-gradient dark:bg-white
       text-white dark:text-black
       font-medium
-      hover:scale-105 transition-all duration-300 shadow-xl">
+      hover:scale-105 transition-all duration-300 shadow-xl max-md:w-[12rem] max-md:py-[1rem]">
            Sell Now →
       </button> 
 
@@ -198,7 +199,7 @@ bg-white dark:bg-black transition-colors duration-500">
       <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
     </div>
 
-    <div className="flex items-center gap-2 mt-1">
+    <div className="flex items-center gap-2 mt-1 max-md:items-end justify-end">
 
       <span className="text-gray-400 text-4xl">₹</span>
 
@@ -223,14 +224,16 @@ bg-white dark:bg-black transition-colors duration-500">
 
 </section>
 
-         <div className="relative">
-         <CryptoLogos />
-         </div>
+      
 
       {/* Live Markets + News Section */}
-      <section className="px-20 py-3 max-lg:py-4 max-lg:px-5 ">
+      <section className="px-20 py-3 max-lg:py-4 max-lg:px-5 max-md:relative ">
         <LivePrices />
       </section>
+
+         <div className="relative ">
+         <CryptoLogos />
+         </div>
 
       {/* Why Choose Us */}
    <section className="relative py-12 bg-black overflow-hidden">
@@ -244,24 +247,24 @@ bg-white dark:bg-black transition-colors duration-500">
   <div className="relative max-w-7xl mx-auto px-6 lg:px-20">
 
     {/* Heading */}
-    <div className="text-center mb-20">
-      <h2 className="text-5xl font-bold text-white">
+    <div className="text-center mb-20 max-md:mb-10">
+      <h2 className="text-5xl font-bold text-white max-md:text-[2.5rem]">
         Built on <span className="block italic font-light 
       bg-gradient-to-r from-yellow-400 to-blue-400 
-      bg-clip-text text-transparent mt-2">
+      bg-clip-text text-transparent mt-2 max-md:text-[1.5rem]">
           Trust & Transparency
         </span>
       </h2>
-      <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
+      <p className="text-gray-400 mt-4 max-w-2xl mx-auto max-md:text-[12px]">
         We combine enterprise-grade infrastructure with regulatory compliance
         to ensure every transaction is secure, traceable and protected.
       </p>
     </div>
 
-    <div className="grid lg:grid-cols-2 gap-16 items-center">
+    <div className="grid lg:grid-cols-2 gap-16 items-center max-md:gap-6">
 
       {/* LEFT SIDE – PROOF CARDS */}
-      <div className="space-y-8">
+      <div className="space-y-8 max-md:space-y-6">
 
         {/* Card 1 */}
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-blue-400/40 transition">
@@ -363,7 +366,7 @@ bg-white dark:bg-black transition-colors duration-500">
 </section>
 
 
-<section className="relative py-12 overflow-hidden">
+<section className="relative py-12 overflow-hidden max-md:py-8">
 
   {/* Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
@@ -375,7 +378,7 @@ bg-white dark:bg-black transition-colors duration-500">
 
     {/* Heading */}
     <div className="text-center mb-20">
-      <h2 className="text-5xl font-bold text-white">
+      <h2 className="text-5xl font-bold text-white max-md:text-[2rem]">
         How iBytex Works
       </h2>
       <p className="text-gray-400 mt-4 text-xl block italic font-light 
@@ -391,7 +394,7 @@ bg-white dark:bg-black transition-colors duration-500">
       <div className="hidden md:block absolute left-1/2 top-0 h-full w-[2px] 
       bg-gradient-to-b from-blue-500 via-green-500 to-yellow-500 opacity-40"></div>
 
-      <div className="space-y-24">
+      <div className="space-y-24 max-md:space-y-12">
 
         {/* STEP 01 */}
         <div className="relative md:grid md:grid-cols-2 md:gap-16 items-center">
@@ -521,7 +524,7 @@ bg-white dark:bg-black transition-colors duration-500">
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="text-6xl font-bold text-white mb-8"
+      className="text-6xl font-bold text-white mb-8 max-md:text-[2rem]"
     >
       Trusted by the{" "}
       <span className="">
@@ -531,12 +534,12 @@ bg-white dark:bg-black transition-colors duration-500">
 
     <p className="text-gray-400 max-w-2xl mx-auto mb-20 text-lg block italic font-light 
       bg-gradient-to-r from-yellow-400 to-blue-400 
-      bg-clip-text text-transparent mt-2">
+      bg-clip-text text-transparent mt-2 max-md:mb-10">
       Real-time growth metrics powering next-generation crypto exchange infrastructure.
     </p>
 
     {/* Stats Grid */}
-    <div className="grid md:grid-cols-3 gap-12">
+    <div className="grid lg:grid-cols-3 gap-12 max-lg:grid-cols-2 max-md:grid-cols-1 max-md:gap-6">
 
       {[
         { prefix: "$", end: 200, suffix: "M+", label: "Total Trade", gradient: "from-yellow-400 to-orange-500" },
@@ -602,7 +605,7 @@ bg-white dark:bg-black transition-colors duration-500">
 
 
 {/* ================= ULTRA PREMIUM TRUST SECTION ================= */}
-<section className="relative py-24 overflow-hidden">
+<section className="relative py-24 overflow-hidden max-md:py-8 max-md:mb-12">
 
   {/* Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
@@ -610,7 +613,7 @@ bg-white dark:bg-black transition-colors duration-500">
     <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-yellow-500/10 blur-[140px] rounded-full"></div>
   </div>
 
-  <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-20">
+  <div className="relative z-10 max-w-8xl mx-auto px-6 lg:px-20">
 
     {/* Heading */}
     <motion.div
@@ -618,18 +621,20 @@ bg-white dark:bg-black transition-colors duration-500">
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
-      className="text-center mb-16"
+      className="text-center mb-16 max-md:mb-10"
     >
-      <h3 className="text-4xl md:text-5xl font-bold text-white">
+      <h3 className="text-4xl md:text-5xl font-bold text-white max-md:text-[2rem]">
         Security & Trust
       </h3>
-      <p className="text-gray-400 mt-4">
+      <p className="text-gray-400 mt-4 block italic font-light 
+      bg-gradient-to-r from-yellow-400 to-blue-400 
+      bg-clip-text text-transparent">
         Built with enterprise-grade infrastructure and compliance standards
       </p>
     </motion.div>
 
     {/* Feature Grid */}
-    <div className="grid md:grid-cols-4 gap-8">
+    <div className="grid lg:grid-cols-4 gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1 max-md:gap-6">
 
       {items.map((item, index) => (
         <motion.div
@@ -651,10 +656,10 @@ bg-white dark:bg-black transition-colors duration-500">
           <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 
           rounded-2xl p-6 flex items-center gap-4
           transition-all duration-300
-          group-hover:scale-[1.05]">
+          group-hover:scale-[1.05] max-md:p-3 max-md:gap-2 max-sm:p-5 max-sm:gap-4">
 
             {/* Icon Box */}
-            <div className="w-12 h-12 rounded-xl 
+            <div className="w-12 h-12 rounded-xl max-md:w-8 max-md:h-8
             bg-gradient-to-br from-yellow-400 to-orange-500
             flex items-center justify-center text-black text-xl shadow-lg">
               {item.icon}
@@ -662,7 +667,7 @@ bg-white dark:bg-black transition-colors duration-500">
 
             {/* Text */}
             <div className="flex flex-col">
-              <span className="text-sm font-medium text-gray-300 group-hover:text-white transition duration-300">
+              <span className="text-sm font-medium text-gray-300 group-hover:text-white transition duration-300 max-md:text-[12px]  max-md:items-center max-md:justify-center max-md:text-center max-sm:text-sm">
                 {item.text}
               </span>
 
@@ -684,26 +689,26 @@ bg-white dark:bg-black transition-colors duration-500">
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="flex flex-wrap justify-center gap-8 mt-20"
+      className="flex flex-wrap justify-center gap-8 mt-20 max-md:mt-10 max-md:justify-center max-md:grid max-md:grid-cols-2"
     >
 
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 
-      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-blue-400/40 transition">
+      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-blue-400/40 transition max-sm:px-3">
         🛡 ISO 27001 Certified
       </div>
 
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 
-      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-green-400/40 transition">
+      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-green-400/40 transition max-sm:px-3">
         🔍 AML & KYC Verified
       </div>
 
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 
-      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-yellow-400/40 transition">
+      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-yellow-400/40 transition max-sm:px-3 ">
         🔐 PCI DSS Secure
       </div>
 
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 
-      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-purple-400/40 transition">
+      rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-purple-400/40 transition max-sm:px-3">
         🌍 Global Compliance Ready
       </div>
 
