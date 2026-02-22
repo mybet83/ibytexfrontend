@@ -195,20 +195,20 @@ const DashboardLayout = () => {
   }, []);
 
   const BottomItem = ({ icon, label, onClick, active }) => (
-  <button
-    onClick={onClick}
-    className={`flex flex-col items-center text-xs 
+    <button
+      onClick={onClick}
+      className={`flex flex-col items-center text-xs 
     transition-all duration-200
     ${active ? "text-yellow-400" : "text-gray-400"}`}
-  >
-    <span className="text-xl">{icon}</span>
-    <span className="mt-1">{label}</span>
+    >
+      <span className="text-xl">{icon}</span>
+      <span className="mt-1">{label}</span>
 
-    {active && (
-      <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mt-1"></div>
-    )}
-  </button>
-);
+      {active && (
+        <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mt-1"></div>
+      )}
+    </button>
+  );
 
   // Dashboard live refresh
 
@@ -233,20 +233,23 @@ const DashboardLayout = () => {
     const hasUSDT = String(value).includes("USDT");
 
     return (
-      <div className="relative bg-white/5 backdrop-blur-xl 
+      <div
+        className="relative bg-white/5 backdrop-blur-xl 
                     border border-white/10 
                     p-6 rounded-2xl 
                     transition-all duration-300 
                     hover:-translate-y-1 
-                    hover:shadow-[0_0_30px_rgba(255,215,0,0.15)]"
+                    hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] max-md:p-3"
       >
         {/* TITLE + BADGE */}
         <div className="flex items-center justify-between">
-          <p className="text-gray-400 text-sm tracking-wide">{title}</p>
+          <p className="text-gray-400 text-sm tracking-wide max-md:text-[12px]">
+            {title}
+          </p>
 
           {badge && (
             <span
-              className="text-[10px] px-2 py-1 
+              className="text-[8px] px-2 py-1 
                            bg-red-500 text-white 
                            rounded-full animate-pulse"
             >
@@ -257,7 +260,7 @@ const DashboardLayout = () => {
 
         {/* VALUE WITH COUNTUP */}
         <h2
-          className={`text-3xl font-bold mt-4 tracking-tight 
+          className={`text-3xl font-bold mt-4 tracking-tight max-md:text-xl max-md:mt-2
         ${green ? "text-emerald-400" : "text-white"}`}
         >
           {hasRupee && "₹ "}
@@ -273,8 +276,8 @@ const DashboardLayout = () => {
   return (
     <div className="h-screen flex bg-[#0b0f19] text-white overflow-hidden">
       {/* MOBILE HEADER */}
-      <div className="md:hidden fixed top-0 left-0 w-full h-14 bg-[#0f172a] border-b border-gray-800 flex items-center justify-between px-4 z-50">
-        <img src="/logot.png" alt="logo" className="w-8 h-8" />
+      <div className="md:hidden fixed top-0 left-0 w-full h-16 bg-[#0f172a] border-b border-gray-800 flex items-center justify-between px-4 z-50">
+        <img src="/logot.png" alt="logo" className="w-12 h-12" />
         <button onClick={() => setSidebarOpen(true)} className="text-3xl">
           ☰
         </button>
@@ -421,47 +424,47 @@ const DashboardLayout = () => {
       </div>
 
       {/* ================= MOBILE BOTTOM NAV ================= */}
-<div className="md:hidden fixed bottom-0 left-0 w-full 
+      <div
+        className="md:hidden fixed bottom-0 left-0 w-full 
 bg-[#111827] border-t border-gray-800 
 flex justify-around items-center 
-py-2 z-50">
+py-2 z-50"
+      >
+        <BottomItem
+          icon="🏠"
+          label="Home"
+          active={activePage === "dashboard"}
+          onClick={() => setActivePage("dashboard")}
+        />
 
-  <BottomItem
-    icon="🏠"
-    label="Home"
-    active={activePage === "dashboard"}
-    onClick={() => setActivePage("dashboard")}
-  />
+        <BottomItem
+          icon="💼"
+          label="Wallet"
+          active={activePage === "wallet"}
+          onClick={() => setActivePage("wallet")}
+        />
 
-  <BottomItem
-    icon="💼"
-    label="Wallet"
-    active={activePage === "wallet"}
-    onClick={() => setActivePage("wallet")}
-  />
+        <BottomItem
+          icon="⬇"
+          label="Deposit"
+          active={activePage === "deposit"}
+          onClick={() => setActivePage("deposit")}
+        />
 
-  <BottomItem
-    icon="⬇"
-    label="Deposit"
-    active={activePage === "deposit"}
-    onClick={() => setActivePage("deposit")}
-  />
+        <BottomItem
+          icon="⬆"
+          label="Withdraw"
+          active={activePage === "withdraw"}
+          onClick={() => setActivePage("withdraw")}
+        />
 
-  <BottomItem
-    icon="⬆"
-    label="Withdraw"
-    active={activePage === "withdraw"}
-    onClick={() => setActivePage("withdraw")}
-  />
-
-  <BottomItem
-    icon="⚙"
-    label="Settings"
-    active={activePage === "settings"}
-    onClick={() => setActivePage("settings")}
-  />
-
-</div>
+        <BottomItem
+          icon="⚙"
+          label="Settings"
+          active={activePage === "settings"}
+          onClick={() => setActivePage("settings")}
+        />
+      </div>
 
       {/* OVERLAY MOBILE */}
       {sidebarOpen && (
@@ -474,51 +477,51 @@ py-2 z-50">
       {/* MAIN */}
       <div
         className={`
-        flex-1 overflow-y-auto transition-all duration-300  pb-20 md:pb-6
+        flex-1 overflow-y-auto transition-all duration-300  pb-24 md:pb-6
         ${sidebarOpen ? "md:ml" : "md:ml"}
-        pt-16 md:pt-8 p-6
+        pt-20 md:pt-8 p-6
         `}
       >
         {activePage === "dashboard" && (
           <>
             {/* TOP BANNER */}
-       <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl">
+            <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl max-md:flex-col">
+              {/* Glow Background */}
+              <div className="absolute -top-20 -left-20 w-72 h-72 bg-yellow-400/20 blur-[120px] rounded-full"></div>
+              <div className="absolute bottom-0 right-0 w-72 h-72 bg-emerald-400/20 blur-[120px] rounded-full"></div>
 
-  {/* Glow Background */}
-  <div className="absolute -top-20 -left-20 w-72 h-72 bg-yellow-400/20 blur-[120px] rounded-full"></div>
-  <div className="absolute bottom-0 right-0 w-72 h-72 bg-emerald-400/20 blur-[120px] rounded-full"></div>
+              <div className="relative z-10">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-emerald-400 bg-clip-text text-transparent max-md:text-[1.5rem]">
+                  Welcome Back, {user?.name} 👋
+                </h1>
+                <p className="text-gray-400 text-sm mt-1">
+                  Trade Smart. Trade Secure.
+                </p>
+              </div>
 
-  <div className="relative z-10">
-    <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-emerald-400 bg-clip-text text-transparent">
-      Welcome Back, {user?.name} 👋
-    </h1>
-    <p className="text-gray-400 text-sm mt-1">
-      Trade Smart. Trade Secure.
-    </p>
-  </div>
+              <div className="relative z-10 flex flex-col items-end max-md:hidden">
+                <span className="text-xs text-gray-400 mb-1">
+                  Live USDT Price
+                </span>
 
-  <div className="relative z-10 flex flex-col items-end">
-    <span className="text-xs text-gray-400 mb-1">Live USDT Price</span>
+                <div className="flex items-center gap-3">
+                  <span className="px-3 py-1 text-xs bg-red-500 rounded-full animate-pulse shadow-lg">
+                    LIVE
+                  </span>
 
-    <div className="flex items-center gap-3">
-      <span className="px-3 py-1 text-xs bg-red-500 rounded-full animate-pulse shadow-lg">
-        LIVE
-      </span>
-
-      <span className="text-2xl font-bold text-emerald-400 drop-shadow-lg">
-        ₹ {rate}
-      </span>
-    </div>
-  </div>
-</div>
+                  <span className="text-2xl font-bold text-emerald-400 drop-shadow-lg">
+                    ₹ {rate}
+                  </span>
+                </div>
+              </div>
+            </div>
 
             {/* MARKET TICKER */}
-           
 
             <div className="mb-8"></div>
 
             {/* STAT CARDS */}
-            <div className="grid md:grid-cols-4 gap-6 mb-10">
+            <div className="grid md:grid-cols-4 gap-6 mb-10 max-md:grid-cols-2">
               <StatCard
                 title="Live USDT Rate"
                 value={`₹ ${rate}`}
@@ -543,11 +546,13 @@ py-2 z-50">
             {/* RECENT ACTIVITY */}
             <div className="mt-12">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">Recent Activity</h2>
+                <h2 className="text-xl font-semibold max-md:text-[16px]">
+                  Recent Activity
+                </h2>
 
                 <button
                   onClick={() => setActivePage("orders")}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold hover:scale-105 transition-all"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold hover:scale-105 transition-all max-md:text-[12px]"
                 >
                   View All Orders →
                 </button>
@@ -556,11 +561,11 @@ py-2 z-50">
               {recentActivity.length === 0 ? (
                 <p className="text-gray-400">No recent activity</p>
               ) : (
-                <div className="space-y-6">
+                <div className="space-y-6 flex flex-col ">
                   {recentActivity.map((item) => (
                     <div
                       key={item.id}
-                      className="group relative overflow-hidden rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#111827]/80 to-[#0f172a]/80 border border-white/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(234,179,8,0.2)]"
+                      className="group relative overflow-hidden rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#111827]/80 to-[#0f172a]/80 border border-white/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(234,179,8,0.2)] "
                     >
                       {/* LEFT COLOR STRIP */}
                       <div
@@ -571,12 +576,27 @@ py-2 z-50">
                         }`}
                       />
 
-                      <div className="relative p-8 flex justify-between items-center">
+                      <div
+                        className="
+relative p-8 
+flex justify-between items-start gap-6
+max-md:p-4 
+max-md:flex-col 
+max-md:gap-0
+
+"
+                      >
                         {/* LEFT SECTION */}
-                        <div className="flex  gap-6 flex-1">
+                        <div
+                          className="
+flex gap-6 flex-1 
+max-md:flex-col 
+max-md:gap-3
+"
+                        >
                           {/* ICON */}
                           <div
-                            className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold ${
+                            className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold max-md:w-12 max-md:h-9  max-md:text-[12px]  ${
                               item.type === "SELL"
                                 ? "bg-emerald-500/10 text-emerald-400"
                                 : "bg-yellow-500/10 text-yellow-400"
@@ -586,24 +606,58 @@ py-2 z-50">
                           </div>
 
                           {/* CONTENT BLOCK */}
-                          <div className="flex flex-col gap-2 w-full max-w-xl">
-                            {/* TITLE */}
-                            <h3 className="text-lg font-semibold tracking-wide">
-                              {item.type === "SELL"
-                                ? `Sold ${item.amount} USDT`
-                                : `Withdraw ₹ ${item.amount}`}
-                            </h3>
+                          <div
+                            className="
+flex flex-col gap-3 
+w-full max-w-xl
+max-md:w-full
+"
+                          >
+                            <div
+                              className="
+flex items-start gap-3 flex-col 
+max-md:flex-col 
+max-md:items-start 
+"
+                            >
+                              {/* TITLE */}
+                              <h3 className="text-lg font-semibold tracking-wide flex">
+                                {item.type === "SELL"
+                                  ? `Sell ${item.amount} USDT`
+                                  : `Withdraw ₹ ${item.amount}`}
+                              </h3> 
+                                 <p className="text-xs text-gray-400">
+                              {new Date(item.date).toLocaleString()}
+                            </p>
 
-                            {/* AMOUNT */}
-                            {item.type === "SELL" && (
-                              <div className="text-emerald-400 font-medium text-sm">
-                                How Much Amount Recived ₹ {item.inr}
+                              {/* AMOUNT */}
+                              {item.type === "SELL" && (
+                                <div className="text-emerald-400 font-medium text-sm max-md:text-xs">
+                                  How Much Amount Recived ₹ {item.inr}
+                                </div>
+                              )}
+
+                              <div>
+                                <span
+                                  className={`absolute top-4 right-9 max-md:right-4
+  px-3 py-1 text-xs rounded-full font-semibold tracking-wide whitespace-nowrap 
+  ${
+    item.status === "COMPLETED" || item.status === "APPROVED"
+      ? "bg-emerald-500/20 text-emerald-400"
+      : item.status === "REJECTED"
+        ? "bg-red-500/20 text-red-400"
+        : item.status === "FAILED"
+          ? "bg-orange-500/20 text-orange-400"
+          : "bg-yellow-500/20 text-yellow-400"
+  }`}
+                                >
+                                  {item.status}
+                                </span>
                               </div>
-                            )}
-
+                            </div>
                             {/* ADMIN NOTE */}
                             {item.adminNotes && item.adminNotes !== "" && (
-                              <div className="mt-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 px-4 py-3 w-fit min-w-[220px]">
+                              <div className="mt-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 px-4 py-2 max-md:mt-0 w-full md:w-fit md:min-w-[220px]">
                                 <p className="text-yellow-400 text-xs font-semibold mb-1">
                                   Admin Note
                                 </p>
@@ -620,7 +674,7 @@ py-2 z-50">
                                   <p className="text-cyan-400 text-xs font-semibold mb-1">
                                     Transaction UTR
                                   </p>
-                                  <p className="text-sm text-gray-300 tracking-wide">
+                                  <p className="text-sm text-gray-300 tracking-wide w-full md:w-fit md:min-w-[220px]">
                                     {item.adminUtrNumber}
                                   </p>
                                 </div>
@@ -631,39 +685,29 @@ py-2 z-50">
                         </div>
 
                         {/* RIGHT BUTTON */}
-                        <div className="ml-6 relative flex flex-col justify-end items-end">
+                        <div
+                          className="
+ml-6 flex flex-col items-end gap-3 
+max-md:ml-0 
+max-md:w-full 
+max-md:flex-row 
+max-md:justify-between 
+max-md:items-center
+"
+                        >
+                          <div>
+                         
+                          </div>
                           <button
                             onClick={() =>
                               setActivePage(
                                 item.type === "SELL" ? "orders" : "withdraw",
                               )
                             }
-                            className="px-6 py-2 rounded-2xl font-semibold text-black bg-gradient-to-r from-yellow-400 to-yellow-600 hover:scale-105 transition-all duration-300 shadow-lg"
+                            className="px-6 py-2 rounded-2xl font-semibold text-black bg-gradient-to-r from-yellow-400 to-yellow-600 hover:scale-105 transition-all duration-300 shadow-lg max-md:px-4 max-md:py-2 max-md:text-sm mt-5 max-md:mt-0 max-md:bottom-7 max-md:absolute max-md:right-4"
                           >
                             View →
                           </button>
-                          <div className="flex items-center  gap-4 mt-3">
-                            {/* DATE */}
-                            <p className="text-xs text-gray-400">
-                              {new Date(item.date).toLocaleString()}
-                            </p>
-
-                            {/* STATUS */}
-                            <span
-                              className={`px-4 py-1 text-xs rounded-full font-semibold tracking-wide ${
-                                item.status === "COMPLETED" ||
-                                item.status === "APPROVED"
-                                  ? "bg-emerald-500/20 text-emerald-400"
-                                  : item.status === "REJECTED"
-                                    ? "bg-red-500/20 text-red-400"
-                                    : item.status === "FAILED"
-                                      ? "bg-orange-500/20 text-orange-400"
-                                      : "bg-yellow-500/20 text-yellow-400"
-                              }`}
-                            >
-                              {item.status}
-                            </span>
-                          </div>
                         </div>
                       </div>
                     </div>

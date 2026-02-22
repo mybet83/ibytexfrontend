@@ -7,6 +7,8 @@ import {BrowserRouter} from 'react-router-dom';
 import 'react-toastify/ReactToastify.css';
 import { ThemeProvider } from './components/ThemeContext';
 
+import { register } from "./serviceWorkerRegistration";
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -18,6 +20,9 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
+
+
+register();
 
 setTimeout(() => {
   const loader = document.getElementById("initial-loader");
