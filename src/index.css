@@ -72,7 +72,7 @@ body {
 
 
 .marquee-wrapper {
-  overflow: hidden;
+ 
   width: 100%;
 
   -webkit-mask-image: linear-gradient(
