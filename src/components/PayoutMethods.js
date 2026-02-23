@@ -90,192 +90,194 @@ const PayoutMethods = () => {
     return "XXXXXX" + number.slice(-4);
   };
 
-  return (
-    <div className="space-y-8">
+return (
+  <div className="space-y-10">
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold">Payout Methods</h1>
-          <p className="text-gray-400 text-sm">
-            Manage your bank accounts and UPI IDs
-          </p>
-        </div>
+    {/* ================= HEADER ================= */}
+    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-[#0f172a] to-[#111827] p-8 flex justify-between items-center shadow-xl">
 
-        <button
-          onClick={() => {
-            resetForm();
-            setOpen(true);
-          }}
-          className="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-600 transition"
-        >
-          + Add New Account
-        </button>
+      <div className="absolute -top-20 -left-20 w-72 h-72 bg-cyan-500/10 blur-[120px] rounded-full"></div>
+
+      <div className="relative z-10">
+        <h1 className="text-3xl font-bold text-white tracking-tight">
+          Payout Methods
+        </h1>
+        <p className="text-gray-400 text-sm mt-2">
+          Securely manage your bank accounts & UPI IDs
+        </p>
       </div>
 
-      {/* EMPTY STATE */}
-      {methods.length === 0 && (
-        <div className="bg-[#111827] border border-gray-800 rounded-2xl p-12 text-center">
-          <p className="text-gray-400 mb-4">
+      <button
+        onClick={() => {
+          resetForm();
+          setOpen(true);
+        }}
+        className="relative z-10 px-6 py-3 rounded-xl 
+        bg-gradient-to-r from-cyan-500 to-blue-500
+        hover:scale-105 transition-all duration-300
+        shadow-lg font-semibold"
+      >
+        + Add New Account
+      </button>
+    </div>
+
+    {/* ================= EMPTY STATE ================= */}
+    {methods.length === 0 && (
+      <div className="bg-[#111827]/70 backdrop-blur-xl border border-gray-800 rounded-3xl p-16 text-center relative overflow-hidden">
+
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-500/5"></div>
+
+        <div className="relative z-10">
+          <div className="text-5xl mb-6">🏦</div>
+          <p className="text-gray-400 mb-6 text-lg">
             No payout methods added yet
           </p>
           <button
             onClick={() => setOpen(true)}
-            className="px-6 py-2 bg-cyan-500 rounded-lg"
+            className="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 font-semibold hover:scale-105 transition-all duration-300"
           >
             Add First Method
           </button>
         </div>
-      )}
-
-      {/* LIST */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {methods.map((item) => (
-          <div
-            key={item._id}
-            className="bg-gradient-to-br from-[#111827] to-[#0f172a] border border-gray-800 rounded-2xl p-6 hover:scale-[1.02] transition"
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm text-gray-400">
-                  {item.type === "BANK" ? "Bank Account" : "UPI ID"}
-                </p>
-
-                {item.type === "BANK" ? (
-                  <>
-                    <p className="font-semibold mt-1">
-                      {item.bankName}
-                    </p>
-                    <p className="text-gray-400 text-sm">
-                      {maskAccount(item.accountNumber)}
-                    </p>
-                  </>
-                ) : (
-                  <p className="font-semibold mt-1">
-                    {item.upiId}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleEdit(item)}
-                  className="text-yellow-400 hover:text-yellow-300"
-                >
-                  ✏ Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(item._id)}
-                  className="text-red-500 hover:text-red-400"
-                >
-                  🗑 Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
       </div>
+    )}
 
-      {/* MODAL */}
-      {open && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-[#0f172a] w-[420px] p-8 rounded-2xl border border-gray-800 space-y-6">
+    {/* ================= LIST ================= */}
+    <div className="grid md:grid-cols-2 gap-8">
+      {methods.map((item) => (
+        <div
+          key={item._id}
+          className="group relative overflow-hidden rounded-3xl 
+          border border-white/10 
+          bg-gradient-to-br from-[#111827]/90 to-[#0f172a]/90
+          backdrop-blur-xl p-8
+          transition-all duration-500
+          hover:-translate-y-2
+          hover:shadow-[0_0_40px_rgba(34,211,238,0.2)]"
+        >
 
-            <div className="flex justify-between">
-            <h2 className="text-xl font-bold">
-              {editId ? "Edit" : "Add"} Payout Method
-            </h2>
-                 <button
+          {/* Glow Hover Effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+          <div className="relative z-10 flex justify-between items-start">
+
+            <div>
+              <p className="text-xs uppercase tracking-widest text-gray-400">
+                {item.type === "BANK" ? "Bank Account" : "UPI ID"}
+              </p>
+
+              {item.type === "BANK" ? (
+                <>
+                  <p className="text-lg font-semibold mt-2 text-white">
+                    {item.bankName}
+                  </p>
+                  <p className="text-gray-400 text-sm mt-1">
+                    {maskAccount(item.accountNumber)}
+                  </p>
+                </>
+              ) : (
+                <p className="text-lg font-semibold mt-2 text-white">
+                  {item.upiId}
+                </p>
+              )}
+            </div>
+
+            <div className="flex gap-4 text-sm">
+              <button
+                onClick={() => handleEdit(item)}
+                className="text-yellow-400 hover:text-yellow-300 transition"
+              >
+                ✏ Edit
+              </button>
+
+              <button
+                onClick={() => handleDelete(item._id)}
+                className="text-red-500 hover:text-red-400 transition"
+              >
+                🗑 Delete
+              </button>
+            </div>
+
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* ================= MODAL ================= */}
+    {open && (
+      <div className="fixed inset-0  backdrop-blur-sm flex items-center justify-center z-50">
+
+        <div className="relative bg-gradient-to-br from-[#0f172a] to-[#111827]
+        w-[450px] p-10 rounded-3xl border border-white/10 shadow-2xl space-y-6">
+
+          <div className="absolute -top-20 -right-20 w-72 h-72 bg-cyan-500/10 blur-[120px] rounded-full"></div>
+
+          <div className="relative z-10">
+
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">
+                {editId ? "Edit" : "Add"} Payout Method
+              </h2>
+
+              <button
                 onClick={() => {
                   setOpen(false);
                   resetForm();
                 }}
-                className="flex-1  rounded-lg"
+                className="text-gray-400 hover:text-white text-lg"
               >
-               X
+                ✕
               </button>
             </div>
+
             {/* TYPE SWITCH */}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setType("BANK")}
-                className={`flex-1 py-2 rounded-lg transition ${
-                  type === "BANK"
-                    ? "bg-cyan-500"
-                    : "bg-[#111827] border border-gray-700"
-                }`}
-              >
-                Bank
-              </button>
-              <button
-                onClick={() => setType("UPI")}
-                className={`flex-1 py-2 rounded-lg transition ${
-                  type === "UPI"
-                    ? "bg-cyan-500"
-                    : "bg-[#111827] border border-gray-700"
-                }`}
-              >
-                UPI
-              </button>
+            <div className="flex gap-4 mb-6">
+              {["BANK", "UPI"].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setType(t)}
+                  className={`flex-1 py-3 rounded-xl font-semibold transition-all duration-300
+                  ${
+                    type === t
+                      ? "bg-gradient-to-r from-cyan-500 to-blue-500"
+                      : "bg-[#111827] border border-gray-700"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
 
             {/* FORM */}
             {type === "BANK" && (
               <div className="space-y-4">
-                <Input
-                  placeholder="Account Holder Name"
-                  value={form.accountHolderName}
-                  onChange={(v) =>
-                    setForm({ ...form, accountHolderName: v })
-                  }
-                />
-                <Input
-                  placeholder="Account Number"
-                  value={form.accountNumber}
-                  onChange={(v) =>
-                    setForm({ ...form, accountNumber: v })
-                  }
-                />
-                <Input
-                  placeholder="IFSC Code"
-                  value={form.ifsc}
-                  onChange={(v) =>
-                    setForm({ ...form, ifsc: v })
-                  }
-                />
-                <Input
-                  placeholder="Bank Name"
-                  value={form.bankName}
-                  onChange={(v) =>
-                    setForm({ ...form, bankName: v })
-                  }
-                />
+                <Input placeholder="Account Holder Name" value={form.accountHolderName} onChange={(v)=>setForm({...form,accountHolderName:v})}/>
+                <Input placeholder="Account Number" value={form.accountNumber} onChange={(v)=>setForm({...form,accountNumber:v})}/>
+                <Input placeholder="IFSC Code" value={form.ifsc} onChange={(v)=>setForm({...form,ifsc:v})}/>
+                <Input placeholder="Bank Name" value={form.bankName} onChange={(v)=>setForm({...form,bankName:v})}/>
               </div>
             )}
 
             {type === "UPI" && (
-              <Input
-                placeholder="UPI ID"
-                value={form.upiId}
-                onChange={(v) =>
-                  setForm({ ...form, upiId: v })
-                }
-              />
-              
-             
+              <Input placeholder="UPI ID" value={form.upiId} onChange={(v)=>setForm({...form,upiId:v})}/>
             )}
 
             <button
               onClick={handleSubmit}
-              className="w-full py-3 rounded-lg bg-cyan-500 hover:bg-cyan-600 transition font-semibold"
+              className="w-full mt-6 py-3 rounded-xl 
+              bg-gradient-to-r from-cyan-500 to-blue-500
+              hover:scale-105 transition-all duration-300 font-semibold shadow-lg"
             >
               {editId ? "Update Method" : "Add Method"}
             </button>
+
           </div>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    )}
+
+  </div>
+);
 };
 
 const Input = ({ placeholder, value, onChange }) => (

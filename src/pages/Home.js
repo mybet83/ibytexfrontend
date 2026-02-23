@@ -653,7 +653,7 @@ bg-white dark:bg-black transition-colors duration-500">
         once: true,
         amount: 0.4, // 🔥 40% visible pe trigger
       }}
-      className="text-6xl font-bold text-white mb-8 max-md:text-[2rem]"
+      className="text-5xl font-bold text-white mb-8 max-md:text-[2rem]"
     >
       Trusted by the{" "}
       <span className="">
@@ -778,7 +778,7 @@ bg-white dark:bg-black transition-colors duration-500">
       }}
       className="text-center mb-16 max-md:mb-10"
     >
-      <h3 className="text-4xl md:text-5xl font-bold text-white max-md:text-[2rem]">
+      <h3 className=" md:text-5xl font-bold text-white max-md:text-[2rem]">
         Security & Trust
       </h3>
       <p className="text-gray-400 mt-4 block italic font-light 

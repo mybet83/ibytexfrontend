@@ -292,15 +292,21 @@ const DashboardLayout = () => {
       </div>
 
       {/* SIDEBAR */}
-      <div
-        className={`
-        fixed md:relative z-40 bg-[#111827] border-r border-gray-800
-        transition-all duration-300 flex flex-col
-        ${sidebarOpen ? "w-64" : "w-20"}
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-        h-screen
-        `}
-      >
+<div
+  className={`
+    fixed md:relative top-0 right-0 md:right-auto
+    h-screen bg-[#111827] border-l md:border-r border-gray-800
+    transition-all duration-300 ease-in-out
+    flex flex-col z-40
+
+    w-64
+    ${sidebarOpen ? "translate-x-0  transition-all duration-300 ease-in-out" : "translate-x-full  transition-all duration-300 ease-in-out"}
+
+    md:translate-x-0
+    ${sidebarOpen ? "md:w-64  transition-all duration-300 ease-in-out" : "md:w-20  transition-all duration-300 ease-in-out"}
+  `}
+>
+    
         {/* LOGO */}
         <div className="flex items-center justify-between p-4 border-b border-gray-800 group relative">
           <div
@@ -469,13 +475,13 @@ py-2 z-50"
         <BottomItem
             label="Orders"
             icon={<HiCube />}
-            open={sidebarOpen}
+            active={activePage === "orders"}
             onClick={() => setActivePage("orders")}
           />
           <BottomItem
             label="Payout"
             icon={<HiCreditCard />}
-            open={sidebarOpen}
+            active={activePage === "payment-method"}
             onClick={() => setActivePage("payment-method")}
           />
 

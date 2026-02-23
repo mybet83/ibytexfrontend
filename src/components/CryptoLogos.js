@@ -100,7 +100,7 @@ export default function CryptoMarquee() {
           {[...logos, ...logos].map((item, index) => (
             <div
               key={index}
-              className="flex items-center gap-4 mx-12 whitespace-nowrap"
+             className="flex items-center gap-4 mx-12 whitespace-nowrap shrink-0"
             >
               <img
                 src={item.logo}

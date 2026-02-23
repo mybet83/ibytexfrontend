@@ -71,25 +71,43 @@ body {
 
 
 
-.marquee-wrapper {
- 
-  width: 100%;
+/* =========================
+   MARQUEE WRAPPER
+========================= */
 
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    white 10%,
-    white 90%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    white 10%,
-    white 90%,
-    transparent
-  );
+.marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
+
+/* Side Fade Effect (Mobile Safe) */
+
+.marquee-wrapper::before,
+.marquee-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 80px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #000 0%, transparent 100%);
+}
+
+.marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #000 0%, transparent 100%);
+}
+
+
+/* =========================
+   MARQUEE TRACK
+========================= */
 
 .marquee-track {
   display: flex;
@@ -97,11 +115,13 @@ body {
   animation: scroll 35s linear infinite;
 }
 
+/* Smooth Infinite Scroll */
+
 @keyframes scroll {
-  from {
-    transform: translateX(0);
+  0% {
+    transform: translateX(0%);
   }
-  to {
+  100% {
     transform: translateX(-50%);
   }
 }
