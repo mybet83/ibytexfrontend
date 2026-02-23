@@ -80,7 +80,7 @@ export default function CryptoMarquee() {
   ];
 
   return (
-    <section className="py-16 overflow-hidden max-md:py-8">
+ <section className="py-16 bg-black overflow-hidden max-md:py-8">
      
 
       <motion.div

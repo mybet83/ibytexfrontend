@@ -22,7 +22,6 @@ html {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
 .react-tel-input .flag-dropdown {
   background: rgba(0, 0, 0, 0.4) !important;
   border: 1px solid #4b5563 !important;
@@ -72,11 +71,17 @@ body {
 
 
 
-
-
 .marquee-wrapper {
   overflow: hidden;
   width: 100%;
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    white 10%,
+    white 90%,
+    transparent
+  );
   mask-image: linear-gradient(
     to right,
     transparent,

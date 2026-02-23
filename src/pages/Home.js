@@ -162,68 +162,80 @@ bg-white dark:bg-black transition-colors duration-500">
       Trusted by thousands of users worldwide.
     </p>
 
-    {/* CTA Button */}
-    <div className="mt-12 flex justify-center gap-5 max-md:flex-col-reverse max-md:justify-center max-md:mx-auto max-md:items-center max-md:mt-8">
-    <button onClick={() => navigate("/login")} className="
-      px-12 py-13 rounded-full
-      bg-gold-gradient dark:bg-white
-      text-white dark:text-black
-      font-medium
-      hover:scale-105 transition-all duration-300 shadow-xl max-md:w-[12rem] max-md:py-[1rem]">
-           Sell Now →
-      </button> 
+<div className="mt-16 flex justify-center max-md:flex-col max-md:items-center max-md:mt-10">
 
-<div className="flex items-center gap-4 mt-2">
+  {/* MAIN CTA WRAPPER */}
+  <div className="flex items-center gap-6 bg-white/5 backdrop-blur-xl 
+                  border border-white/10 
+                  rounded-3xl px-8 py-5 
+                  shadow-[0_10px_40px_rgba(0,0,0,0.4)]
+                  max-md:flex-col-reverse max-md:gap-5 max-md:w-full max-md:max-w-sm">
 
-  {/* Logo with Glow Ring */}
-  <div className="relative">
-    <div className="absolute inset-0 
-    bg-gradient-to-r from-green-400 to-emerald-500 
-    blur-lg opacity-40 rounded-full"></div>
+    {/* SELL BUTTON */}
+    <button
+      onClick={() => navigate("/login")}
+      className="
+        relative overflow-hidden
+        px-10 py-3 rounded-xl
+       bg-gold-gradient
+        text-black font-semibold text-lg
+        shadow-lg
+        hover:scale-105 hover:shadow-[0_0_30px_rgba(255,200,0,0.6)]
+        transition-all duration-300
+        max-md:w-full
+      "
+    >
+      <span className="relative z-10">Sell Now →</span>
 
-    <div className="
-      relative w-10 h-10 rounded-full
-      bg-gradient-to-br from-green-400 to-emerald-600
-      flex items-center justify-center
-      shadow-md
-    ">
-      <img
-        src="https://cryptologos.cc/logos/tether-usdt-logo.png"
-        alt="usdt"
-        className="w-6 h-6"
-      />
+      {/* Shine Effect */}
+      <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-20 transition"></span>
+    </button>
+
+    {/* DIVIDER */}
+    <div className="hidden md:block w-[1px] h-12 bg-white/10"></div>
+
+    {/* RATE CARD */}
+    <div className="flex items-center gap-4">
+
+      {/* Logo */}
+      <div className="w-12 h-12 
+                      bg-gradient-to-br from-green-400 to-emerald-600
+                      flex items-center justify-center
+                      shadow-lg rounded-full">
+        <img
+          src="https://cryptologos.cc/logos/tether-usdt-logo.png"
+          alt="usdt"
+          className="w-7 h-7 "
+        />
+      </div>
+
+      {/* TEXT */}
+      <div className="flex flex-col">
+
+        <div className="flex items-center gap-2 text-xs text-gray-400 uppercase tracking-wider">
+          <span>Live USDT Rate</span>
+          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+        </div>
+
+        <div className="flex items-baseline gap-2 mt-1 justify-end text-end">
+
+          <span className="text-gray-400 text-lg">₹</span>
+
+          <span className="
+            text-3xl font-bold
+            bg-gradient-to-r from-green-400 to-emerald-500
+            bg-clip-text text-transparent
+          ">
+            {rate ? rate : "—"}
+          </span>
+
+        </div>
+
+      </div>
     </div>
+
   </div>
-
-  {/* Text Section */}
-  <div className="flex flex-col">
-
-    <div className="flex items-center gap-2">
-      <span className="text-xs text-gray-400">
-        Today USDT Rate
-      </span>
-
-      {/* Live Dot */}
-      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-    </div>
-
-    <div className="flex items-center gap-2 mt-1 max-md:items-end justify-end">
-
-      <span className="text-gray-400 text-4xl">₹</span>
-
-      <span className="
-        text-4xl font-bold
-        bg-gradient-to-r from-green-400 to-emerald-500
-        bg-clip-text text-transparent justify-end items-end text-end
-      ">
-        {rate ? rate : "—"}
-      </span>
-
-    </div>
-  </div>
-
 </div>
-    </div>
 
     {/* ================= RATE CARD ================= */}
 
@@ -239,9 +251,9 @@ bg-white dark:bg-black transition-colors duration-500">
         <LivePrices />
       </section>
 
-         <div className="relative ">
-         <CryptoLogos />
-         </div>
+     <div className="relative bg-black">
+  <CryptoLogos />
+</div>
 
       {/* Why Choose Us */}
    <section className="relative py-12 bg-black overflow-hidden">
@@ -741,7 +753,7 @@ bg-white dark:bg-black transition-colors duration-500">
 
 
 {/* ================= ULTRA PREMIUM TRUST SECTION ================= */}
-<section className="relative py-24 overflow-hidden max-md:pb-8 max-md:mb-12 max-md:pt-[1rem] ">
+<section className="relative py-12 overflow-hidden max-md:pb-8 max-md:mb-12 max-md:pt-[1rem] ">
 
   {/* Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
