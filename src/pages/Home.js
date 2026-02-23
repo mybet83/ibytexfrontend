@@ -20,7 +20,7 @@ import {
   HiSupport,
   HiCreditCard,
 } from "react-icons/hi";
-import { SparklesCore } from "../components/ui/sparkles";
+
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -49,6 +49,38 @@ const Home = () => {
       console.error("News fetch failed");
     }
   };
+  
+   const [deferredPrompt, setDeferredPrompt] = useState(null);
+const [showInstallCard, setShowInstallCard] = useState(false);
+
+useEffect(() => {
+  const handler = (e) => {
+    e.preventDefault();
+    setDeferredPrompt(e);
+
+    setTimeout(() => {
+       setShowInstallCard(true);
+    },4000);
+  };
+
+  window.addEventListener("beforeinstallprompt", handler);
+
+  return () => window.removeEventListener("beforeinstallprompt", handler);
+}, []);
+
+const handleInstallClick = async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+
+  setDeferredPrompt(null);
+  setShowInstallCard(false);
+};
+
+const handleLater = () => {
+  setShowInstallCard(false);
+};
 
   useEffect(() => {
     setTimeout(() => {
@@ -89,6 +121,9 @@ const navigate = useNavigate();
 
 function AnimatedCounter({ end }) {
   const [count, setCount] = useState(0);
+
+
+
 
   useEffect(() => {
     let start = 0;
@@ -190,6 +225,7 @@ bg-white dark:bg-black transition-colors duration-500">
       {/* Shine Effect */}
       <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-20 transition"></span>
     </button>
+
 
     {/* DIVIDER */}
     <div className="hidden md:block w-[1px] h-12 bg-white/10"></div>
@@ -885,7 +921,89 @@ bg-white dark:bg-black transition-colors duration-500">
   </div>
 </section>
 
+{showInstallCard && (
+  <div className="fixed bottom-6 right-6 z-50 max-md:bottom-4 max-md:right-4">
 
+    <div className="
+      relative w-[380px] max-md:w-[92vw]
+      p-[1px] rounded-3xl
+      bg-gradient-to-r from-yellow-400 via-blue-500 to-yellow-400
+      animate-borderFlow
+    ">
+
+      <div className="
+        relative bg-[#0b0f1a]/95 backdrop-blur-2xl
+        rounded-3xl p-6
+        shadow-[0_25px_80px_rgba(0,0,0,0.7)]
+        animate-slidePremium
+      ">
+
+        {/* Close Button */}
+        <button
+          onClick={handleLater}
+          className="absolute top-4 right-4 text-gray-500 hover:text-white transition"
+        >
+          ✕
+        </button>
+
+        {/* Logo with Glow */}
+        <div className="relative w-16 h-16 rounded-2xl
+        flex items-center justify-center
+        bg-white/5 border border-white/10
+        shadow-[0_0_30px_rgba(255,200,0,0.3)]
+        overflow-hidden">
+
+          <img
+            src="/logot.png"
+            alt="iBytex Logo"
+            className="w-10 h-10 object-contain"
+          />
+
+          <div className="absolute inset-0 rounded-2xl
+          bg-gradient-to-br from-yellow-400/20 to-blue-500/20 blur-xl opacity-60"></div>
+        </div>
+
+        {/* Title */}
+        <h3 className="mt-5 text-xl font-semibold
+        bg-gradient-to-r from-yellow-400 to-blue-400
+        bg-clip-text text-transparent">
+          Install iBytex
+        </h3>
+
+        <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+          Get lightning fast access, real-time price updates,
+          and a smoother trading experience.
+        </p>
+
+        {/* Buttons */}
+        <div className="flex justify-end gap-3 mt-6">
+
+          <button
+            onClick={handleLater}
+            className="px-4 py-2 rounded-xl
+            bg-white/5 text-gray-300
+            hover:bg-white/10 transition"
+          >
+            Later
+          </button>
+
+          <button
+            onClick={handleInstallClick}
+            className="px-6 py-2 rounded-xl
+            bg-gold-gradient
+            text-black font-bold
+            shadow-[0_0_25px_rgba(255,200,0,0.5)]
+            hover:scale-105 transition-all duration-300"
+          >
+            Install Now
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+)}
 
 
 

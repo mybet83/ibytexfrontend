@@ -5,9 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
 import 'react-toastify/ReactToastify.css';
-
-
-import { register } from "./serviceWorkerRegistration";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -22,7 +20,7 @@ root.render(
 );
 
 
-register();
+serviceWorkerRegistration.register();
 
 setTimeout(() => {
   const loader = document.getElementById("initial-loader");
