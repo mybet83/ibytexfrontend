@@ -152,7 +152,7 @@
 
 
 
-import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeContext";   // 👈 ADD THIS
 
 import Home from "./pages/Home";
@@ -291,7 +291,7 @@ function App() {
               element={<AdminActiveUsers />}
             />
 
-            <Route path="/" element={<Navigate to="/home" />} />
+
 
           </Routes>
         </div>
