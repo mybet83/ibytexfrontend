@@ -16,7 +16,10 @@ import {
   HiCube,
   HiCreditCard,
   HiCog,
-  HiChartPie
+ HiCurrencyRupee,
+  HiTrendingUp,
+
+  HiLockClosed,
 } from "react-icons/hi";
 
 const API = process.env.REACT_APP_API_URL;
@@ -260,7 +263,7 @@ useEffect(() => {
 
   /* ================= BTC ================= */
 
-  const StatCard = ({ title, value, green, badge }) => {
+  const StatCard = ({ title, value, green, badge ,icon }) => {
     const numericValue = Number(String(value).replace(/[^0-9.-]+/g, ""));
 
     const hasRupee = String(value).includes("₹");
@@ -270,13 +273,18 @@ useEffect(() => {
       <div
         className="relative bg-white/5 backdrop-blur-xl 
                     border border-white/10 
-                    p-6 rounded-2xl 
+                    p-4 rounded-2xl 
                     transition-all duration-300 
                     hover:-translate-y-1 
                     hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] max-md:p-3"
       >
         {/* TITLE + BADGE */}
         <div className="flex items-center justify-between">
+             <div className="w-14 h-14 flex items-center justify-center 
+        rounded-xl bg-white/5 border border-white/10 max-md:w-8 max-md:h-8">
+          {icon}
+        </div>
+
           <p className="text-gray-400 text-sm tracking-wide max-md:text-[12px]">
             {title}
           </p>
@@ -290,11 +298,12 @@ useEffect(() => {
               {badge}
             </span>
           )}
+        
         </div>
 
         {/* VALUE WITH COUNTUP */}
         <h2
-          className={`text-3xl font-bold mt-4 tracking-tight max-md:text-xl max-md:mt-2
+          className={`text-3xl font-bold mt-2 tracking-tight max-md:text-xl max-md:mt-2 justify-end items-end text-end
         ${green ? "text-emerald-400" : "text-white"}`}
         >
           {hasRupee && "₹ "}
@@ -307,9 +316,12 @@ useEffect(() => {
 
           {hasUSDT && " USDT"}
         </h2>
+
       </div>
     );
   };
+
+  
 
   return (
     <div className="h-screen flex bg-[#0b0f19] text-white overflow-hidden">
@@ -580,25 +592,32 @@ py-2 z-50"
 
             {/* STAT CARDS */}
             <div className="grid md:grid-cols-4 gap-6 mb-10 max-md:grid-cols-2">
-              <StatCard
-                title="Live USDT Rate"
-                value={`₹ ${rate}`}
-                green
-                badge="LIVE"
-              />
+             <StatCard
+  title="Live USDT Rate"
+  value={`₹ ${rate}`}
+  green
+  badge="LIVE"
+  icon={<HiCurrencyRupee className="text-2xl text-emerald-400" />}
+/>
 
-              <StatCard title="Today USDT Trade" value={`${todayTrade} USDT`} />
+<StatCard
+  title="USDT Trade"
+  value={`${todayTrade} USDT`}
+  icon={<HiTrendingUp className="text-2xl text-blue-400" />}
+/>
 
-              <StatCard
-                title="Available Balance"
-                value={`₹ ${Number(availableBalance).toLocaleString()}`}
-                green
-              />
+<StatCard
+  title="Available Balance"
+  value={`₹ ${Number(availableBalance).toLocaleString()}`}
+  green
+  icon={<HiCash className="text-2xl text-emerald-400" />}
+/>
 
-              <StatCard
-                title="Locked Withdrawn"
-                value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
-              />
+<StatCard
+  title="Locked Withdrawn"
+  value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
+  icon={<HiLockClosed className="text-2xl text-yellow-400" />}
+/>
             </div>
 
             {/* RECENT ACTIVITY */}
