@@ -160,6 +160,43 @@ export default function Navbar() {
       >
         <div className="flex flex-col px-6 py-6 gap-4 text-gray-300">
 
+          <div
+            className="relative"
+            onMouseEnter={() => setActiveDropdown("crypto")}
+            onMouseLeave={() => setActiveDropdown(null)}
+          >
+            <button className="flex items-center gap-1 hover:text-yellow-400 transition">
+              Crypto Trading
+              <motion.div
+                animate={{ rotate: activeDropdown === "crypto" ? 180 : 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <ChevronDown size={16} />
+              </motion.div>
+            </button>
+
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={
+                activeDropdown === "crypto"
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: -10 }
+              }
+              transition={{ duration: 0.2 }}
+              className={`absolute top-8 left-0 bg-[#1E2329] border border-white/5 rounded-lg shadow-xl p-5 w-56 ${
+                activeDropdown === "crypto" ? "visible" : "invisible"
+              }`}
+            >
+              <Link to="/login" className="block text-gray-400 hover:text-white">
+                Sell USDT
+              </Link>
+
+              <Link to="/signup" className="block text-gray-400 hover:text-white mt-3">
+                Buy USDT
+              </Link>
+            </motion.div>
+          </div>
+
           <Link to="/home" onClick={() => setMobileOpen(false)}>
             Markets
           </Link>
@@ -169,12 +206,7 @@ export default function Navbar() {
           </Link>
 
           {/* THEME TOGGLE MOBILE */}
-          <button
-            onClick={() => setDark(!dark)}
-            className="px-3 py-2  text-left"
-          >
-            {dark ? "🌞 Light Mode" : "🌙 Dark Mode"}
-          </button>
+          
 
           {user ? (
             <HeaderUserMenu mobile />
@@ -189,7 +221,7 @@ export default function Navbar() {
 
               <Link
                 to="/signup"
-                className="px-4 py-2 rounded-md bg-yellow-400 text-black text-center font-semibold"
+                className="px-4 py-2 rounded-md bg-gold-gradient text-black text-center font-semibold"
               >
                 Get Started
               </Link>

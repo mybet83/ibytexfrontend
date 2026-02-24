@@ -91,18 +91,18 @@ const PayoutMethods = () => {
   };
 
 return (
-  <div className="space-y-10">
+  <div className="space-y-10 max-md:space-y-5">
 
     {/* ================= HEADER ================= */}
-    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-[#0f172a] to-[#111827] p-8 flex justify-between items-center shadow-xl">
+    <div className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-r from-[#0f172a] to-[#111827] p-8 flex justify-between items-center shadow-xl max-md:p-3">
 
       <div className="absolute -top-20 -left-20 w-72 h-72 bg-cyan-500/10 blur-[120px] rounded-full"></div>
 
       <div className="relative z-10">
-        <h1 className="text-3xl font-bold text-white tracking-tight">
+        <h1 className="text-3xl font-bold text-white tracking-tight max-md:text-2xl">
           Payout Methods
         </h1>
-        <p className="text-gray-400 text-sm mt-2">
+        <p className="text-gray-400 text-sm mt-2 max-md:text-[12px] max-md:w-[80%]">
           Securely manage your bank accounts & UPI IDs
         </p>
       </div>
@@ -113,9 +113,9 @@ return (
           setOpen(true);
         }}
         className="relative z-10 px-6 py-3 rounded-xl 
-        bg-gradient-to-r from-cyan-500 to-blue-500
+       bg-gold-gradient text-black
         hover:scale-105 transition-all duration-300
-        shadow-lg font-semibold"
+        shadow-lg font-semibold max-md:text-[12px] max-md:px-3 max-md:py-2"
       >
         + Add New Account
       </button>
@@ -129,12 +129,12 @@ return (
 
         <div className="relative z-10">
           <div className="text-5xl mb-6">🏦</div>
-          <p className="text-gray-400 mb-6 text-lg">
+          <p className="text-gray-400 mb-6 text-lg max-md:text-[14px]">
             No payout methods added yet
           </p>
           <button
             onClick={() => setOpen(true)}
-            className="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 font-semibold hover:scale-105 transition-all duration-300"
+            className="px-8 py-3 rounded-xl bg-gold-gradient text-black  font-semibold hover:scale-105 transition-all duration-300"
           >
             Add First Method
           </button>
@@ -143,17 +143,17 @@ return (
     )}
 
     {/* ================= LIST ================= */}
-    <div className="grid md:grid-cols-2 gap-8">
+    <div className="grid md:grid-cols-2 gap-8 max-md:gap-5">
       {methods.map((item) => (
         <div
           key={item._id}
-          className="group relative overflow-hidden rounded-3xl 
+          className="group relative overflow-hidden rounded-xl 
           border border-white/10 
           bg-gradient-to-br from-[#111827]/90 to-[#0f172a]/90
           backdrop-blur-xl p-8
           transition-all duration-500
           hover:-translate-y-2
-          hover:shadow-[0_0_40px_rgba(34,211,238,0.2)]"
+          hover:shadow-[0_0_40px_rgba(34,211,238,0.2)] max-md:p-3"
         >
 
           {/* Glow Hover Effect */}
@@ -168,7 +168,7 @@ return (
 
               {item.type === "BANK" ? (
                 <>
-                  <p className="text-lg font-semibold mt-2 text-white">
+                  <p className="text-lg font-semibold mt-2 text-white max-md:text-[14px]">
                     {item.bankName}
                   </p>
                   <p className="text-gray-400 text-sm mt-1">
@@ -176,7 +176,7 @@ return (
                   </p>
                 </>
               ) : (
-                <p className="text-lg font-semibold mt-2 text-white">
+                <p className="text-lg font-semibold mt-2 text-white max-md:text-[14px]">
                   {item.upiId}
                 </p>
               )}

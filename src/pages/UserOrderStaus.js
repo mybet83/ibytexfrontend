@@ -34,44 +34,44 @@ export default function MyOrders() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0e11] text-white">
+    <div className="min-h-screen  text-white max-mt-5">
       {/* HEADER */}
-      <div className="flex items-center justify-between px-10 py-8">
+      <div className="flex items-center justify-between ">
         <div className="flex items-center gap-4">
-          <img src="/logot.png" alt="logo" className="w-10" />
-          <h1 className="text-3xl font-bold">My Orders</h1>
+          
+          <h1 className="text-3xl font-bold max-md:text-2xl">My Orders</h1>
         </div>
 
         <button
           onClick={() => navigate("/finalpage")}
-          className="bg-yellow-400 hover:bg-yellow-500 text-black px-5 py-2 rounded-lg font-semibold transition"
+          className="bg-gold-gradient text-black px-5 py-2 rounded-lg font-semibold transition max-md:text-[14px]"
         >
           Back
         </button>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 pb-16">
+      <div className="max-w-6xl mx-auto px pb-16 mt-10 max-md:mt-5">
         {orders.length === 0 && (
           <div className="text-center text-gray-400 mt-32">
             No orders placed yet.
           </div>
         )}
 
-        <div className="grid gap-8">
+        <div className="grid gap-8 max-md:gap-5">
           {orders.map((o) => (
             <div
               key={o._id}
-              className="bg-[#181a20] rounded-2xl border border-gray-800 p-8 shadow-xl transition hover:border-yellow-400/30"
+              className="rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-yellow-400/30 max-md:p-3"
             >
               {/* TOP ROW */}
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <p className="text-gray-400 text-sm">Order ID</p>
-                  <p className="text-white text-sm break-all">{o._id}</p>
+                  <p className="text-white text-sm break-all max-md:text-[12px]">{o._id}</p>
                 </div>
 
                 <span
-                  className={`px-4 py-1 rounded-full text-xs font-semibold ${
+                  className={`px-4 py-1 rounded-full text-xs font-semibold max-md:text-[8px] ${
                     o.status === "PENDING"
                       ? "bg-yellow-500/20 text-yellow-400"
                       : o.status === "COMPLETED"
@@ -84,19 +84,19 @@ export default function MyOrders() {
               </div>
 
               {/* AMOUNT SECTION */}
-              <div className="grid md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-black/40 p-5 rounded-xl border border-gray-800">
-                  <p className="text-gray-400 text-sm">USDT</p>
+              <div className="grid md:grid-cols-3 gap-6 mb-8 max-md:gap-3 max-md:mb-3">
+                <div className="bg-black/40 p-5 rounded-xl border border-gray-800 max-md:p-3">
+                  <p className="text-gray-400 text-sm max-md:text-[12px]">USDT</p>
                   <p className="text-xl font-semibold">{o.usdtAmount}</p>
                 </div>
 
-                <div className="bg-black/40 p-5 rounded-xl border border-gray-800">
-                  <p className="text-gray-400 text-sm">Rate</p>
-                  <p className="text-xl font-semibold">₹ {o.rate}</p>
+                <div className="bg-black/40 p-5 rounded-xl border border-gray-800 max-md:p-3">
+                  <p className="text-gray-400 text-sm max-md:text-[12px]">Rate</p>
+                  <p className="text-xl font-semibold " >₹ {o.rate}</p>
                 </div>
 
-                <div className="bg-black/40 p-5 rounded-xl border border-gray-800">
-                  <p className="text-gray-400 text-sm">You Received</p>
+                <div className="bg-black/40 p-5 rounded-xl border border-gray-800 max-md:p-3">
+                  <p className="text-gray-400 text-sm max-md:text-[12px]">You Received</p>
                   <p className="text-xl font-semibold text-green-400">
                     ₹ {o.totalINR}
                   </p>
@@ -105,7 +105,7 @@ export default function MyOrders() {
 
               {/* PAYMENT METHOD */}
               <div className="mb-6">
-                <p className="text-gray-400 text-sm mb-3">Payment Details</p>
+                <p className="text-gray-400 text-sm mb-3 max-md:text-[12px]">Payment Details</p>
 
                 <div className="bg-black/30 p-5 rounded-xl border border-gray-800">
                   {o.paymentMethod === "UPI" && (
@@ -144,30 +144,27 @@ export default function MyOrders() {
               )}
 
               {o.status === "FAILED" && o.adminNotes && (
-  <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl">
-    <p className="text-red-400 font-semibold mb-2">
-      ❌ Order Failed
-    </p>
+                <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl">
+                  <p className="text-red-400 font-semibold mb-2">
+                    ❌ Order Failed
+                  </p>
 
-    <p className="text-xs text-red-300 font-semibold mb-1">
-      Admin Note
-    </p>
-    <p className="text-sm text-gray-300">
-      {o.adminNotes}
-    </p>
-  </div>
-)}
-
+                  <p className="text-xs text-red-300 font-semibold mb-1">
+                    Admin Note
+                  </p>
+                  <p className="text-sm text-gray-300">{o.adminNotes}</p>
+                </div>
+              )}
 
               {o.status === "COMPLETED" && (
-                <div className="bg-green-500/10 border border-green-500/30 p-5 rounded-xl">
-                  <p className="text-green-400 font-semibold text-lg mb-4">
+                <div className="bg-green-500/10 border border-green-500/30 p-5 rounded-xl max-md:p-3">
+                  <p className="text-green-400 font-semibold text-lg mb-4 max-md:text-[12px] max-md:mb-2">
                     ✅ Order Successful
                   </p>
 
                   {/* ADMIN NOTE */}
                   {o.adminNotes && (
-                    <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-lg">
+                    <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-lg max-md:p-2">
                       <p className="text-yellow-400 text-xs font-semibold mb-1">
                         Admin Note
                       </p>

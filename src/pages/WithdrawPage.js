@@ -1,7 +1,6 @@
 // import React, { useEffect, useState } from "react";
 // import axios from "axios";
 
-
 // const API = process.env.REACT_APP_API_URL;
 
 // export default function WithdrawPage({ onWithdrawSuccess }) {
@@ -12,9 +11,6 @@
 // const [paymentMethods, setPaymentMethods] = useState([]);
 // const [selectedMethod, setSelectedMethod] = useState(null);
 
-
-
-
 //   const token = localStorage.getItem("token");
 
 //   const fetchPaymentMethods = async () => {
@@ -22,10 +18,8 @@
 //   headers: { Authorization: `Bearer ${token}` },
 // });
 
-
 //   setPaymentMethods(res.data);
 // };
-
 
 //   const fetchWithdrawals = async () => {
 //     const res = await axios.get(`${API}/api/withdrawal/my`, {
@@ -52,7 +46,6 @@
 //   0
 // );
 
-
 //   const approvedWithdrawals = withdrawalsRes.data.filter(
 //     w => w.status === "APPROVED"
 //   );
@@ -64,7 +57,6 @@
 
 //   setAvailable(totalSold - totalWithdrawn);
 // };
-
 
 //   useEffect(() => {
 //     fetchWithdrawals();
@@ -101,9 +93,6 @@
 //     onWithdrawSuccess();
 //   }
 // };
-
-
-
 
 // return (
 //   <div className="min-h-screen bg-gradient-to-br from-[#0b1220] to-[#050b18] p-10 text-white">
@@ -245,37 +234,6 @@
 
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -287,13 +245,13 @@ import { motion, AnimatePresence } from "framer-motion";
 const API = process.env.REACT_APP_API_URL;
 
 export default function WithdrawPage({ onWithdrawSuccess }) {
-
   const [amount, setAmount] = useState("");
   const [available, setAvailable] = useState(0);
   const [withdrawals, setWithdrawals] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedMethod, setSelectedMethod] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [balanceLoading, setBalanceLoading] = useState(true);
+  const [historyLoading, setHistoryLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const token = localStorage.getItem("token");
@@ -312,87 +270,70 @@ export default function WithdrawPage({ onWithdrawSuccess }) {
       headers: { Authorization: `Bearer ${token}` },
     });
     setWithdrawals(res.data);
+    setHistoryLoading(false);
   };
 
   const fetchAvailableBalance = async () => {
-    const ordersRes = await axios.get(`${API}/orders/my`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+      const [ordersRes, withdrawalsRes] = await Promise.all([
+        axios.get(`${API}/orders/my`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get(`${API}/api/withdrawal/my`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
 
-    const withdrawalsRes = await axios.get(`${API}/api/withdrawal/my`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+      const completed = ordersRes.data.filter((o) => o.status === "COMPLETED");
 
-    const completed = ordersRes.data.filter(
-      (o) => o.status === "COMPLETED"
-    );
-
-    const totalSold = completed.reduce(
-      (acc, curr) =>
-        acc +
-        Number(curr.usdtAmount || 0) *
-          Number(curr.rate || 0),
-      0
-    );
-
-    const approvedWithdrawals =
-      withdrawalsRes.data.filter(
-        (w) => w.status === "APPROVED"
-      );
-
-    const totalWithdrawn =
-      approvedWithdrawals.reduce(
+      const totalSold = completed.reduce(
         (acc, curr) =>
-          acc + Number(curr.amount),
-        0
+          acc + Number(curr.usdtAmount || 0) * Number(curr.rate || 0),
+        0,
       );
 
-    setAvailable(totalSold - totalWithdrawn);
+      const approvedWithdrawals = withdrawalsRes.data.filter(
+        (w) => w.status === "APPROVED",
+      );
+
+      const totalWithdrawn = approvedWithdrawals.reduce(
+        (acc, curr) => acc + Number(curr.amount),
+        0,
+      );
+
+      setAvailable(totalSold - totalWithdrawn);
+    } catch (err) {
+      console.log("Balance error");
+    } finally {
+      setBalanceLoading(false);
+    }
   };
 
   /* ================= INITIAL LOAD ================= */
 
   useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      await fetchWithdrawals();
-      await fetchAvailableBalance();
-      await fetchPaymentMethods();
-      setLoading(false);
-    };
-    load();
+    fetchWithdrawals();
+    fetchAvailableBalance();
+    fetchPaymentMethods();
   }, []);
 
-  /* ================= REAL TIME BALANCE SYNC ================= */
+  /* ================= REAL TIME SYNC ================= */
 
-useEffect(() => {
-  let isFetching = false;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchWithdrawals();
+      fetchAvailableBalance();
+    }, 6000);
 
-  const interval = setInterval(async () => {
-    if (isFetching) return;
-
-    isFetching = true;
-    try {
-      await fetchWithdrawals();
-      await fetchAvailableBalance();
-    } catch (err) {
-      console.log("Silent sync error");
-    }
-    isFetching = false;
-  }, 6000);
-
-  return () => clearInterval(interval);
-}, []);
-
+    return () => clearInterval(interval);
+  }, []);
 
   /* ================= WITHDRAW ================= */
 
   const handleWithdraw = async () => {
-    if (!selectedMethod)
-      return toast.error("Select payment method");
+    if (!selectedMethod) return toast.error("Select payment method");
 
-    if (Number(amount) > available)
-      return toast.error("Insufficient balance");
+    if (Number(amount) > available) return toast.error("Insufficient balance");
 
     await axios.post(
       `${API}/api/withdrawal/create`,
@@ -401,7 +342,7 @@ useEffect(() => {
         paymentMethod: selectedMethod.type,
         paymentDetails: selectedMethod,
       },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: { Authorization: `Bearer ${token}` } },
     );
 
     toast.success("Withdrawal Requested 🚀");
@@ -423,56 +364,40 @@ useEffect(() => {
   /* ================= UI ================= */
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-white relative overflow-hidden p-10">
-
-      {/* GLOW BACKGROUND */}
-      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-yellow-500/10 blur-[140px] rounded-full"></div>
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-emerald-500/10 blur-[140px] rounded-full"></div>
-
+    <div className="min-h-screen  text-white relative overflow-hidden ">
       {showConfetti && <Confetti recycle={false} numberOfPieces={300} />}
-
       <ToastContainer theme="dark" />
 
       {/* HEADER */}
-      <div className="mb-12 relative z-10">
-        <h1 className="text-4xl font-bold tracking-tight">
-          Withdraw Funds
-        </h1>
-        <p className="text-gray-400 mt-2">
+      <div className="mb-12 max-md:mb-5">
+        <h1 className="text-4xl font-bold max-md:text-2xl">Withdraw Funds</h1>
+        <p className="text-gray-400 mt-2 max-md:text-[14px]">
           Transfer funds securely to your payout method.
         </p>
       </div>
 
       {/* BALANCE CARD */}
-      <motion.div
-        whileHover={{ y: -6 }}
-        className="relative z-10 backdrop-blur-xl bg-white/5 border border-white/10 p-8 rounded-3xl shadow-2xl mb-12 overflow-hidden"
-      >
-        <div className="absolute inset-0 rounded-3xl border border-transparent bg-gradient-to-r from-yellow-500/30 to-emerald-400/30 opacity-20 animate-pulse"></div>
-
-        <p className="text-gray-400 uppercase text-sm tracking-wider">
+      <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-8 rounded-xl shadow-2xl mb-12 max-md:p-3 max-md:px-5 max-md:mb-5">
+        <p className="text-gray-400 uppercase text-sm tracking-wider max-md:text-xs">
           Available Balance
         </p>
 
-        {loading ? (
-          <div className="h-12 w-52 bg-gray-700 animate-pulse rounded mt-4"></div>
+        {balanceLoading ? (
+          <p className="text-yellow-400 text-2xl font-semibold mt-4">
+            Loading...
+          </p>
         ) : (
-          <h2 className="text-5xl font-bold text-emerald-400 mt-4">
+          <h2 className="text-5xl font-bold text-emerald-400 mt-4 max-md:text-2xl">
             ₹ <CountUp end={available} duration={1.2} separator="," />
           </h2>
         )}
-      </motion.div>
+      </div>
 
       {/* WITHDRAW SECTION */}
-      <motion.div
-        whileHover={{ y: -4 }}
-        className="relative z-10 backdrop-blur-xl bg-white/5 border border-white/10 p-8 rounded-3xl shadow-2xl mb-16"
-      >
-        <div className="grid md:grid-cols-2 gap-10">
-
-          {/* AMOUNT */}
+      <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-8 rounded-xl shadow-2xl mb-16 max-md:p-5 max-md:mb-5">
+        <div className="grid md:grid-cols-2 gap-10 max-md:gap-5 ">
           <div>
-            <label className="text-gray-400 text-sm uppercase tracking-wide">
+            <label className="text-gray-400 text-sm uppercase tracking-wide max-md:text-xs">
               Withdraw Amount
             </label>
 
@@ -481,123 +406,113 @@ useEffect(() => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="Enter amount"
-              className="w-full mt-3 bg-[#111827] border border-white/10 rounded-xl p-4 text-lg focus:outline-none focus:border-yellow-500 transition"
+              className="w-full mt-3 bg-[#111827] border border-white/10 rounded-xl p-4 text-lg focus:outline-none focus:border-yellow-500 transition max-md:text-[14px]"
             />
           </div>
 
-          {/* PAYMENT METHODS */}
           <div>
-            <h3 className="text-gray-400 text-sm uppercase tracking-wide mb-3">
+            <h3 className="text-gray-400 text-sm uppercase tracking-wide mb-3 max-md:text-xs">
               Select Payment Method
             </h3>
 
             <div className="grid gap-4">
               {paymentMethods.map((method) => (
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
+                <div
                   key={method._id}
                   onClick={() => setSelectedMethod(method)}
                   className={`p-5 rounded-2xl cursor-pointer border transition-all ${
                     selectedMethod?._id === method._id
-                      ? "border-yellow-500 bg-yellow-500/10 shadow-lg"
-                      : "border-white/10 bg-[#111827] hover:border-white/30"
+                      ? "border-yellow-500 bg-yellow-500/10"
+                      : "border-white/10 bg-[#111827]"
                   }`}
                 >
-                  <p className="font-semibold text-lg">
+                  <p className="font-semibold text-lg max-md:text-xs">
                     {method.type === "UPI" ? "UPI ID" : "Bank Account"}
                   </p>
 
                   {method.type === "UPI" ? (
-                    <p className="text-gray-400 mt-1">
+                    <p className="text-gray-400 mt-1 max-md:text-[14px]">
                       {method.upiId}
                     </p>
                   ) : (
                     <>
-                      <p className="text-gray-400 mt-1">
+                      <p className="text-gray-400 mt-1 max-md:text-[14px]">
                         {method.bankName}
                       </p>
-                      <p className="text-gray-400">
+                      <p className="text-gray-400 max-md:text-[14px]">
                         {method.accountNumber}
                       </p>
                     </>
                   )}
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* BUTTON */}
-        <motion.button
-          whileTap={{ scale: 0.97 }}
+        <button
+          type="button"
           onClick={handleWithdraw}
-          className="mt-12 w-full py-4 rounded-2xl font-bold text-black text-lg shadow-xl transition-all"
+          className="mt-12 w-full py-4 rounded-xl font-bold text-black text-lg max-md:text-[16px] max-md:mt-5"
           style={{
-            background: "linear-gradient(135deg, #F5C56B 0%, #D4A017 100%)"
+            background: "linear-gradient(135deg, #F5C56B 0%, #D4A017 100%)",
           }}
         >
           Request Withdrawal
-        </motion.button>
-      </motion.div>
+        </button>
+      </div>
+
+
+
+
+
+
+
+
+
 
       {/* HISTORY */}
-      <div className="relative z-10">
-        <h3 className="text-2xl font-semibold mb-8">
-          Withdrawal History
-        </h3>
+      <div>
+        <h3 className="text-2xl font-semibold mb-8 max-md:text-2xl max-md:mb-5">Withdrawal History</h3>
 
-        {loading ? (
-          <div className="space-y-5">
-            {[1,2,3].map((i)=>(
-              <div key={i} className="h-20 bg-gray-800 animate-pulse rounded-xl"></div>
-            ))}
-          </div>
+        {historyLoading ? (
+          <p className="text-gray-400">Loading history...</p>
         ) : (
           <div className="space-y-5">
-            <AnimatePresence>
-              {withdrawals.map((w) => (
-                <motion.div
-                  key={w._id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  whileHover={{ scale: 1.01 }}
-                  className="backdrop-blur-xl bg-white/5 border border-white/10 p-6 rounded-2xl flex justify-between items-center shadow-lg transition"
-                >
-                  <div>
-                    <p className="text-xl font-semibold">
-                      ₹ {w.amount}
-                    </p>
-                    <p className="text-sm text-gray-400 mt-1">
-                      {new Date(w.createdAt).toLocaleString()}
-                    </p>
+            {withdrawals.map((w) => (
+              <div
+                key={w._id}
+                className="backdrop-blur-xl bg-white/5 border border-white/10 p-6 rounded-2xl flex justify-between items-center max-md:p-3"
+              >
+                <div>
+                  <p className="text-xl font-semibold max-md:text-[14px]">₹ {w.amount}</p>
+                  <p className="text-sm text-gray-400 mt-1 max-md:text-[12px]">
+                    {new Date(w.createdAt).toLocaleString()}
+                  </p>
 
-                      {w.status === "APPROVED" && w.adminUtrNumber && (
-      <p className="text-blue-400 text-sm mt-1">
-        UTR Number: {w.adminUtrNumber}
-      </p>
-    )}
-                  </div>
+                  {w.status === "APPROVED" && w.adminUtrNumber && (
+                    <p className="text-blue-400 text-sm mt-1 max-md:text-[12px]">
+                      UTR Number: {w.adminUtrNumber}
+                    </p>
+                  )}
+                </div>
 
-                  <div
-                    className={`px-6 py-2 rounded-full text-sm font-semibold ${
-                      w.status === "APPROVED"
-                        ? "bg-green-500/20 text-green-400 animate-pulse"
-                        : w.status === "REJECTED"
+                <div
+                  className={`px-6 py-2 rounded-full text-sm font-semibold max-md:text-[10px] max-md:px-3 max-md:py-1 ${
+                    w.status === "APPROVED"
+                      ? "bg-green-500/20 text-green-400"
+                      : w.status === "REJECTED"
                         ? "bg-red-500/20 text-red-400"
                         : "bg-yellow-500/20 text-yellow-400"
-                    }`}
-                  >
-                    {w.status}
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+                  }`}
+                >
+                  {w.status}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
-
     </div>
   );
 }

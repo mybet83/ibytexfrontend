@@ -15,7 +15,8 @@ import {
   HiArrowUp,
   HiCube,
   HiCreditCard,
-  HiCog
+  HiCog,
+  HiChartPie
 } from "react-icons/hi";
 
 const API = process.env.REACT_APP_API_URL;
@@ -35,6 +36,8 @@ const DashboardLayout = () => {
   const availableBalance = totalSold - approvedWithdraw;
   const [loading, setLoading] = useState(true);
   const [supportOpen, setSupportOpen] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -80,7 +83,7 @@ const DashboardLayout = () => {
         0,
       );
 
-      setTodayTrade(todayTotal);
+ 
 
       setTodayTrade(todayTotalUSDT);
 
@@ -173,9 +176,13 @@ const DashboardLayout = () => {
     fetchRecentActivity();
   };
 
-  const WithdrawPage = () => (
-    <WithdrawPageComponent onWithdrawSuccess={refreshDashboardData} />
-  );
+
+
+
+const WithdrawPage = () => {
+  return <WithdrawPageComponent />;
+};
+
 
   // First load
   useEffect(() => {
@@ -191,10 +198,16 @@ const DashboardLayout = () => {
       ]);
 
       setLoading(false);
+
+      // ✅ sirf first load pe animate
+      setHasAnimated(true);
     };
 
     loadData();
   }, []);
+
+  // master refresh 
+
 
   // Rate live refresh
   useEffect(() => {
@@ -217,6 +230,19 @@ const DashboardLayout = () => {
       )}
     </button>
   );
+
+  // ✅ Dashboard auto refresh (ONLY when dashboard active)
+useEffect(() => {
+  if (activePage !== "dashboard") return;
+
+  const interval = setInterval(() => {
+    fetchUserOrders();
+    fetchApprovedWithdrawals();
+    fetchRecentActivity();
+  }, 5000);
+
+  return () => clearInterval(interval);
+}, [activePage]);
 
   // Dashboard live refresh
 
@@ -273,7 +299,11 @@ const DashboardLayout = () => {
         >
           {hasRupee && "₹ "}
 
-          <CountUp end={numericValue} duration={1.8} separator="," />
+          {!hasAnimated ? (
+            <CountUp end={numericValue} duration={1.8} separator="," />
+          ) : (
+            numericValue.toLocaleString()
+          )}
 
           {hasUSDT && " USDT"}
         </h2>
@@ -292,8 +322,8 @@ const DashboardLayout = () => {
       </div>
 
       {/* SIDEBAR */}
-<div
-  className={`
+      <div
+        className={`
     fixed md:relative top-0 right-0 md:right-auto
     h-screen bg-[#111827] border-l md:border-r border-gray-800
     transition-all duration-300 ease-in-out
@@ -305,8 +335,7 @@ const DashboardLayout = () => {
     md:translate-x-0
     ${sidebarOpen ? "md:w-64  transition-all duration-300 ease-in-out" : "md:w-20  transition-all duration-300 ease-in-out"}
   `}
->
-    
+      >
         {/* LOGO */}
         <div className="flex items-center justify-between p-4 border-b border-gray-800 group relative">
           <div
@@ -339,27 +368,32 @@ const DashboardLayout = () => {
         <nav className="p-4 space-y-3 flex-1">
           <SidebarItem
             label="Dashboard"
-             icon={<HiHome />}
+            icon={<HiHome />}
             open={sidebarOpen}
             onClick={() => setActivePage("dashboard")}
           />
           <SidebarItem
             label="Wallet"
-             icon={<HiCash />}
+            icon={<HiCash />}
             open={sidebarOpen}
             onClick={() => setActivePage("wallet")}
           />
           <SidebarItem
             label="Sell USDT"
-             icon={<HiArrowDown />}
+            icon={<HiArrowDown />}
             open={sidebarOpen}
             onClick={() => setActivePage("deposit")}
           />
           <SidebarItem
             label="Withdrawal"
-              icon={<HiArrowUp />}
+            icon={<HiArrowUp />}
             open={sidebarOpen}
-            onClick={() => setActivePage("withdraw")}
+           onClick={() => {
+  setActivePage(prev => prev === "withdraw" ? prev : "withdraw")
+  setTimeout(() => {
+    fetchApprovedWithdrawals();
+  }, 100);
+}}
           />
           <SidebarItem
             label="Orders"
@@ -382,7 +416,7 @@ const DashboardLayout = () => {
         </nav>
 
         {/* PROFILE */}
-        <div className="p-4 border-t border-gray-800 relative">
+        <div className="p-4 md:border-t border-gray-800 relative max-md:bottom-14 max-md:border-b">
           <button
             onClick={() => setProfileOpen(!profileOpen)}
             className="w-full flex items-center gap-3 hover:bg-[#1f2937] p-2 rounded-lg"
@@ -445,47 +479,49 @@ flex justify-around items-center
 py-2 z-50"
       >
         <BottomItem
-                icon={<HiHome />}
+          icon={<HiHome />}
           label="Home"
           active={activePage === "dashboard"}
           onClick={() => setActivePage("dashboard")}
         />
 
         <BottomItem
-          icon={<HiCash/>}
+          icon={<HiCash />}
           label="Wallet"
           active={activePage === "wallet"}
           onClick={() => setActivePage("wallet")}
         />
 
         <BottomItem
-             icon={<HiArrowUp/>}
+          icon={<HiArrowUp />}
           label="Sell USDT"
           active={activePage === "deposit"}
           onClick={() => setActivePage("deposit")}
         />
 
         <BottomItem
-     
-            icon={<HiArrowDown/>}
+          icon={<HiArrowDown />}
           label="Withdrawal"
           active={activePage === "withdraw"}
-          onClick={() => setActivePage("withdraw")}
+         onClick={() => {
+ setActivePage(prev => prev === "withdraw" ? prev : "withdraw")
+  setTimeout(() => {
+    fetchApprovedWithdrawals();
+  }, 100);
+}}
         />
         <BottomItem
-            label="Orders"
-            icon={<HiCube />}
-            active={activePage === "orders"}
-            onClick={() => setActivePage("orders")}
-          />
-          <BottomItem
-            label="Payout"
-            icon={<HiCreditCard />}
-            active={activePage === "payment-method"}
-            onClick={() => setActivePage("payment-method")}
-          />
-
-      
+          label="Orders"
+          icon={<HiCube />}
+          active={activePage === "orders"}
+          onClick={() => setActivePage("orders")}
+        />
+        <BottomItem
+          label="Payout"
+          icon={<HiCreditCard />}
+          active={activePage === "payment-method"}
+          onClick={() => setActivePage("payment-method")}
+        />
       </div>
 
       {/* OVERLAY MOBILE */}
@@ -509,9 +545,8 @@ py-2 z-50"
             {/* TOP BANNER */}
             <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl max-md:flex-col">
               {/* Glow Background */}
-               <div className="absolute bottom-0 right-0 w-72 h-72 bg-gold-gradient blur-[120px] rounded-full"></div>
+              <div className="absolute bottom-0 right-0 w-72 h-72 bg-gold-gradient blur-[120px] rounded-full"></div>
               <div className="absolute -top-20 -left-20 w-72 h-72 bg-blue-hero   blur-[120px] rounded-full"></div>
-             
 
               <div className="relative z-10">
                 <h1 className="text-3xl font-bold text-white font-sn bg-clip-text text-transparent max-md:text-[1.5rem]">
@@ -648,10 +683,10 @@ max-md:items-start
                                 {item.type === "SELL"
                                   ? `Sell ${item.amount} USDT`
                                   : `Withdraw ₹ ${item.amount}`}
-                              </h3> 
-                                 <p className="text-xs text-gray-400">
-                              {new Date(item.date).toLocaleString()}
-                            </p>
+                              </h3>
+                              <p className="text-xs text-gray-400">
+                                {new Date(item.date).toLocaleString()}
+                              </p>
 
                               {/* AMOUNT */}
                               {item.type === "SELL" && (
@@ -718,9 +753,7 @@ max-md:justify-between
 max-md:items-center
 "
                         >
-                          <div>
-                         
-                          </div>
+                          <div></div>
                           <button
                             onClick={() =>
                               setActivePage(
@@ -755,10 +788,10 @@ max-md:items-center
       {/* ================= SUPPORT ASSISTANT ================= */}
 
       {/* FLOATING BUTTON */}
-      <div className="fixed bottom-[5.5rem] right-6 z-50">
+      <div className="fixed bottom-[5.5rem] right-6 z-50 hidden">
         <button
           onClick={() => setSupportOpen(true)}
-          className="w-14 h-14 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg flex items-center justify-center text-black text-2xl hover:scale-110 transition-all duration-300"
+          className="w-14 h-14 rounded-full bg-gold-gradient shadow-lg flex items-center justify-center text-black text-2xl hover:scale-110 transition-all duration-300"
         >
           💬
         </button>
@@ -824,28 +857,9 @@ const StatCard = ({ title, value, green }) => (
   </div>
 );
 
-const DepositPage = () => (
- <PlaceOrder/>
-);
+const DepositPage = () => <PlaceOrder />;
 
-const OrdersPage = () => (
-<UserOrderStaus/>
-);
-const Payment = () => (
-
-    <PaymentMethod />
-
-);
+const OrdersPage = () => <UserOrderStaus />;
+const Payment = () => <PaymentMethod />;
 
 export default DashboardLayout;
-
-
-
-
-
-
-
-
-
-
-

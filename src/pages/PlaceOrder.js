@@ -585,21 +585,21 @@ export default function PlaceOrder() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#0b0e11] text-white px-6 py-10">
+      <div className="min-h-screen  text-white ">
 
         {/* HEADER */}
-        <div className="flex justify-between items-center max-w-7xl mx-auto mb-10">
-          <h1 className="text-2xl font-semibold">Sell USDT</h1>
+        <div className="flex justify-between items-center max-w-7xl mx-auto mb-10 max-md:mb-5">
+          <h1 className="text-2xl font-semibold ">Sell USDT</h1>
 
           <button
             onClick={() => navigate("/myorder")}
-            className="text-sm px-4 py-2 bg-[#1e2329] rounded-lg border border-gray-700 hover:border-yellow-400 transition"
+            className="text-sm px-4 py-2 bg-[#1e2329] rounded-lg border border-gray-700 hover:border-yellow-400 transition max-md:text-[12px]"
           >
             My Orders
           </button>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto max-md:gap-6">
 
           {/* LEFT SIDE */}
           <div className="lg:col-span-2 space-y-6">
@@ -615,13 +615,13 @@ export default function PlaceOrder() {
                     type="number"
                     value={usdt}
                     onChange={(e) => setUsdt(e.target.value)}
-                    className="w-full bg-[#0b0e11] border border-gray-700 px-4 py-3 rounded-lg focus:border-yellow-400 outline-none"
+                    className="w-full bg-[#0b0e11] border border-gray-700 px-4 py-3 rounded-lg focus:border-gray-400 outline-none"
                   />
                 </div>
 
                 <div>
                   <p className="text-xs text-gray-400 mb-2">Live Rate</p>
-                  <div className="bg-[#0b0e11] border border-gray-700 px-4 py-3 rounded-lg text-yellow-400 font-semibold">
+                  <div className="bg-[#0b0e11] border border-gray-700 px-4 py-3 rounded-lg text-white font-semibold">
                     ₹ {rate}
                   </div>
                 </div>
@@ -662,7 +662,7 @@ export default function PlaceOrder() {
                   navigator.clipboard.writeText(WALLET_ADDRESS);
                   toast.success("Wallet Copied");
                 }}
-                className="w-full py-2.5 bg-yellow-400 text-black rounded-lg font-semibold hover:bg-yellow-300 transition"
+                className="w-full py-2.5 bg-gold-gradient text-black rounded-lg font-semibold hover:bg-yellow-300 transition"
               >
                 Copy Address
               </button>
@@ -705,7 +705,7 @@ export default function PlaceOrder() {
 
             <button
               onClick={placeOrder}
-              className="w-full py-3 bg-yellow-400 text-black rounded-lg font-semibold hover:bg-yellow-300 transition"
+              className="w-full py-3 bg-gold-gradient text-black rounded-lg font-semibold hover:bg-yellow-300 transition"
             >
               Place Order
             </button>
@@ -714,7 +714,7 @@ export default function PlaceOrder() {
         </div>
       </div>
 
-      <Footer />
+    
     </>
   );
 }
