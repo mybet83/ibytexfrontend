@@ -20,7 +20,7 @@ root.render(
 );
 
 
-serviceWorkerRegistration.register();
+serviceWorkerRegistration.unregister();
 
 setTimeout(() => {
   const loader = document.getElementById("initial-loader");

@@ -1,5 +1,6 @@
 // src/serviceWorkerRegistration.js
 
+const CACHE_BUST = Date.now();
 const isLocalhost = Boolean(
   window.location.hostname === "localhost" ||
     window.location.hostname === "[::1]" ||
