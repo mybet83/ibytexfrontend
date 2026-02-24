@@ -18,7 +18,6 @@ import {
   HiCog,
  HiCurrencyRupee,
   HiTrendingUp,
-
   HiLockClosed,
 } from "react-icons/hi";
 
