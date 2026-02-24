@@ -291,7 +291,7 @@ function App() {
               element={<AdminActiveUsers />}
             />
 
-            <Route path="*" element={<Navigate to="/home" />} />
+            <Route path="/" element={<Navigate to="/home" />} />
 
           </Routes>
         </div>
