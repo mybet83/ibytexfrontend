@@ -21,7 +21,7 @@ export function register() {
     });
   }
 }
-
+                              
 function registerValidSW(swUrl) {
   navigator.serviceWorker
     .register(swUrl)

@@ -1,7 +1,7 @@
 // public/service-worker.js
 
 const CACHE_NAME = "ibytex-cache-v1";
-const urlsToCache = ["/", "/index.html"];
+const urlsToCache = ["/", "/home"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
