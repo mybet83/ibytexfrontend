@@ -34,6 +34,18 @@ function registerValidSW(swUrl) {
     });
 }
 
+export function unregister() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready
+      .then(registration => {
+        registration.unregister();
+      })
+      .catch(error => {
+        console.error(error.message);
+      });
+  }
+}
+
 function checkValidServiceWorker(swUrl) {
   fetch(swUrl)
     .then((response) => {
