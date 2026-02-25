@@ -893,22 +893,22 @@ transition-colors duration-500">
 
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 
       rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-blue-400/40 transition max-sm:px-3">
-        🛡 ISO 27001 Certified
+         ISO 27001 Certified
       </div>
 
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 
       rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-green-400/40 transition max-sm:px-3">
-        🔍 AML & KYC Verified
+         AML & KYC Verified
       </div>
 
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 
       rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-yellow-400/40 transition max-sm:px-3 ">
-        🔐 PCI DSS Secure
+         PCI DSS Secure
       </div>
 
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 
       rounded-xl px-6 py-4 text-sm text-gray-300 hover:border-purple-400/40 transition max-sm:px-3">
-        🌍 Global Compliance Ready
+         Global Compliance Ready
       </div>
 
     </motion.div>
