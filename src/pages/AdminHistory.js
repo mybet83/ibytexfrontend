@@ -13,34 +13,44 @@ export default function AdminHistory() {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  // ✅ Define today FIRST
   const today = new Date().toISOString().split("T")[0];
 
-  const [date, setDate] = useState(today); // default today
+  const [date, setDate] = useState(today);
   const [historyData, setHistoryData] = useState(null);
+  const [withdrawHistory, setWithdrawHistory] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("SELL");
 
-  // ================= FETCH HISTORY =================
   const fetchHistory = async (selectedDate = date) => {
     try {
       setLoading(true);
-
       const res = await axios.get(
         `${API}/orders/admin/history?date=${selectedDate}`,
         authHeader
       );
-
       setHistoryData(res.data);
-    } catch (err) {
+    } catch {
       toast.error("Failed to fetch history");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Auto load today history
+  const fetchWithdrawHistory = async (selectedDate = date) => {
+    try {
+      const res = await axios.get(
+        `${API}/admin/withdrawal/history?date=${selectedDate}`,
+        authHeader
+      );
+      setWithdrawHistory(res.data);
+    } catch {
+      toast.error("Failed to fetch withdrawal history");
+    }
+  };
+
   useEffect(() => {
     fetchHistory(today);
+    fetchWithdrawHistory(today);
   }, []);
 
   return (
@@ -49,7 +59,6 @@ export default function AdminHistory() {
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">📊 Transaction History</h1>
-
         <button
           onClick={() => navigate("/admin/dashboard")}
           className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg"
@@ -59,17 +68,19 @@ export default function AdminHistory() {
       </div>
 
       {/* DATE SELECT */}
-      <div className="bg-white/10 p-6 rounded-xl mb-8">
-        <div className="flex flex-col md:flex-row gap-4 items-center">
+      <div className="bg-white/10 p-6 rounded-xl mb-6">
+        <div className="flex gap-4 items-center">
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="px-4 py-3 rounded-lg bg-black/40 border border-gray-600"
           />
-
           <button
-            onClick={() => fetchHistory()}
+            onClick={() => {
+              fetchHistory();
+              fetchWithdrawHistory();
+            }}
             className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold"
           >
             {loading ? "Loading..." : "Get History"}
@@ -77,109 +88,231 @@ export default function AdminHistory() {
         </div>
       </div>
 
-      {/* SUMMARY */}
-      {historyData && (
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white/10 p-6 rounded-xl">
-            <p className="text-gray-400">Total USDT Received</p>
-            <h2 className="text-2xl font-bold text-green-400">
-              {historyData.totalUsdt}
-            </h2>
-          </div>
-
-          <div className="bg-white/10 p-6 rounded-xl">
-            <p className="text-gray-400">Total INR Paid</p>
-            <h2 className="text-2xl font-bold text-emerald-400">
-              ₹ {historyData.totalInrPaid}
-            </h2>
-          </div>
-        </div>
-      )}
-
-      {/* EMPTY */}
-      {historyData && historyData.orders.length === 0 && (
-        <div className="text-center text-gray-400 mt-10">
-          No transactions found for this date
-        </div>
-      )}
-
-      {/* ORDERS */}
-      {historyData && historyData.orders.map((o) => (
-        <div
-          key={o._id}
-          className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 mb-8"
+      {/* TOGGLE */}
+      <div className="flex gap-4 mb-8">
+        <button
+          onClick={() => setActiveTab("SELL")}
+          className={`px-6 py-2 rounded-xl font-semibold ${
+            activeTab === "SELL"
+              ? "bg-green-600"
+              : "bg-white/10 text-gray-300"
+          }`}
         >
+          💰 Sell History
+        </button>
 
-          <h3 className="text-indigo-400 font-semibold mb-4">
-            👤 User Details
-          </h3>
+        <button
+          onClick={() => setActiveTab("WITHDRAW")}
+          className={`px-6 py-2 rounded-xl font-semibold ${
+            activeTab === "WITHDRAW"
+              ? "bg-purple-600"
+              : "bg-white/10 text-gray-300"
+          }`}
+        >
+          💸 Withdrawal History
+        </button>
+      </div>
 
-          <div className="grid md:grid-cols-3 gap-4 text-sm mb-6">
-            <div>
-              <p className="text-gray-400">Name</p>
-              <p>{o.userId?.name}</p>
+      {/* ================= SELL SECTION ================= */}
+      {activeTab === "SELL" && historyData && (
+        <>
+          
+               {/* SELL SUMMARY */}
+    <div className="grid md:grid-cols-2 gap-6 mb-8">
+      <div className="bg-white/10 p-6 rounded-xl">
+        <p className="text-gray-400">Total USDT Received</p>
+        <h2 className="text-2xl font-bold text-green-400">
+          {historyData.totalUsdt}
+        </h2>
+      </div>
+
+      <div className="bg-white/10 p-6 rounded-xl">
+        <p className="text-gray-400">Total INR Paid</p>
+        <h2 className="text-2xl font-bold text-emerald-400">
+          ₹ {historyData.totalInrPaid}
+        </h2>
+      </div>
+    </div>
+
+          {historyData.orders.map((o) => (
+            <div
+              key={o._id}
+              className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8"
+            >
+              <h3 className="text-green-400 font-semibold mb-4">
+                💰 Sell Transaction
+              </h3>
+
+              <div className="grid md:grid-cols-3 gap-4 text-sm mb-6">
+                <div>
+                  <p className="text-gray-400">Order ID</p>
+                  <p>{o._id}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">Status</p>
+                  <p className="text-green-400">{o.status}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">Admin Notes</p>
+                  <p>{o.adminNotes || "-"}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">Name</p>
+                  <p>{o.userId?.name}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">Account ID</p>
+                  <p>#{o.userId?.accountId}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">Email</p>
+                  <p>{o.userId?.email}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">Mobile</p>
+                  <p>{o.userId?.phone}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">Telegram ID</p>
+                  <p>{o.userId?.telegramId}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">USDT</p>
+                  <p>{o.usdtAmount}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">INR</p>
+                  <p>₹ {o.totalINR}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-400">Date</p>
+                  <p>{new Date(o.createdAt).toLocaleString()}</p>
+                </div>
+              </div>
+
+              {o.receiptUrl && (
+                <div>
+                  <p className="text-gray-400 mb-2">Screenshot</p>
+                  <img
+                    src={`${API}${o.receiptUrl}`}
+                    alt="receipt"
+                    className="w-60 rounded-lg border border-white/20"
+                  />
+                </div>
+              )}
             </div>
+          ))}
+        </>
+      )}
 
-            <div>
-              <p className="text-gray-400">Email</p>
-              <p>{o.userId?.email}</p>
-            </div>
+      {/* ================= WITHDRAW SECTION ================= */}
+{/* ================= WITHDRAW SECTION ================= */}
+{activeTab === "WITHDRAW" && withdrawHistory && (
+  <>
+    {/* WITHDRAW SUMMARY */}
+    <div className="grid md:grid-cols-1 gap-6 mb-8">
+      <div className="bg-white/10 p-6 rounded-xl">
+        <p className="text-gray-400">Total Withdraw Paid</p>
+        <h2 className="text-2xl font-bold text-red-400">
+          ₹ {withdrawHistory.totalWithdrawAmount}
+        </h2>
+      </div>
+    </div>
 
-            <div>
-              <p className="text-gray-400">Phone</p>
-              <p>{o.userId?.phone}</p>
-            </div>
+    {withdrawHistory.withdrawals.map((w) => (
+      <div
+        key={w._id}
+        className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8"
+      >
+        <h3 className="text-purple-400 font-semibold mb-4">
+          💸 Withdrawal Transaction
+        </h3>
 
-            <div>
-              <p className="text-gray-400">Account ID</p>
-              <p>#{o.userId?.accountId}</p>
-            </div>
-
-            <div>
-              <p className="text-gray-400">Order ID</p>
-              <p className="break-all">{o._id}</p>
-            </div>
+        <div className="grid md:grid-cols-3 gap-4 text-sm">
+          <div>
+            <p className="text-gray-400">Name</p>
+            <p>{w.userId?.name}</p>
           </div>
 
-          <h3 className="text-green-400 font-semibold mb-4">
-            💰 Transaction Details
-          </h3>
+          <div>
+            <p className="text-gray-400">Account ID</p>
+            <p>#{w.userId?.accountId}</p>
+          </div>
 
-          <div className="grid md:grid-cols-4 gap-4 text-sm">
-            <div>
-              <p className="text-gray-400">USDT</p>
-              <p>{o.usdtAmount}</p>
-            </div>
+          <div>
+            <p className="text-gray-400">Mobile</p>
+            <p>{w.userId?.phone || "N/A"}</p>
+          </div>
 
-            <div>
-              <p className="text-gray-400">Rate</p>
-              <p>₹ {o.rate}</p>
-            </div>
+          <div>
+            <p className="text-gray-400">Telegram ID</p>
+            <p>{w.userId?.telegramId || "N/A"}</p>
+          </div>
 
-            <div>
-              <p className="text-gray-400">Total INR</p>
-              <p>₹ {o.totalINR}</p>
-            </div>
+          <div>
+            <p className="text-gray-400">Withdrawal ID</p>
+            <p>{w._id}</p>
+          </div>
 
-            <div>
-              <p className="text-gray-400">Status</p>
-              <p className={o.status === "COMPLETED" ? "text-green-400" : "text-yellow-400"}>
-                {o.status}
-              </p>
-            </div>
+          <div>
+            <p className="text-gray-400">Amount</p>
+            <p>₹ {w.amount}</p>
+          </div>
 
-            <div>
-              <p className="text-gray-400">UTR</p>
-              <p>{o.adminUtrNumber || "-"}</p>
-            </div>
+          <div>
+            <p className="text-gray-400">Requested On</p>
+            <p>{new Date(w.createdAt).toLocaleString()}</p>
+          </div>
 
-            <div>
-              <p className="text-gray-400">Date</p>
-              <p>{new Date(o.createdAt).toLocaleString()}</p>
-            </div>
+          <div>
+            <p className="text-gray-400">Payment Details</p>
+
+            {w.paymentDetails ? (
+              <div className="text-sm space-y-1">
+                {w.paymentDetails.upiId && (
+                  <p>UPI ID: {w.paymentDetails.upiId}</p>
+                )}
+
+                {w.paymentDetails.accountHolderName && (
+                  <p>Account Name: {w.paymentDetails.accountHolderName}</p>
+                )}
+
+                {w.paymentDetails.accountNumber && (
+                  <p>Account No: {w.paymentDetails.accountNumber}</p>
+                )}
+
+                {w.paymentDetails.ifsc && (
+                  <p>IFSC: {w.paymentDetails.ifsc}</p>
+                )}
+
+                {w.paymentDetails.bankName && (
+                  <p>Bank: {w.paymentDetails.bankName}</p>
+                )}
+              </div>
+            ) : (
+              <p>-</p>
+            )}
+          </div>
+
+          <div>
+            <p className="text-gray-400">Status</p>
+            <p className="text-green-400">{w.status}</p>
           </div>
         </div>
-      ))}
+      </div>
+    ))}
+  </>
+)}
     </div>
   );
 }

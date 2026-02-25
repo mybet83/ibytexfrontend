@@ -22,7 +22,7 @@ export default function AdminDashboard() {
   const [pendingCount, setPendingCount] = useState(0);
 
   const [withdrawCount, setWithdrawCount] = useState(0);
-const [lastPendingId, setLastPendingId] = useState(null);
+const [lastOrderId, setLastOrderId] = useState(null);
 const [lastWithdrawId, setLastWithdrawId] = useState(null);
 
 
@@ -64,21 +64,30 @@ const fetchWithdrawCount = async (notify = false) => {
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     )[0];
 
-    if (notify && newest._id !== lastWithdrawId) {
-      toast.custom((t) => (
-        <div className="bg-[#111827] border border-purple-600 text-white px-5 py-4 rounded-xl shadow-xl flex items-center gap-3">
-          <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-            💰
-          </div>
-          <div>
-            <p className="font-semibold">New Withdrawal Request</p>
-            <p className="text-xs text-gray-400">
-              ID: {newest._id.slice(-6)}
-            </p>
-          </div>
+ if (notify && newest._id !== lastWithdrawId) {
+  const lastShown = localStorage.getItem("withdrawNotificationTime");
+  const now = Date.now();
+
+  // 1 hour = 3600000 ms
+  if (!lastShown || now - Number(lastShown) > 3600000) {
+
+    toast.custom(() => (
+      <div className="bg-[#111827] border border-purple-600 text-white px-5 py-4 rounded-xl shadow-xl flex items-center gap-3">
+        <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+          💰
         </div>
-      ));
-    }
+        <div>
+          <p className="font-semibold">New Withdrawal Request</p>
+          <p className="text-xs text-gray-400">
+            ID: {newest._id.slice(-6)}
+          </p>
+        </div>
+      </div>
+    ));
+
+    localStorage.setItem("withdrawNotificationTime", now);
+  }
+}
 
     setLastWithdrawId(newest._id);
 
@@ -93,7 +102,7 @@ const fetchWithdrawCount = async (notify = false) => {
 useEffect(() => {
   fetchRate();
   fetchNews();
-  fetchPendingCount(false);
+  fetchOrderCount(false);
   fetchSummary();
   fetchStats();
   fetchWithdrawCount(false);
@@ -102,7 +111,7 @@ useEffect(() => {
 
 
   const interval = setInterval(() => {
-    fetchPendingCount(true);
+    fetchOrderCount(true);
     fetchWithdrawCount(true);  
     fetchWithdrawStats();
 
@@ -225,10 +234,10 @@ const fetchStats = async () => {
   };
 
   // ================= ORDERS =================
-const fetchPendingCount = async (notify = false) => {
+const fetchOrderCount = async (notify = false) => {
   try {
     const res = await axios.get(
-      `${API}/orders/admin`,
+      `${API}/api/orders/admin`,
       authHeader
     );
 
@@ -242,23 +251,32 @@ const fetchPendingCount = async (notify = false) => {
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     )[0];
 
-    if (notify && newest._id !== lastPendingId) {
-      toast.custom((t) => (
-        <div className="bg-[#111827] border border-yellow-500 text-white px-5 py-4 rounded-xl shadow-xl flex items-center gap-3">
-          <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-            📦
+    if (notify && newest._id !== lastOrderId) {
+      const lastShown = localStorage.getItem("orderNotificationTime");
+      const now = Date.now();
+
+      // 1 hour = 3600000 ms
+      if (!lastShown || now - Number(lastShown) > 3600000) {
+
+        toast.custom(() => (
+          <div className="bg-[#111827] border border-green-600 text-white px-5 py-4 rounded-xl shadow-xl flex items-center gap-3">
+            <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+              💰
+            </div>
+            <div>
+              <p className="font-semibold">New Sell Order</p>
+              <p className="text-xs text-gray-400">
+                ID: {newest._id.slice(-6)}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="font-semibold">New USDT Sell Request</p>
-            <p className="text-xs text-gray-400">
-              Order ID: {newest._id.slice(-6)}
-            </p>
-          </div>
-        </div>
-      ));
+        ));
+
+        localStorage.setItem("orderNotificationTime", now);
+      }
     }
 
-    setLastPendingId(newest._id);
+    setLastOrderId(newest._id);
 
   } catch (err) {
     console.error(err);
@@ -294,67 +312,93 @@ const fetchWithdrawStats = async () => {
       <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
 
       {/* Dashbord */}
-      <div className="grid md:grid-cols-4 gap-6 mb-8">
+<div className="grid md:grid-cols-4 gap-6 mb-8">
 
+  {/* Today Rate (No Redirect) */}
   <div className="bg-white/10 p-6 rounded-xl">
     <p className="text-gray-400">Today Rate</p>
     <h2 className="text-2xl font-bold text-green-400">
-    {rate ? `₹${rate} / USDT` : "Loading..."}
-    </h2>
-  </div>
-  <div className="bg-white/10 p-6 rounded-xl">
-    <p className="text-gray-400">Total USDT Received</p>
-    <h2 className="text-2xl font-bold text-green-400">
-     {stats.totalUsdt}
+      {rate ? `₹${rate} / USDT` : "Loading..."}
     </h2>
   </div>
 
-  <div className="bg-white/10 p-6 rounded-xl">
+  {/* Total USDT Received → Completed Orders */}
+  <div
+    onClick={() => navigate("/adminorderdashboard?status=COMPLETED")}
+    className="bg-white/10 p-6 rounded-xl cursor-pointer hover:bg-white/20 transition"
+  >
+    <p className="text-gray-400">Total USDT Received</p>
+    <h2 className="text-2xl font-bold text-green-400">
+      {stats.totalUsdt}
+    </h2>
+  </div>
+
+  {/* Pending Payment → Pending Orders */}
+  <div
+    onClick={() => navigate("/adminorderdashboard?status=PENDING")}
+    className="bg-white/10 p-6 rounded-xl cursor-pointer hover:bg-white/20 transition"
+  >
     <p className="text-gray-400">Pending Payment</p>
     <h2 className="text-2xl font-bold text-yellow-400">
       ₹{stats.pendingPayment}
     </h2>
   </div>
 
-  <div className="bg-white/10 p-6 rounded-xl">
+  {/* Successful Payment → Completed Orders */}
+  <div
+    onClick={() => navigate("/adminorderdashboard?status=COMPLETED")}
+    className="bg-white/10 p-6 rounded-xl cursor-pointer hover:bg-white/20 transition"
+  >
     <p className="text-gray-400">Successful Payment</p>
     <h2 className="text-2xl font-bold text-emerald-400">
       ₹{stats.successfulPayment}
     </h2>
   </div>
 
-  <div className="bg-white/10 p-6 rounded-xl">
+  {/* Total Orders → Sell History */}
+  <div
+    onClick={() => navigate("/admin/history")}
+    className="bg-white/10 p-6 rounded-xl cursor-pointer hover:bg-white/20 transition"
+  >
     <p className="text-gray-400">Total Orders</p>
     <h2 className="text-2xl font-bold text-indigo-400">
-    {stats.totalOrders}
+      {stats.totalOrders}
     </h2>
   </div>
-  {/* Pending Withdraw Amount */}
-<div className="bg-white/10 p-6 rounded-xl">
-  <p className="text-gray-400">Pending Withdraw (Today)</p>
-  <h2 className="text-2xl font-bold text-yellow-400">
-    ₹ {withdrawStats.pendingWithdrawAmount}
-  </h2>
-</div>
 
-{/* Successful Withdraw Amount */}
-<div className="bg-white/10 p-6 rounded-xl">
-  <p className="text-gray-400">Successful Withdraw (Today)</p>
-  <h2 className="text-2xl font-bold text-green-400">
-   ₹ {withdrawStats.successfulWithdrawAmount}
-  </h2>
-</div>
+  {/* Pending Withdraw → Pending Withdraw Page */}
+  <div
+    onClick={() => navigate("/admin/withdrawals?status=PENDING")}
+    className="bg-white/10 p-6 rounded-xl cursor-pointer hover:bg-white/20 transition"
+  >
+    <p className="text-gray-400">Pending Withdraw (Today)</p>
+    <h2 className="text-2xl font-bold text-yellow-400">
+      ₹ {withdrawStats.pendingWithdrawAmount}
+    </h2>
+  </div>
 
-{/* Total Withdraw Orders */}
-<div className="bg-white/10 p-6 rounded-xl">
-  <p className="text-gray-400">Withdraw Orders (Today)</p>
-  <h2 className="text-2xl font-bold text-indigo-400">
-    {withdrawStats.totalWithdrawOrders}
-  </h2>
-</div>
+  {/* Successful Withdraw → Approved Withdraw Page */}
+  <div
+    onClick={() => navigate("/admin/withdrawals?status=APPROVED")}
+    className="bg-white/10 p-6 rounded-xl cursor-pointer hover:bg-white/20 transition"
+  >
+    <p className="text-gray-400">Successful Withdraw (Today)</p>
+    <h2 className="text-2xl font-bold text-green-400">
+      ₹ {withdrawStats.successfulWithdrawAmount}
+    </h2>
+  </div>
 
+  {/* Withdraw Orders → Withdrawal History */}
+  <div
+    onClick={() => navigate("/admin/history?tab=WITHDRAW")}
+    className="bg-white/10 p-6 rounded-xl cursor-pointer hover:bg-white/20 transition"
+  >
+    <p className="text-gray-400">Withdraw Orders (Today)</p>
+    <h2 className="text-2xl font-bold text-indigo-400">
+      {withdrawStats.totalWithdrawOrders}
+    </h2>
+  </div>
 
-  
 </div>
 
 
@@ -436,6 +480,15 @@ const fetchWithdrawStats = async () => {
      transition duration-300 text-sm sm:text-base"
 >
   🔥 Active Users (Today)
+</button>
+<button
+  onClick={() => navigate("/admin/history?tab=WITHDRAW")}
+  className="w-full sm:w-auto bg-gradient-to-r from-pink-600 to-pink-700 
+     hover:from-pink-700 hover:to-pink-800 
+     px-6 py-3 rounded-xl font-semibold shadow-lg 
+     transition duration-300 text-sm sm:text-base"
+>
+  💸 Withdrawal History
 </button>
 
 
