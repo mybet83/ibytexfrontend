@@ -231,9 +231,10 @@ transition-colors duration-500">
     <div className="hidden md:block w-[1px] h-12 bg-white/10"></div>
 
     {/* RATE CARD */}
+    <div className="flex gap-2 max-md:mb-3">
      <div className="flex items-center gap-1 
                       bg-white/5 border border-white/10
-                      px-5 py-2 rounded-full text-sm text-gray-400">
+                      px-3 py-1 rounded-full text-sm text-gray-400 max-md:flex">
 
         <span className="text-green-400">↗</span>
         <span>Rate:</span>
@@ -253,8 +254,11 @@ transition-colors duration-500">
         </span>
 
         <span className="text-gray-500 text-xl">/USDT</span>
+         <span className=" absolute right-[0.75rem] px-2 py-1 text-[8px] top-2 bg-red-500 rounded-full animate-pulse shadow-lg">
+                    LIVE
+                  </span>
       </div>
-
+</div>
   </div>
 </div>
 

@@ -60,10 +60,10 @@ export default function Navbar() {
       className={`fixed top-0 left-0 w-full z-50 ${
         atTop
           ? "bg-transparent"
-          : "bg-[#0B0E11]/90 dark:bg-[#0B0E11]/90 backdrop-blur-xl border-b border-white/5"
+          : "bg-black backdrop-blur-xl border-b border-white/10"
       }`}
     >
-      <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-2">
+      <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-1">
 
         {/* Logo */}
         <img src="/logot.png" alt="logo" className="w-16" />

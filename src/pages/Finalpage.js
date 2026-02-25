@@ -16,7 +16,7 @@ import {
   HiCube,
   HiCreditCard,
   HiCog,
- HiCurrencyRupee,
+  HiCurrencyRupee,
   HiTrendingUp,
   HiLockClosed,
 } from "react-icons/hi";
@@ -39,7 +39,6 @@ const DashboardLayout = () => {
   const [loading, setLoading] = useState(true);
   const [supportOpen, setSupportOpen] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
-  
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -84,8 +83,6 @@ const DashboardLayout = () => {
         (acc, curr) => acc + Number(curr.usdtAmount || 0),
         0,
       );
-
- 
 
       setTodayTrade(todayTotalUSDT);
 
@@ -178,13 +175,9 @@ const DashboardLayout = () => {
     fetchRecentActivity();
   };
 
-
-
-
-const WithdrawPage = () => {
-  return <WithdrawPageComponent />;
-};
-
+  const WithdrawPage = () => {
+    return <WithdrawPageComponent />;
+  };
 
   // First load
   useEffect(() => {
@@ -208,8 +201,7 @@ const WithdrawPage = () => {
     loadData();
   }, []);
 
-  // master refresh 
-
+  // master refresh
 
   // Rate live refresh
   useEffect(() => {
@@ -234,17 +226,17 @@ const WithdrawPage = () => {
   );
 
   // ✅ Dashboard auto refresh (ONLY when dashboard active)
-useEffect(() => {
-  if (activePage !== "dashboard") return;
+  useEffect(() => {
+    if (activePage !== "dashboard") return;
 
-  const interval = setInterval(() => {
-    fetchUserOrders();
-    fetchApprovedWithdrawals();
-    fetchRecentActivity();
-  }, 5000);
+    const interval = setInterval(() => {
+      fetchUserOrders();
+      fetchApprovedWithdrawals();
+      fetchRecentActivity();
+    }, 5000);
 
-  return () => clearInterval(interval);
-}, [activePage]);
+    return () => clearInterval(interval);
+  }, [activePage]);
 
   // Dashboard live refresh
 
@@ -262,7 +254,7 @@ useEffect(() => {
 
   /* ================= BTC ================= */
 
-  const StatCard = ({ title, value, green, badge ,icon }) => {
+  const StatCard = ({ title, value, green, badge, icon }) => {
     const numericValue = Number(String(value).replace(/[^0-9.-]+/g, ""));
 
     const hasRupee = String(value).includes("₹");
@@ -279,10 +271,12 @@ useEffect(() => {
       >
         {/* TITLE + BADGE */}
         <div className="flex items-center justify-between">
-             <div className="w-14 h-14 flex items-center justify-center 
-        rounded-xl bg-white/5 border border-white/10 max-md:w-8 max-md:h-8 ">
-          {icon}
-        </div>
+          <div
+            className="w-14 h-14 flex items-center justify-center 
+        rounded-xl bg-white/5 border border-white/10 max-md:w-8 max-md:h-8 "
+          >
+            {icon}
+          </div>
 
           <p className="text-gray-400 text-sm tracking-wide max-md:text-[12px] text-end">
             {title}
@@ -297,12 +291,11 @@ useEffect(() => {
               {badge}
             </span>
           )}
-        
         </div>
 
         {/* VALUE WITH COUNTUP */}
         <h2
-          className={`text-3xl font-bold mt-2 tracking-tight max-md:text-xl max-md:mt-2 justify-end items-end text-end
+          className={`text-3xl font-bold  tracking-tight max-md:text-xl justify-end items-end text-end
         ${green ? "text-emerald-400" : "text-white"}`}
         >
           {hasRupee && "₹ "}
@@ -315,19 +308,16 @@ useEffect(() => {
 
           {hasUSDT && " USDT"}
         </h2>
-
       </div>
     );
   };
 
-  
-
   return (
     <div className="h-screen flex bg-[#0b0f19] text-white overflow-hidden">
       {/* MOBILE HEADER */}
-      <div className="md:hidden fixed top-0 left-0 w-full h-16 bg-[#0f172a] border-b border-gray-800 flex items-center justify-between px-4 z-50">
-        <img src="/logot.png" alt="logo" className="w-12 h-12" />
-        <button onClick={() => setSidebarOpen(true)} className="text-3xl">
+      <div className="md:hidden fixed top-0 left-0 w-full h-16 bg-[#0f172a] border-b border-gray-800 flex items-center justify-between px-2 z-50">
+        <img src="/logot.png" alt="logo" className="w-14 h-14" />
+        <button onClick={() => setSidebarOpen(true)} className="text-[30px]">
           ☰
         </button>
       </div>
@@ -399,12 +389,14 @@ useEffect(() => {
             label="Withdrawal"
             icon={<HiArrowUp />}
             open={sidebarOpen}
-           onClick={() => {
-  setActivePage(prev => prev === "withdraw" ? prev : "withdraw")
-  setTimeout(() => {
-    fetchApprovedWithdrawals();
-  }, 100);
-}}
+            onClick={() => {
+              setActivePage((prev) =>
+                prev === "withdraw" ? prev : "withdraw",
+              );
+              setTimeout(() => {
+                fetchApprovedWithdrawals();
+              }, 100);
+            }}
           />
           <SidebarItem
             label="Orders"
@@ -514,12 +506,12 @@ py-2 z-50"
           icon={<HiArrowDown />}
           label="Withdrawal"
           active={activePage === "withdraw"}
-         onClick={() => {
- setActivePage(prev => prev === "withdraw" ? prev : "withdraw")
-  setTimeout(() => {
-    fetchApprovedWithdrawals();
-  }, 100);
-}}
+          onClick={() => {
+            setActivePage((prev) => (prev === "withdraw" ? prev : "withdraw"));
+            setTimeout(() => {
+              fetchApprovedWithdrawals();
+            }, 100);
+          }}
         />
         <BottomItem
           label="Orders"
@@ -556,7 +548,7 @@ py-2 z-50"
             {/* TOP BANNER */}
             <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl max-md:flex-col">
               {/* Glow Background */}
-              <div className="absolute bottom-0 right-0 w-72 h-72 bg-gold-gradient blur-[120px] rounded-full"></div>
+
               <div className="absolute -top-20 -left-20 w-72 h-72 bg-blue-hero   blur-[120px] rounded-full"></div>
 
               <div className="relative z-10">
@@ -590,33 +582,33 @@ py-2 z-50"
             <div className="mb-8"></div>
 
             {/* STAT CARDS */}
-            <div className="grid md:grid-cols-4 gap-6 mb-10 max-md:grid-cols-2">
-             <StatCard
-  title="Live USDT Rate"
-  value={`₹ ${rate}`}
-  green
-  badge="LIVE"
-  icon={<HiCurrencyRupee className="text-2xl text-emerald-400" />}
-/>
+            <div className="grid md:grid-cols-4 gap-4 mb-10 max-md:grid-cols-2 max-md:mb-5">
+              <StatCard
+                title="Live USDT Rate"
+                value={`₹ ${rate}`}
+                green
+                badge="LIVE"
+                icon={<HiCurrencyRupee className="text-2xl text-emerald-400" />}
+              />
 
-<StatCard
-  title="USDT Trade"
-  value={`${todayTrade} USDT`}
-  icon={<HiTrendingUp className="text-2xl text-blue-400" />}
-/>
+              <StatCard
+                title="USDT Trade"
+                value={`${todayTrade} USDT`}
+                icon={<HiTrendingUp className="text-2xl text-blue-400" />}
+              />
 
-<StatCard
-  title="Available Balance"
-  value={`₹ ${Number(availableBalance).toLocaleString()}`}
-  green
-  icon={<HiCash className="text-2xl text-emerald-400" />}
-/>
+              <StatCard
+                title="Available Balance"
+                value={`₹ ${Number(availableBalance).toLocaleString()}`}
+                green
+                icon={<HiCash className="text-2xl text-emerald-400" />}
+              />
 
-<StatCard
-  title="Locked Withdrawn"
-  value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
-  icon={<HiLockClosed className="text-2xl text-yellow-400" />}
-/>
+              <StatCard
+                title="Locked Withdrawn"
+                value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
+                icon={<HiLockClosed className="text-2xl text-yellow-400" />}
+              />
             </div>
 
             {/* RECENT ACTIVITY */}
@@ -645,7 +637,7 @@ py-2 z-50"
                     >
                       {/* LEFT COLOR STRIP */}
                       <div
-                        className={`absolute left-0 top-0 h-full w-1 ${
+                        className={`absolute left-0 top-0 h-full w-1 max-md:w-[2px] max-md:opacity-50 ${
                           item.type === "SELL"
                             ? "bg-emerald-400"
                             : "bg-yellow-400"
