@@ -340,9 +340,9 @@ transition-colors duration-500">
         once: true,
         amount: 0.4, // 🔥 40% visible pe trigger
       }}
-        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-blue-400/40 transition">
-          <h3 className="text-xl font-semibold text-white mb-2">
-            🔐 Bank-Level Encryption
+        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-blue-400/40 transition max-md:p-4">
+          <h3 className="text-xl font-semibold text-white mb-2 max-md:text-[16px]">
+             Bank-Level Encryption
           </h3>
           <p className="text-gray-400 text-sm">
             All transactions are secured with AES-256 encryption and monitored
@@ -362,9 +362,9 @@ transition-colors duration-500">
         once: true,
         amount: 0.4, // 🔥 40% visible pe trigger
       }}
-        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-green-400/40 transition">
-          <h3 className="text-xl font-semibold text-white mb-2">
-            📊 Real-Time Market Execution
+        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-green-400/40 transition max-md:p-4 ">
+          <h3 className="text-xl font-semibold text-white mb-2 max-md:text-[16px]">
+             Real-Time Market Execution
           </h3>
           <p className="text-gray-400 text-sm">
             USDT conversions happen instantly at live rates — no hidden spreads,
@@ -384,9 +384,9 @@ transition-colors duration-500">
         once: true,
         amount: 0.4, // 🔥 40% visible pe trigger
       }}
-        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-yellow-400/40 transition">
-          <h3 className="text-xl font-semibold text-white mb-2">
-            🛡 Fully AML & KYC Compliant
+        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-yellow-400/40 transition max-md:p-4">
+          <h3 className="text-xl font-semibold text-white mb-2 max-md:text-[16px]">
+             Fully AML & KYC Compliant
           </h3>
           <p className="text-gray-400 text-sm">
             We follow strict Anti-Money Laundering and Know Your Customer
@@ -411,7 +411,7 @@ transition-colors duration-500">
       
       className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12 max-md:p-6">
 
-        <h3 className="text-2xl font-semibold text-white mb-8">
+        <h3 className="text-2xl font-semibold text-white mb-8 max-md:text-xl">
           Platform Performance
         </h3>
 

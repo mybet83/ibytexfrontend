@@ -103,7 +103,7 @@ export default function CryptoMarquee() {
                   ${
                     item.name === "PCI DSS Compliant"
                       ? "h-8 sm:h-12 w-auto max-w-[150px]"
-                      : "h-8 w-8 sm:h-12 sm:w-12"
+                      : "h-8 w-8 sm:h-14 sm:w-14"
                   }
                 `}
               />

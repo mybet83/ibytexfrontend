@@ -63,7 +63,7 @@ export default function Navbar() {
           : "bg-black backdrop-blur-xl border-b border-white/10"
       }`}
     >
-      <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-1">
+      <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-1 max-md:px-0">
 
         {/* Logo */}
         <img src="/logot.png" alt="logo" className="w-16" />
