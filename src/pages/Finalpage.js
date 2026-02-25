@@ -559,7 +559,7 @@ py-2 z-50"
         {activePage === "dashboard" && (
           <>
             {/* TOP BANNER */}
-            <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl max-md:flex-col">
+            <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl max-md:flex-col max-md:p-4">
               {/* Glow Background */}
 
               <div className="absolute -top-20 -left-20 w-72 h-72 bg-blue-hero   blur-[120px] rounded-full"></div>
