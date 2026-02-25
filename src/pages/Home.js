@@ -152,12 +152,12 @@ function AnimatedCounter({ end }) {
   };
 
   return (
-    <div className=" relative z-10 min-h-screen bg-white text-black dark:bg-black dark:text-white ">
+    <div className=" relative z-10 min-h-screen  ">
       <Navbar />
 
    <section className="relative min-h-screen flex items-center justify-center overflow-hidden max-md:min-h-[auto] py-24 
 max-md:pt-[10rem] max-md:pb-[6rem]
-bg-white dark:bg-black transition-colors duration-500">
+transition-colors duration-500">
 
   {/* Background Glow Effects */}
   <div className="absolute inset-0 pointer-events-none">
@@ -180,7 +180,7 @@ bg-white dark:bg-black transition-colors duration-500">
 
     {/* Main Heading */}
     <h1 className="text-5xl md:text-7xl font-bold 
-    text-black dark:text-white leading-tight max-md:text-[2.5rem]">
+     leading-tight max-md:text-[2.5rem]">
 
       Buy & Sell USDT  
 
@@ -192,7 +192,7 @@ bg-white dark:bg-black transition-colors duration-500">
     </h1>
 
     {/* Subtitle */}
-    <p className="mt-6 text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto max-md:text-[1rem]">
+    <p className="mt-6 text-gray-500 text-lg max-w-2xl mx-auto max-md:text-[1rem]">
       Trade digital assets with competitive rates and lightning-fast processing.
       Trusted by thousands of users worldwide.
     </p>
