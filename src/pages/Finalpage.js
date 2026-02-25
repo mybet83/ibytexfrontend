@@ -24,7 +24,7 @@ import {
 const API = process.env.REACT_APP_API_URL;
 
 const DashboardLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
   const [rate, setRate] = useState(0);
@@ -43,6 +43,12 @@ const DashboardLayout = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   /* ================= FETCH ================= */
+   useEffect(() => {
+  if (window.innerWidth >= 768) {
+    setSidebarOpen(true);
+  }
+}, []);
+
 
   const fetchUserOrders = async () => {
     try {
@@ -290,7 +296,10 @@ const DashboardLayout = () => {
             <span
               className="  text-[8px] px-2 py-1 
                            bg-red-500 text-white 
-                           rounded-full animate-pulse absolute top-2 right-2"
+                           rounded-full animate-pulse absolute top-2 right-2      max-md:top-auto
+    max-md:right-auto
+    max-md:bottom-2
+    max-md:left-3"
             >
               {badge}
             </span>
