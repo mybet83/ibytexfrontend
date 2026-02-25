@@ -12,6 +12,8 @@ const Signup = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
+const [emailExists, setEmailExists] = useState(false);
 
   const [signupInfo, setSignupInfo] = useState({
     name: "",
@@ -35,6 +37,48 @@ const Signup = () => {
       return "Strong";
     return "Medium";
   };
+
+  const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+  
+  useEffect(() => {
+  if (!signupInfo.email) {
+    setEmailError("");
+    setEmailExists(false);
+    return;
+  }
+
+  if (!isValidEmail(signupInfo.email)) {
+    setEmailError("Enter valid email id");
+    setEmailExists(false);
+    return;
+  }
+
+  setEmailError("");
+
+  const delay = setTimeout(async () => {
+    try {
+      const res = await fetch(
+        `${API}/api/auth/check-email?email=${signupInfo.email}`
+      );
+      const data = await res.json();
+
+      if (data.exists) {
+        setEmailExists(true);
+        setEmailError("Email already registered");
+      } else {
+        setEmailExists(false);
+        setEmailError("");
+      }
+    } catch {
+      setEmailExists(false);
+    }
+  }, 500); // debounce 500ms
+
+  return () => clearTimeout(delay);
+}, [signupInfo.email]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,6 +123,10 @@ const Signup = () => {
     e.preventDefault();
 
     const { name, email, password, phone } = signupInfo;
+
+      if (emailError || emailExists) {
+    return handleError(emailError || "Email already registered");
+  }
 
     if (!name || !email || !password || !phone) {
       return handleError("Please fill all required fields");
@@ -209,6 +257,11 @@ const Signup = () => {
                   placeholder="Email"
                   className="w-full px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700"
                 />
+                {emailError && (
+  <p className="text-red-500 text-sm mt-1">
+    {emailError}
+  </p>
+)}
 
                 <PhoneInput
                   country={"in"}

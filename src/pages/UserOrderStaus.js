@@ -42,12 +42,7 @@ export default function MyOrders() {
           <h1 className="text-3xl font-bold max-md:text-2xl">My Orders</h1>
         </div>
 
-        <button
-          onClick={() => navigate("/finalpage")}
-          className="bg-gold-gradient text-black px-5 py-2 rounded-lg font-semibold transition max-md:text-[14px]"
-        >
-          Back
-        </button>
+    
       </div>
 
       <div className="max-w-6xl mx-auto px pb-16 mt-10 max-md:mt-5">

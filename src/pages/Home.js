@@ -183,15 +183,15 @@ transition-colors duration-500">
   className="relative z-10 max-w-5xl mx-auto px-6 text-center">
 
     {/* Main Heading */}
-    <h1 className="text-5xl md:text-7xl font-bold 
-     leading-tight max-md:text-[2.5rem]">
+    <h1 className="text-3xl md:text-6xl font-bold 
+     leading-tight max-md:text-[1rem]">
 
-      Buy & Sell USDT  
+      Sell Your USDT Instantly
 
       <span className="block italic font-light 
       bg-gradient-to-r from-yellow-400 to-blue-400 
-      bg-clip-text text-transparent mt-2 max-md:text-[2rem]">
-        Securely & Instantly
+      bg-clip-text text-transparent mt-5 text-4xl  max-md:text-[2rem]">
+       Fast, secure, and reliable USDT selling with competitive market rates.
       </span>
     </h1>
 

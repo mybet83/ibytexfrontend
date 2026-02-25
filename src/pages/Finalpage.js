@@ -8,16 +8,17 @@ import UserOrderStaus from "./UserOrderStaus";
 import WithdrawPageComponent from "./WithdrawPage";
 import WalletPage from "../components/WalletPage";
 import SettingsPage from "../components/SettingsPage";
+import { useLocation } from "react-router-dom";
 import {
   HiHome,
   HiCash,
   HiArrowDown,
-  HiArrowUp,
+  HiCurrencyDollar,
   HiCube,
   HiCreditCard,
   HiCog,
   HiCurrencyRupee,
-  HiTrendingUp,
+  HiArrowUp,
   HiLockClosed,
 } from "react-icons/hi";
 
@@ -42,12 +43,20 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  const location = useLocation();
+
   /* ================= FETCH ================= */
    useEffect(() => {
   if (window.innerWidth >= 768) {
     setSidebarOpen(true);
   }
 }, []);
+
+useEffect(() => {
+  if (location.state?.openOrders) {
+    setActivePage("orders");
+  }
+}, [location.state]);
 
 
   const fetchUserOrders = async () => {
@@ -248,6 +257,8 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
     return () => clearInterval(interval);
   }, [activePage]);
 
+
+
   // Dashboard live refresh
 
   const formatNumber = (num) => {
@@ -328,7 +339,7 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div className="h-screen flex bg-[#0b0f19] text-white overflow-hidden">
       {/* MOBILE HEADER */}
-      <div className="md:hidden fixed top-0 left-0 w-full h-16 bg-[#0f172a] border-b border-gray-800 flex items-center justify-between px-2 z-50">
+      <div className="md:hidden fixed top-0 left-0 w-full h-16 bg-[#0b0f19] border-b border-gray-800 flex items-center justify-between px-2 z-50">
         <img src="/logot.png" alt="logo" className="w-14 h-14" />
         <button onClick={() => setSidebarOpen(true)} className="text-[30px]">
           ☰
@@ -607,7 +618,7 @@ py-2 z-50"
               <StatCard
                 title="USDT Trade"
                 value={`${todayTrade} USDT`}
-                icon={<HiTrendingUp className="text-2xl text-blue-400" />}
+                icon={<HiCurrencyDollar className="text-2xl text-blue-400" />}
               />
 
               <StatCard
