@@ -162,10 +162,10 @@ transition-colors duration-500">
   {/* Background Glow Effects */}
   <div className="absolute inset-0 pointer-events-none">
     <div className="absolute top-0 left-0 w-[500px] h-[500px] 
-    bg-blue-600/20 blur-[140px] rounded-full"></div>
+    bg-blue-600/20 blur-[140px] rounded-full max-md:w-[300px] max-md:h-[300px] max-md:blur-[70px]"></div>
 
     <div className="absolute bottom-0 right-0 w-[500px] h-[500px] 
-    bg-yellow-500/20 blur-[140px] rounded-full"></div>
+    bg-yellow-500/20 blur-[140px] rounded-full max-md:w-[300px] max-md:h-[300px] max-md:blur-[70px]"></div>
   </div>
 
   <motion.div
@@ -200,11 +200,11 @@ transition-colors duration-500">
 <div className="mt-16 flex justify-center max-md:flex-col max-md:items-center max-md:mt-10">
 
   {/* MAIN CTA WRAPPER */}
-  <div className="flex items-center gap-6 bg-white/5 backdrop-blur-xl 
+  <div className="flex items-center gap-4 bg-white/5 backdrop-blur-xl 
                   border border-white/10 
                   rounded-3xl px-8 py-5 
                   shadow-[0_10px_40px_rgba(0,0,0,0.4)]
-                  max-md:flex-col-reverse max-md:gap-5 max-md:w-full max-md:max-w-sm">
+                  max-md:flex-col-reverse max-md:gap-2 max-md:w-full max-md:max-w-sm ">
 
     {/* SELL BUTTON */}
     <button
@@ -231,44 +231,29 @@ transition-colors duration-500">
     <div className="hidden md:block w-[1px] h-12 bg-white/10"></div>
 
     {/* RATE CARD */}
-    <div className="flex items-center gap-4">
+     <div className="flex items-center gap-1 
+                      bg-white/5 border border-white/10
+                      px-5 py-2 rounded-full text-sm text-gray-400">
 
-      {/* Logo */}
-      <div className="w-12 h-12 
-                      bg-gradient-to-br from-green-400 to-emerald-600
-                      flex items-center justify-center
-                      shadow-lg rounded-full">
-        <img
-          src="https://cryptologos.cc/logos/tether-usdt-logo.png"
-          alt="usdt"
-          className="w-7 h-7 "
-        />
+        <span className="text-green-400">↗</span>
+        <span>Rate:</span>
       </div>
 
-      {/* TEXT */}
-      <div className="flex flex-col">
+      {/* PRICE */}
+      <div className="flex items-baseline gap-1">
 
-        <div className="flex items-center gap-2 text-xs text-gray-400 uppercase tracking-wider">
-          <span>Live USDT Rate</span>
-          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-        </div>
+        <span className="text-gray-400 text-2xl">₹</span>
 
-        <div className="flex items-baseline gap-2 mt-1 justify-end text-end">
+        <span className="
+          text-2xl font-bold
+          bg-gradient-to-r text-white
+          bg-clip-text text-transparent
+        ">
+          {rate ? rate : "—"}
+        </span>
 
-          <span className="text-gray-400 text-lg">₹</span>
-
-          <span className="
-            text-3xl font-bold
-            bg-gradient-to-r from-green-400 to-emerald-500
-            bg-clip-text text-transparent
-          ">
-            {rate ? rate : "—"}
-          </span>
-
-        </div>
-
+        <span className="text-gray-500 text-xl">/USDT</span>
       </div>
-    </div>
 
   </div>
 </div>
@@ -283,13 +268,15 @@ transition-colors duration-500">
       
 
       {/* Live Markets + News Section */}
+           <div className="relative ">
+  <CryptoLogos />
+</div>
+
       <section className="px-20 py-3 max-lg:py-4 max-lg:px-5 max-md:relative ">
         <LivePrices />
       </section>
 
-     <div className="relative bg-black">
-  <CryptoLogos />
-</div>
+
 
       {/* Why Choose Us */}
    <section className="relative py-12 bg-black overflow-hidden">
@@ -527,7 +514,7 @@ transition-colors duration-500">
             <span className="text-6xl font-bold text-white/30">
               01
             </span>
-            <h3 className="text-2xl font-semibold text-white mt-4">
+            <h3 className="text-2xl font-semibold text-white mt-4 ">
               Deposit USDT
             </h3>
             <p className="text-gray-400 mt-3">

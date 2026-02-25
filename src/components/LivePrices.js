@@ -97,7 +97,7 @@ function LivePrices() {
   };
 
   return (
-    <div className="relative px-6 py-16 overflow-hidden max-sm:px-0 max-md:py-8 ">
+    <div className="relative px-6 py-10 overflow-hidden max-sm:px-0 max-md:py-5 ">
 
       {/* Header */}
     <motion.div
