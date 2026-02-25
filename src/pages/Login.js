@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utiles";
@@ -23,6 +23,10 @@ const Login = () => {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    document.title = "iBytex | Trusted Crypto Exchange Since 2008";
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

@@ -97,6 +97,10 @@ const handleLater = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+  document.title = "iBytex | Global Digital Asset Exchange";
+}, []);
+
   const totalAmount = usdt ? (usdt * rate).toFixed(2) : "--";
 
   const items = [

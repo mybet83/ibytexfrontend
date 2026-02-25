@@ -556,6 +556,10 @@ export default function PlaceOrder() {
       .catch(() => toast.error("Failed to load rate"));
   }, [API]);
 
+  useEffect(() => {
+    document.title = "iBytex | Real-Time USDT Trading Platform";
+  },[])
+
   /* ================= PLACE ORDER ================= */
   const placeOrder = async () => {
     if (!usdt) return toast.error("Enter USDT amount");

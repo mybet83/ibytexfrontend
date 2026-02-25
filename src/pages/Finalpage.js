@@ -179,6 +179,10 @@ const DashboardLayout = () => {
     return <WithdrawPageComponent />;
   };
 
+  useEffect(() => {
+    document.title = "iBytex | Enterprise-Grade Crypto Exchange";
+  },[])
+
   // First load
   useEffect(() => {
     const loadData = async () => {
@@ -284,9 +288,9 @@ const DashboardLayout = () => {
 
           {badge && (
             <span
-              className="text-[8px] px-2 py-1 
+              className="  text-[8px] px-2 py-1 
                            bg-red-500 text-white 
-                           rounded-full animate-pulse absolute bottom-3"
+                           rounded-full animate-pulse absolute top-2 right-2"
             >
               {badge}
             </span>
@@ -566,7 +570,7 @@ py-2 z-50"
                 </span>
 
                 <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 text-xs bg-red-500 rounded-full animate-pulse shadow-lg">
+                  <span className="  px-3 py-1 text-xs bg-red-500 rounded-full animate-pulse shadow-lg">
                     LIVE
                   </span>
 

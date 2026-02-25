@@ -61,6 +61,10 @@ const Signup = () => {
     }
   };
 
+    useEffect(() => {
+      document.title = "iBytex | Smart & Secure Digital Asset Exchange";
+    }, []);
+
   useEffect(() => {
     if (timer <= 0) return;
 

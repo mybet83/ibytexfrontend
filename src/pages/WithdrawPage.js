@@ -371,6 +371,10 @@ setAvailable(newBalance);
     }
   };
 
+  useEffect(() =>{
+    document.title = "iBytex | Fast, Secure Payout"
+  },[])
+
   /* ================= UI ================= */
 
   return (

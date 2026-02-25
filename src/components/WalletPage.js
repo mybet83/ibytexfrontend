@@ -92,6 +92,10 @@ const userId = localStorage.getItem("userId");
     }
   };
 
+    useEffect(() => {
+      document.title = "iBytex | Fast, Secure & Transparent Trading";
+    },[])
+
   useEffect(() => {
   const socket = io(API);
 
