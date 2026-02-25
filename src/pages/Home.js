@@ -176,7 +176,7 @@ transition-colors duration-500">
      initial={{ opacity: 0, y: 80 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{
-    delay: 3, // 🔥 4 second delay
+    delay: 1, // 🔥 4 second delay
     duration: 2,
     ease: [0.22, 1, 0.36, 1],
   }}
