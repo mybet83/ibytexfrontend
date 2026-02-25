@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
+import { io } from "socket.io-client";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -10,7 +11,7 @@ const WalletPage = ({ setActivePage }) => {
   const [totalWithdraw, setTotalWithdraw] = useState(0);
   const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
-
+const userId = localStorage.getItem("userId");
   const [hasAnimated, setHasAnimated] = useState(false);
 
   const previousSold = useRef(0);
@@ -91,6 +92,19 @@ const WalletPage = ({ setActivePage }) => {
     }
   };
 
+  useEffect(() => {
+  const socket = io(API);
+
+  socket.emit("join", userId); // join room
+
+  socket.on("wallet_update", (data) => {
+    setTotalSold(data.totalSold);
+    setTotalWithdraw(data.totalWithdraw);
+  });
+
+  return () => socket.disconnect();
+}, []);
+
   /* INITIAL LOAD */
   useEffect(() => {
     fetchWalletData();
@@ -138,7 +152,7 @@ const WalletPage = ({ setActivePage }) => {
         <motion.div whileHover={{ y: -4 }}
           className="bg-emerald-900/30 p-6 rounded-2xl border border-emerald-500/20 max-md:p-3">
           <p className="text-emerald-300 text-sm max-md:text-xs">Available Balance</p>
-          <h2 className="text-3xl font-bold mt-2 text-emerald-400 max-md:2xl" >
+          <h2 className="text-3xl font-bold mt-2 text-emerald-400 max-md:text-2xl" >
             ₹ {renderNumber(availableBalance)}
           </h2>
         </motion.div>

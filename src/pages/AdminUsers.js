@@ -66,7 +66,18 @@ export default function AdminUsers() {
               <th>Orders</th>
               <th>Registered</th>
               <th>Status</th>
-              <th>Action</th>
+              
+              <th>Created IP</th>
+<th>Created Device</th>
+<th>Created City</th>
+<th>Created Country</th>
+
+<th>Last Active</th>
+<th>Login IP</th>
+<th>Login Device</th>
+<th>Login City</th>
+<th>Login Country</th>
+<th>Action</th>
             </tr>
           </thead>
 
@@ -82,18 +93,33 @@ export default function AdminUsers() {
                 <td>{u.totalOrders}</td>
                 <td>{new Date(u.registrationDate).toLocaleDateString()}</td>
                 <td>
-                  {u.isBlocked ? (
+                  {u.status === "Blocked" ? (
                     <span className="text-red-400">Blocked</span>
                   ) : (
                     <span className="text-green-400">Active</span>
                   )}
                 </td>
+                <td>{u.ipAddress || "-"}</td>
+<td>{u.deviceInfo || "-"}</td>
+<td>{u.city || "-"}</td>
+<td>{u.country || "-"}</td>
+
+<td>
+  {u.lastActive
+    ? new Date(u.lastActive).toLocaleString()
+    : "-"}
+</td>
+
+<td>{u.lastLoginIp || "-"}</td>
+<td>{u.lastLoginDevice || "-"}</td>
+<td>{u.lastLoginCity || "-"}</td>
+<td>{u.lastLoginCountry || "-"}</td>
                 <td className="flex gap-2">
                   <button
                     onClick={() => toggleBlock(u._id)}
                     className="bg-yellow-600 px-2 py-1 rounded"
                   >
-                    {u.isBlocked ? "Unblock" : "Block"}
+                    {u.status === "Blocked" ? "Unblock" : "Block"}
                   </button>
 
                   <button
@@ -111,3 +137,8 @@ export default function AdminUsers() {
     </div>
   );
 }
+
+
+
+
+

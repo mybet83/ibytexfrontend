@@ -280,11 +280,11 @@ useEffect(() => {
         {/* TITLE + BADGE */}
         <div className="flex items-center justify-between">
              <div className="w-14 h-14 flex items-center justify-center 
-        rounded-xl bg-white/5 border border-white/10 max-md:w-8 max-md:h-8">
+        rounded-xl bg-white/5 border border-white/10 max-md:w-8 max-md:h-8 ">
           {icon}
         </div>
 
-          <p className="text-gray-400 text-sm tracking-wide max-md:text-[12px]">
+          <p className="text-gray-400 text-sm tracking-wide max-md:text-[12px] text-end">
             {title}
           </p>
 
@@ -292,7 +292,7 @@ useEffect(() => {
             <span
               className="text-[8px] px-2 py-1 
                            bg-red-500 text-white 
-                           rounded-full animate-pulse"
+                           rounded-full animate-pulse absolute bottom-3"
             >
               {badge}
             </span>

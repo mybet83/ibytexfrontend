@@ -241,6 +241,7 @@ import "react-toastify/dist/ReactToastify.css";
 import CountUp from "react-countup";
 import Confetti from "react-confetti";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -253,6 +254,8 @@ export default function WithdrawPage({ onWithdrawSuccess }) {
   const [balanceLoading, setBalanceLoading] = useState(true);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
+  const hasAnimated = useRef(false);
+const previousBalance = useRef(0);
 
   const token = localStorage.getItem("token");
 
@@ -295,13 +298,20 @@ export default function WithdrawPage({ onWithdrawSuccess }) {
       const approvedWithdrawals = withdrawalsRes.data.filter(
         (w) => w.status === "APPROVED",
       );
-
       const totalWithdrawn = approvedWithdrawals.reduce(
         (acc, curr) => acc + Number(curr.amount),
         0,
       );
 
-      setAvailable(totalSold - totalWithdrawn);
+const newBalance = totalSold - totalWithdrawn;
+
+if (!hasAnimated.current) {
+  previousBalance.current = 0;
+} else {
+  previousBalance.current = available;
+}
+
+setAvailable(newBalance);
     } catch (err) {
       console.log("Balance error");
     } finally {
@@ -323,7 +333,7 @@ export default function WithdrawPage({ onWithdrawSuccess }) {
     const interval = setInterval(() => {
       fetchWithdrawals();
       fetchAvailableBalance();
-    }, 6000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -388,7 +398,17 @@ export default function WithdrawPage({ onWithdrawSuccess }) {
           </p>
         ) : (
           <h2 className="text-5xl font-bold text-emerald-400 mt-4 max-md:text-2xl">
-            ₹ <CountUp end={available} duration={1.2} separator="," />
+          ₹{" "}
+<CountUp
+  start={hasAnimated.current ? previousBalance.current : 0}
+  end={available}
+  duration={1}
+  separator=","
+  onEnd={() => {
+    hasAnimated.current = true;
+    previousBalance.current = available;
+  }}
+/>
           </h2>
         )}
       </div>
