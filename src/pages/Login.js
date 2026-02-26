@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utiles";
+import { messaging, getToken } from "../firebase";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -29,47 +30,75 @@ const Login = () => {
   }, []);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const { email, password } = loginInfo;
+  const { email, password } = loginInfo;
 
-    if (!email || !password) {
-      return handleError("Please fill all the fields");
+  if (!email || !password) {
+    return handleError("Please fill all the fields");
+  }
+
+  try {
+    setLoading(true);
+
+    const response = await fetch(`${API}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(loginInfo),
+    });
+
+    const result = await response.json();
+    const { success, message, jwtToken, user, error } = result;
+
+    if (!success) {
+      const details = error?.details?.[0]?.message;
+      return handleError(details || message || "Login failed");
     }
 
+    handleSuccess(message);
+
+    // ✅ Save auth data first
+    localStorage.setItem("token", jwtToken);
+    localStorage.setItem("user", JSON.stringify(user));
+
+    // 🔔 Request Notification Permission
     try {
-      setLoading(true);
+      const permission = await Notification.requestPermission();
 
-      const response = await fetch(`${API}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginInfo),
-      });
+      if (permission === "granted") {
+        const fcmToken = await getToken(messaging, {
+          vapidKey: "BKRiFrLs3dKcSKGuZ4uV7Tn5s6jg34pmRQXN2Rp7QctRq3AO94iFcCDzUbAteokJvJ__8xvzwL1yKhSQzn5xCJg"
+        });
 
-      const result = await response.json();
-      const { success, message, jwtToken, user, error } = result;
+        if (fcmToken) {
+          console.log("FCM Token:", fcmToken);
 
-      if (success) {
-        handleSuccess(message);
-
-        localStorage.setItem("token", jwtToken);
-        localStorage.setItem("user", JSON.stringify(user));
-
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1000);
-      } else if (error) {
-        const details = error?.details?.[0]?.message;
-        handleError(details || "Login failed");
-      } else {
-        handleError(message || "Login failed");
+          await fetch(`${API}/api/save-fcm-token`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwtToken}`,
+            },
+            body: JSON.stringify({ fcmToken }),
+          });
+        }
       }
-    } catch (error) {
-      handleError("Server not responding");
-    } finally {
-      setLoading(false);
+    } catch (notifError) {
+      console.log("Notification setup failed:", notifError);
     }
-  };
+
+    // ✅ Navigate
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 800);
+
+  } catch (error) {
+    console.error("Login error:", error);
+    handleError("Server not responding");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#0b0e11] text-white flex flex-col">

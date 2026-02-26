@@ -66,7 +66,9 @@ export default function Navbar() {
       <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-1 max-md:px-0">
 
         {/* Logo */}
-        <img src="/logot.png" alt="logo" className="w-16" />
+       <Link to="/home">
+  <img src="/logot.png" alt="logo" className="w-16 cursor-pointer" />
+</Link>
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-8 text-[13px] font-medium tracking-wide">

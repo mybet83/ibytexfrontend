@@ -551,7 +551,17 @@ We conduct regular vulnerability scans and penetration testing in accordance wit
 
         {/* ================= FULL DOC LEGAL TEXT ================= */}
         <div className="border-t border-gray-800 px-6 py-12 max-w-7xl mx-auto text-xs leading-6 text-gray-500 space-y-6 whitespace-pre-line">
+          <p className="text-sm text-gray-500 mt-">
+  IBYTEX Exchange is a leading Crypto Exchange Platform India offering 
+  INR to USDT Exchange, Instant USDT Trading, and USDT OTC India services.
+  We are known as a Trusted USDT Dealer India providing fast and secure 
+  Buy USDT India and Sell USDT India solutions.
+</p>
+
+
 {`
+    
+
 iBytex Pte Ltd is a Securities Dealer registered in Seychelles with registration number 7423606-3 and authorised by the Financial Services Authority (FSA) with licence number SD7015.
 iBytex Pte Ltd is also authorized as an Over-The-Counter Derivatives Provider (ODP) by the Financial Sector Conduct Authority (FSCA).
 Certain services may be provided by affiliated entities operating under the iBytex brand:

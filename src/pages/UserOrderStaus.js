@@ -27,6 +27,17 @@ export default function MyOrders() {
     }
   };
 
+  const formatDateTime = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
   const statusStyle = (status) => {
     if (status === "PENDING") return "bg-yellow-500/20 text-yellow-400";
     if (status === "COMPLETED") return "bg-green-500/20 text-green-400";
@@ -63,7 +74,12 @@ export default function MyOrders() {
                 <div>
                   <p className="text-gray-400 text-sm">Order ID</p>
                   <p className="text-white text-sm break-all max-md:text-[12px]">{o._id}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+  {formatDateTime(o.createdAt)}
+</p>
                 </div>
+
+                
 
                 <span
                   className={`px-4 py-1 rounded-full text-xs font-semibold max-md:text-[8px] ${
@@ -99,37 +115,7 @@ export default function MyOrders() {
               </div>
 
               {/* PAYMENT METHOD */}
-              <div className="mb-6">
-                <p className="text-gray-400 text-sm mb-3 max-md:text-[12px]">Payment Details</p>
-
-                <div className="bg-black/30 p-5 rounded-xl border border-gray-800">
-                  {o.paymentMethod === "UPI" && (
-                    <p>
-                      <span className="text-gray-400">UPI ID:</span>{" "}
-                      <span className="text-white font-medium">
-                        {o.userPaymentDetails?.upiId}
-                      </span>
-                    </p>
-                  )}
-
-                  {o.paymentMethod === "BANK" && (
-                    <>
-                      <p>
-                        <span className="text-gray-400">Account:</span>{" "}
-                        <span className="text-white font-medium">
-                          {o.userPaymentDetails?.accountNumber}
-                        </span>
-                      </p>
-                      <p>
-                        <span className="text-gray-400">IFSC:</span>{" "}
-                        <span className="text-white font-medium">
-                          {o.userPaymentDetails?.ifsc}
-                        </span>
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
+     
 
               {/* STATUS MESSAGE */}
               {o.status === "PENDING" && (

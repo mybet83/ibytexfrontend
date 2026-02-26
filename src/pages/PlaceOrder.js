@@ -3,12 +3,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-
 export default function PlaceOrder() {
   const [usdt, setUsdt] = useState("");
   const [rate, setRate] = useState(0);
   const [receipt, setReceipt] = useState(null);
   const [processing, setProcessing] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [amountError, setAmountError] = useState("");
+  const [showWallet, setShowWallet] = useState(false);
 
   const API = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ export default function PlaceOrder() {
 
   useEffect(() => {
     document.title = "iBytex | Real-Time USDT Trading Platform";
-  },[])
+  }, []);
 
   /* ================= PLACE ORDER ================= */
   const placeOrder = async () => {
@@ -41,63 +43,72 @@ export default function PlaceOrder() {
     formData.append("totalINR", totalINR);
     formData.append("receipt", receipt);
 
-try {
-  setProcessing(true); // 🔥 show processing
+    try {
+      setProcessing(true); // 🔥 show processing
 
-  const res = await axios.post(`${API}/orders`, formData, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-      "Content-Type": "multipart/form-data",
-    },
-  });
+      const res = await axios.post(`${API}/orders`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-  toast.success(`Order Placed ✅ ID: ${res.data.orderId}`);
+      toast.success(`Order Placed ✅ ID: ${res.data.orderId}`);
 
-  setUsdt("");
-  setReceipt(null);
+      setUsdt("");
+      setReceipt(null);
 
-  // 🔥 2 sec processing delay
-setTimeout(() => {
-  navigate("/dashboard", { state: { openOrders: true } });
-}, 2000);
+      // 🔥 2 sec processing delay
+      setTimeout(() => {
+        navigate("/dashboard", { state: { openOrders: true } });
+      }, 2000);
+    } catch {
+      setProcessing(false);
+      toast.error("Order failed ❌");
+    }
+  };
 
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    setAmount(value);
 
-
-} catch {
-  setProcessing(false);
-  toast.error("Order failed ❌");
-}
+    if (value && parseFloat(value) < 50) {
+      setAmountError("Minimum sell 50 USDT");
+        setShowWallet(false);
+    } else {
+      setAmountError("");
+    }
   };
 
   return (
     <>
       <div className="min-h-screen  text-white ">
-
         {/* HEADER */}
         <div className="flex justify-between items-center max-w-7xl mx-auto mb-10 max-md:mb-5">
           <h1 className="text-2xl font-semibold ">Sell USDT</h1>
-
-    
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto max-md:gap-6">
-
           {/* LEFT SIDE */}
           <div className="lg:col-span-2 space-y-6">
-
             {/* TRADE BOX */}
-            <div className="bg-[#161a1e] border border-gray-800 rounded-xl p-6">
-
+            <div className="bg-[#0b0e11] border border-gray-800 rounded-xl p-6">
               <div className="grid md:grid-cols-3 gap-6">
-
                 <div>
-                  <p className="text-xs text-gray-400 mb-2">Amount (USDT)</p>
+                  <label className="text-gray-400 text-xs ">Amount (USDT)</label>
+
                   <input
                     type="number"
-                    value={usdt}
-                    onChange={(e) => setUsdt(e.target.value)}
-                    className="w-full bg-[#0b0e11] border border-gray-700 px-4 py-3 rounded-lg focus:border-gray-400 outline-none"
+                    value={amount}
+                    onChange={handleAmountChange}
+                    className="w-full  bg-[#0b0e11] border border-gray-700 
+               rounded-lg px-4 py-3 text-white outline-none"
+                    placeholder="Enter amount"
                   />
+
+                  {amountError && (
+                    <p className="text-red-500 text-sm mt-2">{amountError}</p>
+                  )}
                 </div>
 
                 <div>
@@ -112,25 +123,88 @@ setTimeout(() => {
                   <div className="bg-[#0b0e11] border border-gray-700 px-4 py-3 rounded-lg text-green-400 font-semibold">
                     ₹ {totalINR}
                   </div>
+        <button
+  onClick={() => {
+    if (!amount || parseFloat(amount) < 50) {
+      toast.error("Minimum sell 50 USDT");
+      setShowWallet(false);
+      return;
+    }
+    setUsdt(amount);
+    setShowWallet(true);
+  }}
+  className="mt-4 w-full py-2.5 bg-gold-gradient text-black rounded-lg font-semibold hover:scale-105 transition"
+>
+  Process 
+</button>
                 </div>
-
               </div>
             </div>
 
             {/* WALLET SECTION */}
-            <div className="bg-[#161a1e] border border-gray-800 rounded-xl p-6">
+          {/* PROCESS INFO / WALLET SECTION */}
+{!showWallet ? (
+  <div className="relative bg-gradient-to-br from-[#161a1e] to-[#111417] border border-gray-800 rounded-2xl p-8 overflow-hidden">
 
+    {/* Glow Effect */}
+    <div className="absolute -top-10 -right-10 w-40 h-40 bg-yellow-500/10 blur-3xl rounded-full"></div>
+
+    <h2 className="text-lg font-semibold text-white mb-6">
+      Process to Sell USDT
+    </h2>
+
+    <div className="space-y-4 text-gray-300 text-sm">
+
+      <div className="flex items-start gap-3">
+        <div className="w-7 h-7 flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">
+          1
+        </div>
+        <p>Select minimum <span className="text-white font-medium">50 USDT</span></p>
+      </div>
+
+      <div className="flex items-start gap-3">
+        <div className="w-7 h-7 flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">
+          2
+        </div>
+        <p>Click on <span className="text-white font-medium">Process</span> button</p>
+      </div>
+
+      <div className="flex items-start gap-3">
+        <div className="w-7 h-7 flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">
+          3
+        </div>
+        <p>You will receive the wallet address and pay selected USDT</p>
+      </div>
+
+      <div className="flex items-start gap-3">
+        <div className="w-7 h-7 flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">
+          4
+        </div>
+        <p>Upload screenshot and click <span className="text-white font-medium">Place Order</span></p>
+      </div>
+      <div className="flex items-start gap-3">
+        <div className="w-7 h-7 flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">
+          5
+        </div>
+        <p>Our Team Will Verify And You Recive <span className="text-white font-medium">INR In Your Wallet</span></p>
+      </div>
+
+    </div>
+
+    <div className="mt-6 text-xs text-gray-500 border-t border-gray-800 pt-4">
+      iBytex - Real Time USDT Trade
+    </div>
+
+  </div>
+) : (
+  <div className="bg-[#161a1e] border border-gray-800 rounded-xl p-6">
               <h2 className="text-sm text-gray-400 mb-4">
                 Send USDT ({NETWORK})
               </h2>
 
               <div className="flex justify-center mb-5">
                 <div className="bg-white p-3 rounded-lg">
-                  <img
-                    src="/usdt-qr.png"
-                    alt="QR"
-                    className="w-40"
-                  />
+                  <img src="/usdt-qr.png" alt="QR" className="w-40" />
                 </div>
               </div>
 
@@ -148,14 +222,12 @@ setTimeout(() => {
                 Copy Address
               </button>
             </div>
-
+)}
           </div>
 
           {/* RIGHT SIDE */}
           <div className="bg-[#161a1e] border border-gray-800 rounded-xl p-6 space-y-6">
-
             <div className="border border-dashed border-gray-700 rounded-lg p-5 text-center relative bg-[#0b0e11]">
-
               <input
                 type="file"
                 accept="image/*"
@@ -177,34 +249,35 @@ setTimeout(() => {
                     alt="Preview"
                     className="mx-auto w-28 rounded-lg"
                   />
-                  <p className="text-green-400 text-xs mt-2">
-                    {receipt.name}
-                  </p>
+                  <p className="text-green-400 text-xs mt-2">{receipt.name}</p>
                 </>
               )}
             </div>
 
-           {processing && (
-  <div className="text-yellow-400 text-sm text-center animate-pulse">
-    Your order is processing...
-  </div>
-)}
+            {processing && (
+              <div className="text-yellow-400 text-sm text-center animate-pulse">
+                Your order is processing...
+              </div>
+            )}
 
-<button
+        <button
   onClick={placeOrder}
-  disabled={processing}
-  className="w-full py-3 bg-gold-gradient text-black rounded-lg font-semibold hover:bg-yellow-300 transition disabled:opacity-50"
+  disabled={amountError || !amount || processing}
+  className={`
+   w-full py-3 bg-gold-gradient text-black rounded-lg font-semibold hover:bg-yellow-300 transition disabled:opacity-50
+    ${
+      amountError || !amount || processing
+        ? "bg-gray-600 cursor-not-allowed"
+        : "bg-gold-gradient hover:scale-105"
+    }
+  `}
 >
   {processing ? "Processing..." : "Place Order"}
 </button>
-
           </div>
         </div>
       </div>
-
-    
     </>
   );
 }
-
 

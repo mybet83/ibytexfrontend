@@ -16,7 +16,6 @@ const TermsConditions = () => {
 
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">
-            <img src="/logot.png" alt="logo" className="w-14 h-14" />
             <h1 className="text-4xl lg:text-5xl font-bold bg-[linear-gradient(135deg,#FFD700_0%,#00BFFF_100%)] bg-clip-text text-transparent">
               Terms & Conditions
             </h1>

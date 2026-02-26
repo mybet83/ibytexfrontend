@@ -28,7 +28,7 @@ const PrivacyPolicy = () => {
 
   {/* Left Side - Logo + Title */}
   <div className="flex items-center gap-4">
-    <img src="/logot.png" alt="logo" className="w-14 h-14" />
+
 
     <h1 className="text-4xl lg:text-5xl font-bold 
       bg-[linear-gradient(135deg,#FFD700_0%,#00BFFF_100%)] 

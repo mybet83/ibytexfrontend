@@ -159,118 +159,115 @@ function AnimatedCounter({ end }) {
     <div className=" relative z-10 min-h-screen  ">
       <Navbar />
 
-   <section className="relative min-h-screen flex items-center justify-center overflow-hidden max-md:min-h-[auto] py-24 
-max-md:pt-[10rem] max-md:pb-[6rem]
-transition-colors duration-500">
+<section className="relative min-h-screen flex items-center 
+justify-center overflow-hidden py-24 px-6">
 
-  {/* Background Glow Effects */}
+  {/* Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
     <div className="absolute top-0 left-0 w-[500px] h-[500px] 
-    bg-blue-600/20 blur-[140px] rounded-full max-md:w-[300px] max-md:h-[300px] max-md:blur-[70px]"></div>
+    bg-blue-600/20 blur-[140px] rounded-full"></div>
 
     <div className="absolute bottom-0 right-0 w-[500px] h-[500px] 
-    bg-yellow-500/20 blur-[140px] rounded-full max-md:w-[300px] max-md:h-[300px] max-md:blur-[70px]"></div>
+    bg-yellow-500/20 blur-[140px] rounded-full"></div>
   </div>
 
-  <motion.div
-     initial={{ opacity: 0, y: 80 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{
-    delay: 1, // 🔥 4 second delay
-    duration: 2,
-    ease: [0.22, 1, 0.36, 1],
-  }}
-  className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+  <div className="relative z-10 max-w-7xl w-full 
+  grid lg:grid-cols-2 gap-10 items-center">
 
-    {/* Main Heading */}
-    <h1 className="text-3xl md:text-6xl font-bold 
-     leading-tight max-md:text-[1rem]">
-
-      Sell Your USDT Instantly
-
-      <span className="block italic font-light 
-      bg-gradient-to-r from-yellow-400 to-blue-400 
-      bg-clip-text text-transparent mt-5 text-4xl  max-md:text-[2rem]">
-       Fast, secure, and reliable USDT selling with competitive market rates.
-      </span>
-    </h1>
-
-    {/* Subtitle */}
-    <p className="mt-6 text-gray-500 text-lg max-w-2xl mx-auto max-md:text-[1rem]">
-      Trade digital assets with competitive rates and lightning-fast processing.
-      Trusted by thousands of users worldwide.
-    </p>
-
-<div className="mt-16 flex justify-center max-md:flex-col max-md:items-center max-md:mt-10">
-
-  {/* MAIN CTA WRAPPER */}
-  <div className="flex items-center gap-4 bg-white/5 backdrop-blur-xl 
-                  border border-white/10 
-                  rounded-3xl px-8 py-5 
-                  shadow-[0_10px_40px_rgba(0,0,0,0.4)]
-                  max-md:flex-col-reverse max-md:gap-2 max-md:w-full max-md:max-w-sm ">
-
-    {/* SELL BUTTON */}
-    <button
-      onClick={() => navigate("/login")}
-      className="
-        relative overflow-hidden
-        px-10 py-3 rounded-xl
-       bg-gold-gradient
-        text-black font-semibold text-lg
-        shadow-lg
-        hover:scale-105 hover:shadow-[0_0_30px_rgba(255,200,0,0.6)]
-        transition-all duration-300
-        max-md:w-full
-      "
+    {/* ================= LEFT SIDE = YOUR HERO ================= */}
+    <motion.div
+          initial={{ opacity: 0, y: 150 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+        delay: 1,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+      className="text-center lg:text-left"
     >
-      <span className="relative z-10">Sell Now →</span>
 
-      {/* Shine Effect */}
-      <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-20 transition"></span>
-    </button>
-
-
-    {/* DIVIDER */}
-    <div className="hidden md:block w-[1px] h-12 bg-white/10"></div>
-
-    {/* RATE CARD */}
-    <div className="flex gap-2 max-md:mb-3">
-     <div className="flex items-center gap-1 
-                      bg-white/5 border border-white/10
-                      px-3 py-1 rounded-full text-sm text-gray-400 max-md:flex">
-
-        <span className="text-green-400">↗</span>
-        <span>Rate:</span>
+      <div className="inline-flex items-center gap-2 
+        bg-white/5 border border-white/10 
+        px-4 py-2 rounded-full text-sm text-gray-300 mb-6">
+        <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+        Trusted Crypto Forex Exchange in India
       </div>
 
-      {/* PRICE */}
-      <div className="flex items-baseline gap-1">
-
-        <span className="text-gray-400 text-2xl">₹</span>
-
-        <span className="
-          text-2xl font-bold
-          bg-gradient-to-r text-white
-          bg-clip-text text-transparent
-        ">
-          {rate ? rate : "—"}
+      <h1 className="text-5xl font-bold leading-tight text-white max-md:text-3xl ">
+        Sell USDT Instantly in India with IBYTEX
+        <span className="block italic font-light 
+        bg-gradient-to-r from-yellow-400 to-blue-400 
+        bg-clip-text text-transparent mt-5 text-lg">
+          India’s trusted crypto forex exchange platform offering fast, secure,
+          and reliable USDT buy & sell services.
         </span>
+      </h1>
 
-        <span className="text-gray-500 text-xl">/USDT</span>
-         <span className=" absolute right-[0.75rem] px-2 py-1 text-[8px] top-2 bg-red-500 rounded-full animate-pulse shadow-lg">
-                    LIVE
-                  </span>
+      <p className="mt-6 text-gray-400 text-base max-w-xl">
+        Experience seamless INR to USDT transactions with professional OTC support.
+      </p>
+
+      <div className="mt-16 flex gap-6 max-md:flex-col-reverse max-md:items-center">
+
+        <button
+          onClick={() => navigate("/login")}
+          className="px-10 py-4 rounded-xl bg-gold-gradient
+          text-black font-semibold text-lg
+          hover:scale-105 transition-all duration-300 "
+        >
+          Sell Now →
+        </button>
+
+        <div className="flex items-center gap-3 
+          bg-white/5 border border-white/10 
+          px-5 py-3 rounded-xl backdrop-blur-lg">
+
+          <span className="text-gray-400">₹</span>
+
+          <span className="text-2xl font-bold text-white">
+            {rate ? rate : "—"}
+          </span>
+
+          <span className="text-gray-400">/USDT</span>
+
+          <span className="px-2 py-1 text-[10px] 
+          bg-red-500 rounded-full animate-pulse">
+            LIVE
+          </span>
+        </div>
+
       </div>
-</div>
+
+    </motion.div>
+
+
+    {/* ================= RIGHT SIDE = LIVE MARKET ================= */}
+
+    <motion.div
+          initial={{ opacity: 0, y: 150 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.8,
+         delay: 1,
+        ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
+      }}
+      viewport={{
+        once: true,
+        amount: 0.4, // 🔥 40% visible pe trigger
+      }}
+      className="flex justify-center lg:justify-end"
+    >
+        <div className="w-full max-w-[450px] ">
+    <LivePrices />
   </div>
-</div>
+  
+    </motion.div>
 
-    {/* ================= RATE CARD ================= */}
-
-
-  </motion.div>
-
+  </div>
 </section>
 
       
@@ -280,9 +277,7 @@ transition-colors duration-500">
   <CryptoLogos />
 </div>
 
-      <section className="px-20 py-3 max-lg:py-4 max-lg:px-5 max-md:relative ">
-        <LivePrices />
-      </section>
+    
 
 
 
