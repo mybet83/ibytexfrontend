@@ -154,6 +154,7 @@ function AnimatedCounter({ end }) {
  const particlesInit = async (engine) => {
     await loadFull(engine);
   };
+  const isMobile = window.matchMedia("(max-width: 1024px)").matches;
 
   return (
     <div className=" relative z-10 min-h-screen  ">
@@ -207,26 +208,26 @@ justify-center overflow-hidden py-24 px-6">
         </span>
       </h1>
 
-      <p className="mt-6 text-gray-400 text-base max-w-xl">
+      <p className="mt-6 text-gray-400 text-base ">
         Experience seamless INR to USDT transactions with professional OTC support.
       </p>
 
-      <div className="mt-16 flex gap-6 max-md:flex-col-reverse max-md:items-center">
+      <div className="mt-16 flex gap-6 max-lg:flex-col-reverse max-lg:items-center">
 
         <button
           onClick={() => navigate("/login")}
           className="px-10 py-4 rounded-xl bg-gold-gradient
           text-black font-semibold text-lg
-          hover:scale-105 transition-all duration-300 "
+          hover:scale-105 transition-all duration-300 max-lg:px-20"
         >
           Sell Now →
         </button>
 
         <div className="flex items-center gap-3 
           bg-white/5 border border-white/10 
-          px-5 py-3 rounded-xl backdrop-blur-lg">
+          px-5 py-3 rounded-xl backdrop-blur-lg  max-lg:px-10">
 
-          <span className="text-gray-400">₹</span>
+          <span className="text-gray-400 text-2xl">₹</span>
 
           <span className="text-2xl font-bold text-white">
             {rate ? rate : "—"}
@@ -252,7 +253,7 @@ justify-center overflow-hidden py-24 px-6">
       whileInView={{ opacity: 1, y: 0 }}
       transition={{
         duration: 0.8,
-         delay: 1,
+       delay: isMobile ? 0 : 1,
         ease: [0.25, 0.1, 0.25, 1], // smooth cubic bezier
       }}
       viewport={{
@@ -261,7 +262,7 @@ justify-center overflow-hidden py-24 px-6">
       }}
       className="flex justify-center lg:justify-end"
     >
-        <div className="w-full max-w-[450px] ">
+        <div className="w-full max-w-[450px] max-lg:w-auto">
     <LivePrices />
   </div>
   

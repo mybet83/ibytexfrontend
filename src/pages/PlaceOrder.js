@@ -46,7 +46,7 @@ export default function PlaceOrder() {
     try {
       setProcessing(true); // 🔥 show processing
 
-      const res = await axios.post(`${API}/orders`, formData, {
+      const res = await axios.post(`${API}/api/orders`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "multipart/form-data",

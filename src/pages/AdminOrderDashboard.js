@@ -606,7 +606,7 @@ export default function AdminOrders() {
   /* ================= FETCH ================= */
   const fetchOrders = useCallback(async () => {
     try {
-      const res = await axios.get(`${API}/orders/admin`, authHeader);
+      const res = await axios.get(`${API}/api/orders/admin`, authHeader);
       const filtered = res.data.filter(
         (o) => o.status === statusParam
       );
@@ -626,7 +626,7 @@ export default function AdminOrders() {
 
     try {
       await axios.put(
-        `${API}/orders/complete/${id}`,
+        `${API}/api/orders/complete/${id}`,
         {
           status,
           notes: notes[id],

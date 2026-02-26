@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utiles";
 import { messaging, getToken } from "../firebase";
 
+
 const API = process.env.REACT_APP_API_URL;
 
 const Login = () => {
@@ -13,6 +14,7 @@ const Login = () => {
   const [loginInfo, setLoginInfo] = React.useState({
     email: "",
     password: "",
+   
   });
 
   const navigate = useNavigate();
@@ -41,10 +43,38 @@ const Login = () => {
   try {
     setLoading(true);
 
+    let fcmToken = null;   // ✅ DEFINE HERE
+
+    // 🔔 Generate FCM token
+    if ("serviceWorker" in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register(
+          "/firebase-messaging-sw.js"
+        );
+
+        const permission = await Notification.requestPermission();
+
+        if (permission === "granted") {
+          fcmToken = await getToken(messaging, {
+            vapidKey:
+              "BKRiFrLs3dKcSKGuZ4uV7Tn5s6jg34pmRQXN2Rp7QctRq3AO94iFcCDzUbAteokJvJ__8xvzwL1yKhSQzn5xCJg",
+            serviceWorkerRegistration: registration,
+          });
+        }
+      } catch (err) {
+        console.log("FCM error:", err.message);
+      }
+    }
+
+    // 🔥 Send login request
     const response = await fetch(`${API}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(loginInfo),
+      body: JSON.stringify({
+        email,
+        password,
+        fcmToken,   // ✅ now defined
+      }),
     });
 
     const result = await response.json();
@@ -57,37 +87,9 @@ const Login = () => {
 
     handleSuccess(message);
 
-    // ✅ Save auth data first
     localStorage.setItem("token", jwtToken);
     localStorage.setItem("user", JSON.stringify(user));
 
-    // 🔔 Request Notification Permission
-    try {
-      const permission = await Notification.requestPermission();
-
-      if (permission === "granted") {
-        const fcmToken = await getToken(messaging, {
-          vapidKey: "BKRiFrLs3dKcSKGuZ4uV7Tn5s6jg34pmRQXN2Rp7QctRq3AO94iFcCDzUbAteokJvJ__8xvzwL1yKhSQzn5xCJg"
-        });
-
-        if (fcmToken) {
-          console.log("FCM Token:", fcmToken);
-
-          await fetch(`${API}/api/save-fcm-token`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${jwtToken}`,
-            },
-            body: JSON.stringify({ fcmToken }),
-          });
-        }
-      }
-    } catch (notifError) {
-      console.log("Notification setup failed:", notifError);
-    }
-
-    // ✅ Navigate
     setTimeout(() => {
       navigate("/dashboard");
     }, 800);

@@ -240,7 +240,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CountUp from "react-countup";
 import Confetti from "react-confetti";
-import { motion, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
 
 const API = process.env.REACT_APP_API_URL;
@@ -279,7 +278,7 @@ const previousBalance = useRef(0);
   const fetchAvailableBalance = async () => {
     try {
       const [ordersRes, withdrawalsRes] = await Promise.all([
-        axios.get(`${API}/orders/my`, {
+        axios.get(`${API}/api/orders/my`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
         axios.get(`${API}/api/withdrawal/my`, {

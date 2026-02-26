@@ -20,7 +20,7 @@ const SettingsPage = ({ user }) => {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get(`${API}/orders/my`, {
+      const res = await axios.get(`${API}/api/orders/my`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

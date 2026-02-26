@@ -9,6 +9,7 @@ import WithdrawPageComponent from "./WithdrawPage";
 import WalletPage from "../components/WalletPage";
 import SettingsPage from "../components/SettingsPage";
 import { useLocation } from "react-router-dom";
+import { messaging, getToken } from "../firebase";  // agar firebase.js src me hai
 import {
   HiHome,
   HiCash,
@@ -45,6 +46,47 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const location = useLocation();
 
+
+useEffect(() => {
+  const setupFCM = async () => {
+    try {
+      if (!("serviceWorker" in navigator)) return;
+
+      const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+
+      const permission = await Notification.requestPermission();
+
+      if (permission !== "granted") return;
+
+      const fcmToken = await getToken(messaging, {
+        vapidKey: "BKRiFrLs3dKcSKGuZ4uV7Tn5s6jg34pmRQXN2Rp7QctRq3AO94iFcCDzUbAteokJvJ__8xvzwL1yKhSQzn5xCJg",
+        serviceWorkerRegistration: registration,
+      });
+
+      if (!fcmToken) return;
+
+      const jwt = localStorage.getItem("token");
+
+      await fetch(`${API}/api/auth/save-fcm-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({ fcmToken }),
+      });
+
+      console.log("FCM Saved Successfully");
+     
+    } catch (err) {
+      console.log("FCM setup failed:", err);
+    }
+  };
+
+  setupFCM();
+}, []);
+
+
   /* ================= FETCH ================= */
    useEffect(() => {
   if (window.innerWidth >= 768) {
@@ -63,7 +105,7 @@ useEffect(() => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get(`${API}/orders/my`, {
+      const res = await axios.get(`${API}/api/orders/my`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -145,7 +187,7 @@ useEffect(() => {
 
     try {
       const [ordersRes, withdrawRes] = await Promise.all([
-        axios.get(`${API}/orders/my`, {
+        axios.get(`${API}/api/orders/my`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
         axios.get(`${API}/api/withdrawal/my`, {

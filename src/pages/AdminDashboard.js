@@ -126,7 +126,7 @@ useEffect(() => {
 const fetchStats = async () => {
   try {
     const res = await axios.get(
-      `${API}/orders/admin/today-stats`,
+      `${API}/api/orders/admin/today-stats`,
       authHeader
     );
 
@@ -166,7 +166,7 @@ const fetchStats = async () => {
   const fetchSummary = async () => {
   try {
     const res = await axios.get(
-      `${API}/orders/admin/dashboard-summary`,
+      `${API}/api/orders/admin/dashboard-summary`,
       authHeader
     );
     setSummary(res.data);
