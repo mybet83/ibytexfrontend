@@ -210,7 +210,7 @@ const ForgotPassword = () => {
                 className={`w-full py-3 rounded-lg font-semibold transition
                 ${loading
                   ? "bg-gray-600"
-                  : "bg-yellow-400 hover:bg-yellow-500 text-black"
+                  : "bg-gold-gradient hover:bg-yellow-500 text-black"
                 }`}
               >
                 {loading ? "Sending OTP..." : "Send OTP"}

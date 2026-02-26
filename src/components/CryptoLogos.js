@@ -103,14 +103,14 @@ export default function CryptoMarquee() {
                   ${
                     item.name === "PCI DSS Compliant"
                       ? "h-8 sm:h-12 w-auto max-w-[150px]"
-                      : "h-8 w-8 sm:h-14 sm:w-14"
+                      : "h-10 w-10 sm:h-14 sm:w-14"
                   }
                 `}
               />
 
               <span
                 className="
-                  text-[10px] 
+                  text-[13px] 
                   sm:text-sm 
                   uppercase 
                   tracking-[0.15em] 

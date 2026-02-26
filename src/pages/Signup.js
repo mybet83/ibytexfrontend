@@ -230,24 +230,24 @@ const [emailExists, setEmailExists] = useState(false);
           </div>
 
           <div className="flex justify-center">
-            <div className="w-full max-w-md bg-[#181a20] rounded-2xl p-8 shadow-2xl border border-gray-800">
-              <div className="text-center flex items-center justify-center gap-3">
+            <div className="w-full max-w-md bg-[#181a20] rounded-2xl p-8 shadow-2xl border border-gray-800 max-md:p-3">
+              <div className="text-center flex items-center justify-center gap-3 max-md:flex-col max-md:gap-0">
                 <img src="/logot.png" alt="logo" className="w-16" />
                 <div>
                   <h2 className="text-2xl font-bold">Welcome to Ibytex</h2>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-gray-400 text-sm max-md:mt-2">
                     Create your account to start trading
                   </p>
                 </div>
               </div>
 
-              <form onSubmit={handleSignup} className="space-y-5 mt-6">
+              <form onSubmit={handleSignup} className="space-y-5 mt-6 max-md:space-y-3">
                 <input
                   name="name"
                   value={signupInfo.name}
                   onChange={handleChange}
                   placeholder="Full Name"
-                  className="w-full px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700"
+                  className="w-full px-4 py-3 rounded-lg bg-[#0b0e11] border border-gray-700 "
                 />
 
                 <input
@@ -360,7 +360,7 @@ const [emailExists, setEmailExists] = useState(false);
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 rounded-lg bg-yellow-400 text-black font-semibold"
+                  className="w-full py-3 rounded-lg bg-gold-gradient text-black font-semibold"
                 >
                   {loading
                     ? "Processing..."

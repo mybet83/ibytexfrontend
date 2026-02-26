@@ -463,7 +463,7 @@ We conduct regular vulnerability scans and penetration testing in accordance wit
       <footer className="bg-black text-gray-400 border-t border-gray-800">
 
         {/* ================= TOP GRID ================= */}
-        <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="max-w-7xl mx-auto px-6 py-16 max-lg:py-3">
           <div className="grid lg:grid-cols-5 gap-12">
 
           <div>

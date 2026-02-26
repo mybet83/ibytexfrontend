@@ -145,7 +145,7 @@ const Login = () => {
           {/* ================= RIGHT SIDE LOGIN FORM ================= */}
           <div className="flex justify-center">
 
-            <div className="w-full max-w-md bg-[#181a20] rounded-2xl p-8 shadow-2xl border border-gray-800">
+            <div className="w-full max-w-md bg-[#181a20] rounded-2xl p-8 shadow-2xl border border-gray-800 max-md:p-3">
 
               {/* Logo + Title */}
               <div className="text-center mb-6 flex items-center justify-center  max-sm:flex-col">
@@ -164,7 +164,7 @@ const Login = () => {
                </div>
               </div>
 
-              <form onSubmit={handleLogin} className="space-y-5">
+              <form onSubmit={handleLogin} className="space-y-5 ">
 
                 {/* EMAIL */}
                 <div>
@@ -195,7 +195,7 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-[42px] text-gray-400 text-sm"
+                    className="absolute right-3 top-[42px] text-gray-400 text-sm "
                   >
                     {showPassword ? "Hide" : "Show"}
                   </button>
@@ -205,11 +205,11 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full py-3 rounded-lg font-semibold transition
+                  className={`w-full py-3 mt-2 rounded-lg font-semibold transition 
                   ${
                     loading
                       ? "bg-gray-600"
-                      : "bg-yellow-400 hover:bg-yellow-500 text-black"
+                      : "bg-gold-gradient text-black"
                   }`}
                 >
                   {loading ? "Logging in..." : "Login"}

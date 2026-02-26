@@ -161,7 +161,7 @@ function AnimatedCounter({ end }) {
       <Navbar />
 
 <section className="relative min-h-screen flex items-center 
-justify-center overflow-hidden py-24 px-6">
+justify-center overflow-hidden py-24 px-6 max-lg:pb-8">
 
   {/* Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
@@ -199,7 +199,7 @@ justify-center overflow-hidden py-24 px-6">
       </div>
 
       <h1 className="text-5xl font-bold leading-tight text-white max-md:text-3xl ">
-        Sell USDT Instantly in India with IBYTEX
+        Sell USDT Instantly in India with iBytex
         <span className="block italic font-light 
         bg-gradient-to-r from-yellow-400 to-blue-400 
         bg-clip-text text-transparent mt-5 text-lg">
@@ -283,7 +283,7 @@ justify-center overflow-hidden py-24 px-6">
 
 
       {/* Why Choose Us */}
-   <section className="relative py-12 bg-black overflow-hidden">
+   <section className="relative py-12 bg-black overflow-hidden max-lg:py-6">
 
   {/* Subtle Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
@@ -780,7 +780,7 @@ justify-center overflow-hidden py-24 px-6">
 
 
 {/* ================= ULTRA PREMIUM TRUST SECTION ================= */}
-<section className="relative py-12 overflow-hidden max-md:pb-8 max-md:mb-12 max-md:pt-[1rem] ">
+<section className="relative py-12 overflow-hidden max-md:pb-8 max-lg:mb-6 max-md:pt-[1rem] ">
 
   {/* Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
