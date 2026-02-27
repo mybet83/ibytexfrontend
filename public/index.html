@@ -41,84 +41,89 @@
 }
 </script>
   </head>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: #000;
-  }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #000;
+    }
 
-  #initial-loader {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    display: grid;
-    place-items: center; /* ✅ Perfect center */
-    z-index: 9999;
-    transition: opacity 0.5s ease;
-  }
+    /* 🔥 FULL SCREEN LOADER */
+    #initial-loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: grid;
+      place-items: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
 
-  .loader-content {
-    text-align: center;
-  }
+    .loader-wrapper {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  .loader-logo {
-    width: 100px;
-    animation: pulse 1.8s infinite ease-in-out;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
+    /* 🔥 ROTATING GRADIENT RING */
+    .loader-ring {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #0072ff,
+        #00c6ff,
+        #00f0ff,
+        #0072ff
+      );
+      animation: spin 1.2s linear infinite;
+      filter: blur(6px);
+    }
 
-  .loader-text {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    background: linear-gradient(
-      135deg,
-      #0072ff 0%,
-      #00bfff 40%,
-      #e6f7ff 55%,
-      #00bfff 70%,
-      #0050ff 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+    /* Dark inner circle */
+    .loader-ring::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      background: #000;
+      border-radius: 50%;
+    }
 
-  .loader-sub {
-    color: #aaa;
-    font-size: 14px;
-    letter-spacing: 1px;
-  }
+    /* LOGO */
+    .loader-logo {
+      width: 130px;
+      z-index: 2;
+      animation: pulse 2s ease-in-out infinite;
+    }
 
-  @keyframes pulse {
-    0% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.1); opacity: 1; }
-    100% { transform: scale(1); opacity: 0.8; }
-  }
-</style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.85; }
+    }
+  </style>
+</head>
 
+<body>
 
-
-  <body>
-
-  <!-- 🔥 INITIAL LOADER (Outside Root) -->
+  <!-- 🔥 INITIAL LOADER -->
   <div id="initial-loader">
-    <div class="loader-content">
-      <img src="%PUBLIC_URL%/logot.png" class="loader-logo" />
-
-      <h1 class="loader-text">
-        Welcome to iBytex
-      </h1>
-
-      <p class="loader-sub">
-        Loading Secure Exchange Platform...
-      </p>
+    <div class="loader-wrapper">
+      <div class="loader-ring"></div>
+      <img src="%PUBLIC_URL%/logot.png" class="loader-logo" alt="IBYTEX Logo" />
     </div>
   </div>
+
 
   <!-- React Root -->
   <div id="root"></div>

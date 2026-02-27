@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utiles";
-import { messaging, getToken } from "../firebase";
-
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -14,11 +12,15 @@ const Login = () => {
   const [loginInfo, setLoginInfo] = React.useState({
     email: "",
     password: "",
-   
   });
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.title = "iBytex | Trusted Crypto Exchange Since 2008";
+  }, []);
+
+  // ✅ INPUT CHANGE FUNCTION
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginInfo((prev) => ({
@@ -27,80 +29,49 @@ const Login = () => {
     }));
   };
 
-  useEffect(() => {
-    document.title = "iBytex | Trusted Crypto Exchange Since 2008";
-  }, []);
-
+  // ✅ LOGIN FUNCTION
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const { email, password } = loginInfo;
+    const { email, password } = loginInfo;
 
-  if (!email || !password) {
-    return handleError("Please fill all the fields");
-  }
+    if (!email || !password) {
+      return handleError("Please fill all the fields");
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    let fcmToken = null;   // ✅ DEFINE HERE
+      const response = await fetch(`${API}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    // 🔔 Generate FCM token
-    if ("serviceWorker" in navigator) {
-      try {
-        const registration = await navigator.serviceWorker.register(
-          "/firebase-messaging-sw.js"
-        );
+      const result = await response.json();
+      const { success, message, jwtToken, user, error } = result;
 
-        const permission = await Notification.requestPermission();
-
-        if (permission === "granted") {
-          fcmToken = await getToken(messaging, {
-            vapidKey:
-              "BKRiFrLs3dKcSKGuZ4uV7Tn5s6jg34pmRQXN2Rp7QctRq3AO94iFcCDzUbAteokJvJ__8xvzwL1yKhSQzn5xCJg",
-            serviceWorkerRegistration: registration,
-          });
-        }
-      } catch (err) {
-        console.log("FCM error:", err.message);
+      if (!success) {
+        const details = error?.details?.[0]?.message;
+        return handleError(details || message || "Login failed");
       }
+
+      handleSuccess(message);
+
+      localStorage.setItem("token", jwtToken);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 800);
+    } catch (err) {
+      console.error("Login error:", err);
+      handleError("Server not responding");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    // 🔥 Send login request
-    const response = await fetch(`${API}/api/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        password,
-        fcmToken,   // ✅ now defined
-      }),
-    });
-
-    const result = await response.json();
-    const { success, message, jwtToken, user, error } = result;
-
-    if (!success) {
-      const details = error?.details?.[0]?.message;
-      return handleError(details || message || "Login failed");
-    }
-
-    handleSuccess(message);
-
-    localStorage.setItem("token", jwtToken);
-    localStorage.setItem("user", JSON.stringify(user));
-
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 800);
-
-  } catch (error) {
-    console.error("Login error:", error);
-    handleError("Server not responding");
-  } finally {
-    setLoading(false);
-  }
-};
 
   return (
     <div className="min-h-screen bg-[#0b0e11] text-white flex flex-col">
