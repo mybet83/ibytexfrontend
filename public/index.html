@@ -40,104 +40,150 @@
   ]
 }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
   </head>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000;
-    }
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
 
-    /* 🔥 FULL SCREEN LOADER */
-    #initial-loader {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      display: grid;
-      place-items: center;
-      z-index: 9999;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
+  font-family: 'SN Pro', sans-serif;
+}
 
-    .loader-wrapper {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+/* FULL SCREEN */
+#initial-loader {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #0a0a0a 0%, #000 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
 
-    /* 🔥 ROTATING GRADIENT RING */
-    .loader-ring {
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: conic-gradient(
-        #0072ff,
-        #00c6ff,
-        #00f0ff,
-        #0072ff
-      );
-      animation: spin 1.2s linear infinite;
-      filter: blur(6px);
-    }
+/* WRAPPER */
+.loader-wrapper {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    /* Dark inner circle */
-    .loader-ring::after {
-      content: "";
-      position: absolute;
-      inset: 10px;
-      background: #000;
-      border-radius: 50%;
-    }
+/* GLASS CENTER */
+.center-glass {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    /* LOGO */
-    .loader-logo {
-      width: 130px;
-      z-index: 2;
-      animation: pulse 2s ease-in-out infinite;
-    }
+/* LOGO */
+.loader-logo {
+  width: 90px;
+  opacity: 0.9;
+}
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+/* ORBIT BASE */
+.orbit {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+  will-change: transform;
+}
 
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.85; }
-      50% { transform: scale(1.08); opacity: 1; }
-      100% { transform: scale(1); opacity: 0.85; }
-    }
-  </style>
+/* RING SIZES + SPEED */
+.ring1 {
+  width: 240px;
+  height: 240px;
+  animation: rotateSlow 4s linear infinite;
+}
+
+.ring2 {
+  width: 200px;
+  height: 200px;
+  animation: rotateReverse 4.5s linear infinite;
+}
+
+.ring3 {
+  width: 170px;
+  height: 170px;
+  animation: rotateSlow 5s linear infinite;
+}
+
+/* MOVING DOT */
+.orbit::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: #ffffff;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px rgba(255,255,255,0.6);
+}
+
+/* ANIMATIONS */
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotateReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+</style>
 </head>
 
 <body>
 
   <!-- 🔥 INITIAL LOADER -->
-  <div id="initial-loader">
-    <div class="loader-wrapper">
-      <div class="loader-ring"></div>
-      <img src="%PUBLIC_URL%/logot.png" class="loader-logo" alt="IBYTEX Logo" />
+<div id="initial-loader">
+  <div class="loader-wrapper">
+
+    <div class="orbit ring1"></div>
+    <div class="orbit ring2"></div>
+    <div class="orbit ring3"></div>
+
+    <div class="center-glass">
+      <img src="%PUBLIC_URL%/logot.png" class="loader-logo" />
     </div>
+
   </div>
+</div>
 
 
   <!-- React Root -->
   <div id="root"></div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const loader = document.getElementById("initial-loader");
 
-    // Safety timeout (in case React crashes)
-    setTimeout(() => {
-      if (loader) loader.style.opacity = "0";
-    }, 4000);
-  });
+  window.addEventListener("load", function () {
+  const loader = document.getElementById("initial-loader");
+  setTimeout(() => {
+    loader.style.opacity = "0";
+    loader.style.visibility = "hidden";
+  }, 4000);
+});
+
+
+  
+
 </script>
+
 
 
 

@@ -467,7 +467,7 @@ We conduct regular vulnerability scans and penetration testing in accordance wit
           <div className="grid lg:grid-cols-5 gap-12">
 
           <div>
-               <img src="/logot.png" alt="logo" className="w-20 " />
+               <img src="/logot.png" alt="logo" className="w-20  max-lg:hidden" />
               <p className="text-sm leading-relaxed">
                  Secure, fast and trusted USDT to fiat exchange platform.
                </p>
