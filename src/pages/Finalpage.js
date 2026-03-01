@@ -21,7 +21,11 @@ import {
   HiCurrencyRupee,
   HiArrowUp,
   HiLockClosed,
+
 } from "react-icons/hi";
+import { FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
+import { MdSupportAgent } from "react-icons/md";
+
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -39,8 +43,8 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
   const [recentActivity, setRecentActivity] = useState([]);
   const availableBalance = totalSold - approvedWithdraw;
   const [loading, setLoading] = useState(true);
-  const [supportOpen, setSupportOpen] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [supportOpen, setSupportOpen] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -476,6 +480,75 @@ useEffect(() => {
             open={sidebarOpen}
             onClick={() => setActivePage("payment-method")}
           />
+          {/* ================= CUSTOMER SUPPORT ================= */}
+{/* CUSTOMER SUPPORT DROPDOWN */}
+<div>
+  <div
+    onClick={() => setSupportOpen(!supportOpen)}
+    className="group flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#1f2937] cursor-pointer"
+  >
+    <span className="text-lg">
+      <MdSupportAgent />
+    </span>
+
+    {sidebarOpen && (
+      <span className="flex-1">Customer Support</span>
+    )}
+
+    {sidebarOpen && (
+      <span
+        className={`transition-transform duration-300 ${
+          supportOpen ? "rotate-90" : ""
+        }`}
+      >
+        ▶
+      </span>
+    )}
+  </div>
+
+  {/* DROPDOWN CONTENT */}
+  <div
+    className={`overflow-hidden transition-all duration-300 ${
+      supportOpen ? "max-h-40 mt-2" : "max-h-0"
+    }`}
+  >
+    <div className="ml-8 space-y-2">
+
+      {/* TELEGRAM */}
+      <div
+        onClick={() => {
+          const token = localStorage.getItem("token");
+          if (token) {
+            window.open("https://t.me/iBytex_PayCh", "_blank");
+          } else {
+            window.location.href = "/login";
+          }
+        }}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-500/10 cursor-pointer text-blue-400 text-sm"
+      >
+        <FaTelegramPlane />
+        {sidebarOpen && "Telegram Support"}
+      </div>
+
+      {/* WHATSAPP */}
+      <div
+        onClick={() => {
+          const token = localStorage.getItem("token");
+          if (token) {
+         window.open("https://wa.me/918057678348", "_blank");
+          } else {
+            window.location.href = "/login";
+          }
+        }}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-500/10 cursor-pointer text-green-400 text-sm"
+      >
+        <FaWhatsapp />
+        {sidebarOpen && "WhatsApp Support"}
+      </div>
+
+    </div>
+  </div>
+</div>
           <SidebarItem
             label="Settings"
             icon={<HiCog />}
@@ -632,7 +705,7 @@ py-2 z-50"
                 </span>
 
                 <div className="flex items-center gap-3">
-                  <span className="  px-3 py-1 text-xs bg-red-500 rounded-full animate-pulse shadow-lg">
+                  <span className="  px-2 py-1 text-[8px] bg-red-500 rounded-full animate-pulse shadow-lg">
                     LIVE
                   </span>
 
@@ -699,7 +772,7 @@ py-2 z-50"
                   {recentActivity.map((item) => (
                     <div
                       key={item.id}
-                      className="group relative overflow-hidden rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#111827]/80 to-[#0f172a]/80 border border-white/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(234,179,8,0.2)] "
+                      className="group relative overflow-hidden rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#111827]/80 to-[#0f172a]/80 border border-white/10 transition-all duration-500 hover:-translate-y-2  "
                     >
                       {/* LEFT COLOR STRIP */}
                       <div
@@ -791,7 +864,7 @@ max-md:items-start
                             </div>
                             {/* ADMIN NOTE */}
                             {item.adminNotes && item.adminNotes !== "" && (
-                              <div className="mt-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 px-4 py-2 max-md:mt-0 w-full md:w-fit md:min-w-[220px]">
+                              <div className="mt-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 px-4 py-2 max-md:mt-0 w-full md:w-fit md:min-w-[180px] max-md:px-3 max-md:py-1">
                                 <p className="text-yellow-400 text-xs font-semibold mb-1">
                                   Admin Note
                                 </p>
@@ -804,12 +877,12 @@ max-md:items-start
                             {/* WITHDRAW UTR NUMBER */}
                             {item.type === "WITHDRAW" &&
                               item.adminUtrNumber && (
-                                <div className="mt-3 rounded-xl border border-cyan-500/30 bg-cyan-500/5 px-4 py-3 w-fit min-w-[220px]">
+                                <div className="mt-3 rounded-xl border border-cyan-500/30 bg-cyan-500/5 px-4 py-3 w-fit min-w-[180px] max-md:px-3 max-md:py-1">
                                   <p className="text-cyan-400 text-xs font-semibold mb-1">
                                     Transaction UTR
                                   </p>
                                   <p className="text-sm text-gray-300 tracking-wide w-full md:w-fit md:min-w-[220px]">
-                                    {item.adminUtrNumber}
+                                    No - {item.adminUtrNumber}
                                   </p>
                                 </div>
                               )}
@@ -863,44 +936,10 @@ max-md:items-center
 
       {/* ================= SUPPORT ASSISTANT ================= */}
 
-      {/* FLOATING BUTTON */}
-      <div className="fixed bottom-[5.5rem] right-6 z-50 hidden">
-        <button
-          onClick={() => setSupportOpen(true)}
-          className="w-14 h-14 rounded-full bg-gold-gradient shadow-lg flex items-center justify-center text-black text-2xl hover:scale-110 transition-all duration-300"
-        >
-          💬
-        </button>
-      </div>
+
 
       {/* POPUP MODAL */}
-      {supportOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 ">
-          <div className="bg-[#111827] p-8 rounded-2xl border border-gray-700 w-[90%] max-w-md text-center relative">
-            <button
-              onClick={() => setSupportOpen(false)}
-              className="absolute top-3 right-4 text-gray-400 hover:text-white text-xl"
-            >
-              ✕
-            </button>
 
-            <h2 className="text-xl font-bold mb-4 text-yellow-400">
-              Customer Support
-            </h2>
-
-            <p className="text-gray-300 mb-6">Custom Support Msg in Telegram</p>
-
-            <a
-              href="https://t.me/ibytex_Pays"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold hover:scale-105 transition-all duration-300 inline-block"
-            >
-              Open Telegram Support
-            </a>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

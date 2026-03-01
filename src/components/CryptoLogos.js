@@ -63,10 +63,10 @@ export default function CryptoMarquee() {
       name: "Ethereum",
       logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
     },
-    {
-      name: "Solana",
-      logo: "https://cryptologos.cc/logos/solana-sol-logo.png",
-    },
+ {
+  name: "Solana",
+  logo: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
+},
     {
       name: "XRP",
       logo: "https://cryptologos.cc/logos/xrp-xrp-logo.png",

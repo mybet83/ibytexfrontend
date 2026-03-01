@@ -25,7 +25,7 @@ export default function AdminHistory() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${API}/orders/admin/history?date=${selectedDate}`,
+        `${API}/api/orders/admin/history?date=${selectedDate}`,
         authHeader
       );
       setHistoryData(res.data);
