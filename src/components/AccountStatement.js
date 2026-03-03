@@ -11,7 +11,7 @@ const AccountStatement = ({ user }) => {
 
     try {
       const [ordersRes, withdrawRes] = await Promise.all([
-        axios.get(`${API}/orders/my`, {
+        axios.get(`${API}/api/orders/my`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
         axios.get(`${API}/api/withdrawal/my`, {
