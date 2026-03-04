@@ -721,7 +721,7 @@ py-2 z-50"
             <div className="mb-8"></div>
 
             {/* STAT CARDS */}
-            <div className="grid md:grid-cols-4 gap-4 mb-10 max-md:grid-cols-2 max-md:mb-5">
+            <div className="grid grid-cols-4 gap-4 mb-10 max-lg:grid-cols-2 max-md:mb-5">
               <StatCard
                 title="Live USDT Rate"
                 value={`₹ ${rate}`}
