@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { io } from "socket.io-client";
+import AccountStatement from "./AccountStatement";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -169,6 +170,7 @@ const userId = localStorage.getItem("userId");
             ₹ {renderNumber(lockedBalance)}
           </h2>
         </motion.div>
+      
       </div>
 
       {/* ===== ACTION BUTTONS ===== */}
