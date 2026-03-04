@@ -884,7 +884,7 @@ grid lg:grid-cols-2 gap-6 items-center mx-auto">
         once: true,
         amount: 0.4, // 🔥 40% visible pe trigger
       }}
-      className="flex flex-wrap justify-center gap-8 mt-20 max-md:mt-10 max-md:justify-center max-md:grid max-md:grid-cols-2"
+      className="flex flex-wrap justify-center gap-8 mt-10 max-md:mt-10 max-md:justify-center max-md:grid max-md:grid-cols-2"
     >
 
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 
