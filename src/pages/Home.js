@@ -212,7 +212,7 @@ grid lg:grid-cols-2 gap-6 items-center mx-auto">
         Experience seamless INR to USDT transactions with professional OTC support.
       </p>
 
-      <div className="mt-16 flex gap-6 max-lg:flex-col-reverse max-lg:items-center">
+      <div className="mt-8 flex gap-6 max-lg:flex-col-reverse max-lg:items-center">
 
         <button
           onClick={() => navigate("/login")}
