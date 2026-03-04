@@ -303,6 +303,15 @@ useEffect(() => {
     return () => clearInterval(interval);
   }, [activePage]);
 
+  const handlePageChange = (page) => {
+  setActivePage(page);
+
+  // mobile me sidebar auto close
+  if (window.innerWidth < 768) {
+    setSidebarOpen(false);
+  }
+};
+
 
 
   // Dashboard live refresh
@@ -441,26 +450,30 @@ useEffect(() => {
             label="Dashboard"
             icon={<HiHome />}
             open={sidebarOpen}
-            onClick={() => setActivePage("dashboard")}
+            active={activePage === "dashboard"}
+            onClick={() => handlePageChange("dashboard")}
           />
           <SidebarItem
             label="Wallet"
             icon={<HiCash />}
             open={sidebarOpen}
-            onClick={() => setActivePage("wallet")}
+            active={activePage === "wallet"}
+            onClick={() => handlePageChange("wallet")}
           />
           <SidebarItem
             label="Sell USDT"
             icon={<HiArrowDown />}
             open={sidebarOpen}
-            onClick={() => setActivePage("deposit")}
+            active={activePage === "deposit"}
+            onClick={() => handlePageChange("deposit")}
           />
           <SidebarItem
             label="Withdrawal"
             icon={<HiArrowUp />}
             open={sidebarOpen}
+            active={activePage === "withdraw"}
             onClick={() => {
-              setActivePage((prev) =>
+             handlePageChange((prev) =>
                 prev === "withdraw" ? prev : "withdraw",
               );
               setTimeout(() => {
@@ -472,19 +485,22 @@ useEffect(() => {
             label="Orders"
             icon={<HiCube />}
             open={sidebarOpen}
-            onClick={() => setActivePage("orders")}
+            active={activePage === "orders"}
+            onClick={() => handlePageChange("orders")}
           />
           <SidebarItem
             label="Payment Method"
             icon={<HiCreditCard />}
             open={sidebarOpen}
-            onClick={() => setActivePage("payment-method")}
+            active={activePage === "payment-method"}
+            onClick={() => handlePageChange("payment-method")}
           />
           {/* ================= CUSTOMER SUPPORT ================= */}
 {/* CUSTOMER SUPPORT DROPDOWN */}
 <div>
   <div
     onClick={() => setSupportOpen(!supportOpen)}
+    active={activePage === "supportOpen"}
     className="group flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#1f2937] cursor-pointer"
   >
     <span className="text-lg">
@@ -502,7 +518,14 @@ useEffect(() => {
         }`}
       >
         ▶
-      </span>
+      </span>,
+      <span
+  className={`transition-transform  duration-300 ${
+    supportOpen ? "-rotate-90" : ""
+  }`}
+>
+  ◀
+</span>
     )}
   </div>
 
@@ -553,7 +576,8 @@ useEffect(() => {
             label="Settings"
             icon={<HiCog />}
             open={sidebarOpen}
-            onClick={() => setActivePage("settings")}
+            active={activePage === "settings"}
+         onClick={() => handlePageChange("settings")}
           />
         </nav>
 
@@ -946,13 +970,16 @@ max-md:items-center
 
 /* COMPONENTS */
 
-const SidebarItem = ({ label, icon, open, onClick }) => (
+const SidebarItem = ({ label, icon, open, onClick, active }) => (
   <div
     onClick={onClick}
-    className="group flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#1f2937] cursor-pointer relative"
+    className={`group flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer relative
+    ${active ? "bg-yellow-400/10 text-yellow-400" : "hover:bg-[#1f2937]"}`}
   >
     <span className="text-lg">{icon}</span>
+
     {open && <span>{label}</span>}
+
     {!open && (
       <span className="absolute left-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap">
         {label}

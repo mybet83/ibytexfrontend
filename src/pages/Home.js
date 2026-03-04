@@ -160,8 +160,8 @@ function AnimatedCounter({ end }) {
     <div className=" relative z-10 min-h-screen  ">
       <Navbar />
 
-<section className="relative min-h-screen flex items-center 
-justify-center overflow-hidden py-24 px-6 max-lg:pb-8">
+<section className="relative  flex items-center 
+justify-center overflow-hidden pt-32 pb-11 px-6 max-lg:pb-8">
 
   {/* Background Glow */}
   <div className="absolute inset-0 pointer-events-none">
@@ -172,8 +172,8 @@ justify-center overflow-hidden py-24 px-6 max-lg:pb-8">
     bg-yellow-500/20 blur-[140px] rounded-full"></div>
   </div>
 
-  <div className="relative z-10 max-w-7xl w-full 
-  grid lg:grid-cols-2 gap-10 items-center">
+<div className="relative z-10 max-w-[75rem] w-full 
+grid lg:grid-cols-2 gap-6 items-center mx-auto">
 
     {/* ================= LEFT SIDE = YOUR HERO ================= */}
     <motion.div

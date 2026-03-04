@@ -12,8 +12,8 @@ const Footer = () => {
     company: {
       title: "Company Information",
       content: `
-iBytex Pte Ltd is a Securities Dealer registered in Seychelles with registration number 7423606-3 and authorised by the Financial Services Authority (FSA) with licence number SD7015.
-iBytex Pte Ltd is also authorized as an Over-The-Counter Derivatives Provider (ODP) by the Financial Sector Conduct Authority (FSCA).
+iBytex Pvt Ltd is a Securities Dealer registered in Seychelles with registration number 7423606-3 and authorised by the Financial Services Authority (FSA) with licence number SD7015.
+iBytex Pvt Ltd is also authorized as an Over-The-Counter Derivatives Provider (ODP) by the Financial Sector Conduct Authority (FSCA).
 Certain services may be provided by affiliated entities operating under the iBytex brand:
 These entities are duly authorized to operate under the iBytex brand and trademarks.
       `,
@@ -23,7 +23,7 @@ These entities are duly authorized to operate under the iBytex brand and tradema
       content: `
 Our services relate to complex derivative products traded outside an exchange. These products carry a high risk of losing money rapidly due to leverage and are not suitable for all investors.
 You should consider whether you understand how leveraged products work and whether you can afford to take the high risk of losing your money.
-Under no circumstances shall iBytex Pte Ltd have any liability to any person or entity for any loss or damage in whole or part caused by, resulting from, or relating to any investing activity.
+Under no circumstances shall iBytex Pvt Ltd have any liability to any person or entity for any loss or damage in whole or part caused by, resulting from, or relating to any investing activity.
       `,
     },
     advice: {
@@ -55,7 +55,7 @@ This website and its content do not constitute an invitation for the contracting
       title: "Intellectual Property",
       content: `
 All content on this website is protected by intellectual property laws.
-Information may only be copied, reproduced, or distributed with the express written permission of iBytex Pte Ltd.
+Information may only be copied, reproduced, or distributed with the express written permission of iBytex Pvt Ltd.
       `,
     },
     security: {
@@ -194,15 +194,15 @@ We conduct regular vulnerability scans and penetration testing in accordance wit
 {`
     
 
-iBytex Pte Ltd is a Securities Dealer registered in Seychelles with registration number 7423606-3 and authorised by the Financial Services Authority (FSA) with licence number SD7015.
-iBytex Pte Ltd is also authorized as an Over-The-Counter Derivatives Provider (ODP) by the Financial Sector Conduct Authority (FSCA).
+iBytex Pvt Ltd is a Securities Dealer registered in Seychelles with registration number 7423606-3 and authorised by the Financial Services Authority (FSA) with licence number SD7015.
+iBytex Pvt Ltd is also authorized as an Over-The-Counter Derivatives Provider (ODP) by the Financial Sector Conduct Authority (FSCA).
 Certain services may be provided by affiliated entities operating under the iBytex brand:
 These entities are duly authorized to operate under the iBytex brand and trademarks.
 
 Risk Warning
 Our services relate to complex derivative products traded outside an exchange. These products carry a high risk of losing money rapidly due to leverage and are not suitable for all investors.
 You should consider whether you understand how leveraged products work and whether you can afford to take the high risk of losing your money.
-Under no circumstances shall iBytex Pte Ltd have any liability to any person or entity for any loss or damage in whole or part caused by, resulting from, or relating to any investing activity.
+Under no circumstances shall iBytex Pvt Ltd have any liability to any person or entity for any loss or damage in whole or part caused by, resulting from, or relating to any investing activity.
 
 No Investment Advice
 The information on this website is for general information purposes only and does not constitute:
@@ -222,7 +222,7 @@ This website and its content do not constitute an invitation for the contracting
 
 Intellectual Property
 All content on this website is protected by intellectual property laws.
-Information may only be copied, reproduced, or distributed with the express written permission of iBytex Pte Ltd.
+Information may only be copied, reproduced, or distributed with the express written permission of iBytex Pvt Ltd.
 
 Security & Data Protection
 https://ibytex.com complies with the Payment Card Industry Data Security Standard (PCI DSS) to help ensure your security and privacy.
@@ -231,7 +231,7 @@ We conduct regular vulnerability scans and penetration testing in accordance wit
         </div>
 
         <div className="border-t border-gray-800 text-center py-6 text-xs text-gray-600">
-          © {new Date().getFullYear()} iBytex Pte Ltd. All rights reserved.
+          © {new Date().getFullYear()} iBytex Pvt Ltd. All rights reserved.
         </div>
 
       </footer>

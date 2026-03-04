@@ -53,7 +53,7 @@ export default function CryptoMarquee() {
     },
     {
       name: "Bitcoin",
-      logo: "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+      logo: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
     },
     {
       name: "Tether",
@@ -61,7 +61,7 @@ export default function CryptoMarquee() {
     },
     {
       name: "Ethereum",
-      logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+      logo: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
     },
  {
   name: "Solana",
@@ -80,7 +80,7 @@ export default function CryptoMarquee() {
   ];
 
   return (
- <section className="py-16 bg-black overflow-hidden max-md:py-8">
+ <section className="py-12 bg-black overflow-hidden max-md:py-8">
      
 
       <div
