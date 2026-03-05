@@ -41,14 +41,19 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
   const [recentOrders, setRecentOrders] = useState([]);
   const [approvedWithdraw, setApprovedWithdraw] = useState(0);
   const [recentActivity, setRecentActivity] = useState([]);
-  const availableBalance = totalSold - approvedWithdraw;
-  const [loading, setLoading] = useState(true);
+
+ const [loading, setLoading] = useState(true);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
-
+const [pendingWithdraw, setPendingWithdraw] = useState(0);
   const user = JSON.parse(localStorage.getItem("user"));
 
   const location = useLocation();
+
+  const availableBalance = Math.max(
+  totalSold - approvedWithdraw - pendingWithdraw,
+  0
+); 
 
 
 useEffect(() => {
@@ -172,19 +177,29 @@ useEffect(() => {
     } catch {}
   };
 
-  const fetchApprovedWithdrawals = async () => {
-    const token = localStorage.getItem("token");
+const fetchApprovedWithdrawals = async () => {
+  const token = localStorage.getItem("token");
 
-    const res = await axios.get(`${API}/api/withdrawal/my`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  const res = await axios.get(`${API}/api/withdrawal/my`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-    const approved = res.data.filter((w) => w.status === "APPROVED");
+  const approved = res.data.filter((w) => w.status === "APPROVED");
+  const pending = res.data.filter((w) => w.status === "PENDING");
 
-    const total = approved.reduce((acc, curr) => acc + Number(curr.amount), 0);
+  const approvedTotal = approved.reduce(
+    (acc, curr) => acc + Number(curr.amount),
+    0
+  );
 
-    setApprovedWithdraw(total);
-  };
+  const pendingTotal = pending.reduce(
+    (acc, curr) => acc + Number(curr.amount),
+    0
+  );
+
+  setApprovedWithdraw(approvedTotal);
+  setPendingWithdraw(pendingTotal);
+};
 
   const fetchRecentActivity = async () => {
     const token = localStorage.getItem("token");

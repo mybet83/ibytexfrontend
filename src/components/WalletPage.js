@@ -14,6 +14,7 @@ const WalletPage = ({ setActivePage }) => {
   const [loading, setLoading] = useState(true);
 const userId = localStorage.getItem("userId");
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [pendingWithdraw, setPendingWithdraw] = useState(0);
 
   const previousSold = useRef(0);
   const previousWithdraw = useRef(0);
@@ -22,76 +23,95 @@ const userId = localStorage.getItem("userId");
 
   /* ================= FETCH WALLET ================= */
 
-  const fetchWalletData = async () => {
-    try {
-      const [ordersRes, withdrawRes] = await Promise.all([
-        axios.get(`${API}/api/orders/my`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`${API}/api/withdrawal/my`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
+const fetchWalletData = async () => {
+  try {
+    const [ordersRes, withdrawRes] = await Promise.all([
+      axios.get(`${API}/api/orders/my`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+      axios.get(`${API}/api/withdrawal/my`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+    ]);
 
-      const completedOrders = ordersRes.data.filter(
-        (o) => o.status === "COMPLETED"
-      );
+    /* ================= ORDERS ================= */
 
-      const soldINR = completedOrders.reduce(
-        (acc, curr) =>
-          acc + Number(curr.usdtAmount || 0) * Number(curr.rate || 0),
-        0
-      );
+    const completedOrders = ordersRes.data.filter(
+      (o) => o.status === "COMPLETED"
+    );
 
-      const approvedWithdrawals = withdrawRes.data.filter(
-        (w) => w.status === "APPROVED"
-      );
+    const soldINR = completedOrders.reduce(
+      (acc, curr) =>
+        acc + Number(curr.usdtAmount || 0) * Number(curr.rate || 0),
+      0
+    );
 
-      const withdrawTotal = approvedWithdrawals.reduce(
-        (acc, curr) => acc + Number(curr.amount),
-        0
-      );
+    /* ================= WITHDRAWALS ================= */
 
-      const sellActivity = ordersRes.data.map((o) => ({
-        id: o._id,
-        type: "SELL",
-        amount: o.usdtAmount,
-        inr: Number(o.usdtAmount || 0) * Number(o.rate || 0),
-        status: o.status,
-        date: o.createdAt,
-        adminNotes: o.adminNotes || null,
-      }));
+    const approvedWithdrawals = withdrawRes.data.filter(
+      (w) => w.status === "APPROVED"
+    );
 
-      const withdrawActivity = withdrawRes.data.map((w) => ({
-        id: w._id,
-        type: "WITHDRAW",
-        amount: w.amount,
-        status: w.status,
-        date: w.createdAt,
-        utrNumber: w.adminUtrNumber || null,
-      }));
+    const pendingWithdrawals = withdrawRes.data.filter(
+      (w) => w.status === "PENDING"
+    );
 
-      const combined = [...sellActivity, ...withdrawActivity]
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 6);
+    const approvedTotal = approvedWithdrawals.reduce(
+      (acc, curr) => acc + Number(curr.amount),
+      0
+    );
 
-      previousSold.current = totalSold;
-      previousWithdraw.current = totalWithdraw;
+    const pendingTotal = pendingWithdrawals.reduce(
+      (acc, curr) => acc + Number(curr.amount),
+      0
+    );
 
-      setTotalSold(soldINR);
-      setTotalWithdraw(withdrawTotal);
-      setRecentActivity(combined);
-      setLoading(false);
+    /* ================= RECENT ACTIVITY ================= */
 
-      if (!hasAnimated) {
-        setHasAnimated(true);
-      }
+    const sellActivity = ordersRes.data.map((o) => ({
+      id: o._id,
+      type: "SELL",
+      amount: o.usdtAmount,
+      inr: Number(o.usdtAmount || 0) * Number(o.rate || 0),
+      status: o.status,
+      date: o.createdAt,
+      adminNotes: o.adminNotes || null,
+    }));
 
-    } catch (err) {
-      console.log("Wallet fetch failed");
-      setLoading(false);
+    const withdrawActivity = withdrawRes.data.map((w) => ({
+      id: w._id,
+      type: "WITHDRAW",
+      amount: w.amount,
+      status: w.status,
+      date: w.createdAt,
+      utrNumber: w.adminUtrNumber || null,
+    }));
+
+    const combined = [...sellActivity, ...withdrawActivity]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 6);
+
+    /* ================= SET STATE ================= */
+
+    previousSold.current = totalSold;
+    previousWithdraw.current = totalWithdraw;
+
+    setTotalSold(soldINR);
+    setTotalWithdraw(approvedTotal);
+    setPendingWithdraw(pendingTotal);
+
+    setRecentActivity(combined);
+
+    setLoading(false);
+
+    if (!hasAnimated) {
+      setHasAnimated(true);
     }
-  };
+
+  } catch (err) {
+    console.log("Wallet fetch failed");
+  }
+};
 
     useEffect(() => {
       document.title = "iBytex | Fast, Secure & Transparent Trading";
@@ -121,8 +141,8 @@ const userId = localStorage.getItem("userId");
     return () => clearInterval(interval);
   }, []);
 
-  const availableBalance = totalSold - totalWithdraw;
-  const lockedBalance = totalWithdraw;
+const availableBalance = totalSold - totalWithdraw - pendingWithdraw;
+const lockedBalance = totalWithdraw;
 
   /* Smooth Number Render */
   const renderNumber = (value) => {
@@ -142,7 +162,7 @@ const userId = localStorage.getItem("userId");
       <h1 className="text-2xl font-bold mb-6 max-md:mb-4">Wallet</h1>
 
       {/* ===== BALANCE CARDS ===== */}
-      <div className="grid md:grid-cols-3 gap-6 mb-8 max-md:grid-cols-2 max-md:mb-4 max-md:gap-4">
+      <div className="grid md:grid-cols-4 gap-6 mb-8 max-md:grid-cols-2 max-md:mb-4 max-md:gap-4">
 
         {/* Total Earned */}
         <motion.div whileHover={{ y: -4 }}
@@ -155,18 +175,30 @@ const userId = localStorage.getItem("userId");
 
         {/* Available */}
         <motion.div whileHover={{ y: -4 }}
-          className="bg-emerald-900/30 p-6 rounded-2xl border border-emerald-500/20 max-md:p-3">
+          className="bg-[#111827] p-6 rounded-2xl border border-white/10 max-md:p-3">
           <p className="text-emerald-300 text-sm max-md:text-xs">Available Balance</p>
           <h2 className="text-3xl font-bold mt-2 text-emerald-400 max-md:text-2xl" >
             ₹ {renderNumber(availableBalance)}
           </h2>
         </motion.div>
+        <motion.div
+ whileHover={{ y: -4 }}
+ className="bg-[#111827] p-6 rounded-2xl border border-white/10 max-md:p-3"
+>
+ <p className="text-yellow-300 text-sm max-md:text-xs">
+   Pending Withdrawal
+ </p>
+
+ <h2 className="text-3xl font-bold mt-2 text-yellow-400 max-md:text-2xl">
+   ₹ {renderNumber(pendingWithdraw)}
+ </h2>
+</motion.div>
 
         {/* Locked */}
         <motion.div whileHover={{ y: -4 }}
-          className="bg-yellow-900/30 p-6 rounded-2xl border border-yellow-500/20 max-md:p-3">
-          <p className="text-yellow-300 text-sm max-md:text-xs">Locked (Withdrawn)</p>
-          <h2 className="text-3xl font-bold mt-2 text-yellow-400 max-md:text-2xl">
+          className="bg-[#111827] p-6 rounded-2xl border border-white/10 max-md:p-3">
+          <p className="text-red-300 text-sm max-md:text-xs">Locked (Withdrawn)</p>
+          <h2 className="text-3xl font-bold mt-2 text-red-400 max-md:text-2xl">
             ₹ {renderNumber(lockedBalance)}
           </h2>
         </motion.div>
