@@ -18,7 +18,7 @@ export default function PlaceOrder() {
   const WALLET_ADDRESS = "TDVWXSpPog4VRM34BckxgWx1Aq7TXaaS57";
   const NETWORK = "TRC20";
 
-  const totalINR = usdt ? (usdt * rate).toFixed(2) : "--";
+const totalINR = amount ? (amount * rate).toFixed(2) : "--";
 
   /* ================= FETCH LIVE RATE ================= */
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function PlaceOrder() {
           {/* LEFT SIDE */}
           <div className="lg:col-span-2 space-y-6">
             {/* TRADE BOX */}
-            <div className="bg-[#0b0e11] border border-gray-800 rounded-xl p-6">
+            <div className="bg-[#161a1e] border border-gray-800 rounded-xl p-6">
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
                   <label className="text-gray-400 text-xs ">Amount (USDT)</label>

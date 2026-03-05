@@ -550,7 +550,7 @@ const fetchApprovedWithdrawals = async () => {
       supportOpen ? "max-h-40 mt-2" : "max-h-0"
     }`}
   >
-    <div className="ml-8 space-y-2">
+    <div className="ml-8 space-y-2 ">
 
       {/* TELEGRAM */}
       <div
@@ -724,7 +724,7 @@ py-2 z-50"
         {activePage === "dashboard" && (
           <>
             {/* TOP BANNER */}
-            <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl max-md:flex-col max-md:p-4">
+            <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl max-md:flex-col max-md:p-4 max-md:mb-[1.25rem]">
               {/* Glow Background */}
 
               <div className="absolute -top-20 -left-20 w-72 h-72 bg-blue-hero   blur-[120px] rounded-full"></div>
@@ -757,10 +757,10 @@ py-2 z-50"
 
             {/* MARKET TICKER */}
 
-            <div className="mb-8"></div>
+       
 
             {/* STAT CARDS */}
-            <div className="grid grid-cols-4 gap-4 mb-10 max-lg:grid-cols-2 max-md:mb-5">
+            <div className="grid grid-cols-4 gap-4  max-lg:grid-cols-2 max-md:mb-5">
               <StatCard
                 title="Live USDT Rate"
                 value={`₹ ${rate}`}
@@ -790,7 +790,7 @@ py-2 z-50"
             </div>
 
             {/* RECENT ACTIVITY */}
-            <div className="mt-12">
+            <div className="mt-8 max-md:mt-5">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold max-md:text-[16px]">
                   Recent Activity

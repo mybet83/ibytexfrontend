@@ -187,7 +187,7 @@ setAvailable(newBalance);
     </p>
 
     {balanceLoading ? (
-      <p className="text-yellow-400 text-xl font-semibold mt-4 max-md:text-2xl max-md:mt-2 ">
+      <p className="text-yellow-400 text-xl font-semibold mt-4  max-md:mt-2 ">
         Loading...
       </p>
     ) : (
