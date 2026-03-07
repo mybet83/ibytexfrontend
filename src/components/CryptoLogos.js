@@ -55,10 +55,10 @@ export default function CryptoMarquee() {
       name: "Bitcoin",
       logo: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
     },
-    {
-      name: "Tether",
-      logo: "https://cryptologos.cc/logos/tether-usdt-logo.png",
-    },
+{
+  name: "Tether",
+  logo: "https://assets.coingecko.com/coins/images/325/large/Tether.png",
+},
     {
       name: "Ethereum",
       logo: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
