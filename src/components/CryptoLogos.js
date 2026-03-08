@@ -43,13 +43,12 @@
 
 "use client";
 
-import {motion} from 'framer-motion'
 
 export default function CryptoMarquee() {
   const logos = [
    {
     name: "Binance",
-    logo: "https://assets.coingecko.com/coins/images/825/large/binancecoin.png",
+    logo: "https://assets.coingecko.com/markets/images/52/large/binance.jpg?1706864274",
   },
     {
       name: "Bitcoin",
