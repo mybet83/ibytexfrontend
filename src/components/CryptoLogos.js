@@ -47,18 +47,18 @@ import {motion} from 'framer-motion'
 
 export default function CryptoMarquee() {
   const logos = [
-    {
-      name: "Binance",
-      logo: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png",
-    },
+   {
+    name: "Binance",
+    logo: "https://assets.coingecko.com/coins/images/825/large/binancecoin.png",
+  },
     {
       name: "Bitcoin",
       logo: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
     },
-{
-  name: "Tether",
-  logo: "https://assets.coingecko.com/coins/images/325/large/Tether.png",
-},
+  {
+    name: "Tether",
+    logo: "https://assets.coingecko.com/coins/images/325/large/tether.png",
+  },
     {
       name: "Ethereum",
       logo: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
@@ -67,10 +67,10 @@ export default function CryptoMarquee() {
   name: "Solana",
   logo: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
 },
-    {
-      name: "XRP",
-      logo: "https://cryptologos.cc/logos/xrp-xrp-logo.png",
-    },
+  {
+    name: "XRP",
+    logo: "https://assets.coingecko.com/coins/images/44/large/xrp.png",
+  },
 {
   name: "PCI DSS Compliant",
   logo: "/psi1.png",
