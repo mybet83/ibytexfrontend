@@ -162,7 +162,7 @@ const WalletPage = ({ setActivePage, theme }) => {
   const StatCard = ({ title, value, icon, green, yellow, red, theme }) => {
   return (
     <div
-      className={`p-4 rounded-2xl border border-white/10 flex justify-between items-center
+      className={`p-4 rounded-2xl border border-white/10 flex justify-between items-center max-md:p-2
       ${theme === "dark" ? "bg-[#191D23]" : "bg-white"}
       `}
     >
@@ -170,7 +170,7 @@ const WalletPage = ({ setActivePage, theme }) => {
       <div className="flex items-center gap-5 ">
         
         {/* ICON */}
-        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 max-md:h-8 max-md:w-8">
           {icon}
         </div>
       </div>
@@ -209,14 +209,14 @@ const WalletPage = ({ setActivePage, theme }) => {
   <StatCard
     title="Total Earned"
     value={`₹ ${renderNumber(totalSold)}`}
-    icon={<HiCurrencyRupee className="text-xl text-emerald-400" />}
+    icon={<HiCurrencyRupee className="text-xl max-md:text-[16px] text-emerald-400" />}
     theme={theme}
   />
 
   <StatCard
     title="Available Balance"
     value={`₹ ${renderNumber(availableBalance)}`}
-    icon={<HiCash className="text-xl text-emerald-400" />}
+    icon={<HiCash className="text-xl max-md:text-[16px] text-emerald-400" />}
     green
     theme={theme}
   />
@@ -224,7 +224,7 @@ const WalletPage = ({ setActivePage, theme }) => {
   <StatCard
     title="Pending Withdrawal"
     value={`₹ ${renderNumber(pendingWithdraw)}`}
-    icon={<HiArrowDown className="text-xl text-yellow-400" />}
+    icon={<HiArrowDown className="text-xl max-md:text-[16px] text-yellow-400" />}
     yellow
     theme={theme}
   />
@@ -232,7 +232,7 @@ const WalletPage = ({ setActivePage, theme }) => {
   <StatCard
     title="Locked Withdrawn"
     value={`₹ ${renderNumber(lockedBalance)}`}
-    icon={<HiLockClosed className="text-xl text-red-400" />}
+    icon={<HiLockClosed className="text-xl max-md:text-[16px] text-red-400" />}
     red
     theme={theme}
   />
