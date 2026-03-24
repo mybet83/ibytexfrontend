@@ -629,7 +629,7 @@ useEffect(() => {
                 </div>
 
                 {/* WHATSAPP */}
-                <div
+                {/* <div
                   onClick={() => {
                     const token = localStorage.getItem("token");
                     if (token) {
@@ -642,7 +642,7 @@ useEffect(() => {
                 >
                   <FaWhatsapp />
                   {sidebarOpen && "WhatsApp Support"}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

@@ -122,14 +122,14 @@ We conduct regular vulnerability scans and penetration testing in accordance wit
   </a>
 
   {/* WHATSAPP */}
-  <a
+  {/* <a
        href="https://wa.me/918057678348"
 
     className="flex items-center gap-2 border border-green-500/30 px-5 py-2 rounded-lg text-green-400 hover:bg-green-500/10 transition mb-5 max-w-[200px]"
   >
     <FaWhatsapp size={18} />
     Join WhatsApp
-  </a>
+  </a> */}
 
   {/* SOCIAL ICONS */}
   <div className="flex items-center gap-6 mt-4 text-gray-400">
