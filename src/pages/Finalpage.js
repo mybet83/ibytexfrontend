@@ -56,7 +56,12 @@ const DashboardLayout = () => {
     totalSold - approvedWithdraw - pendingWithdraw,
     0,
   );
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
+const [theme, setTheme] = useState("dark");
+
+useEffect(() => {
+  localStorage.setItem("theme", "dark");
+}, []);
+ 
 
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -685,7 +690,7 @@ useEffect(() => {
       className={`absolute bottom-16 left-4 w-56 rounded-xl shadow-xl py-2 z-50
       ${
         theme === "dark"
-          ? "bg-[#111827] border border-gray-700 text-white"
+          ? "bg-[#191d23] border border-gray-700 text-white"
           : "bg-white border border-gray-200 text-black"
       }`}
     >
@@ -728,7 +733,7 @@ useEffect(() => {
           className={`rounded-lg p-3 space-y-2 border
           ${
             theme === "dark"
-              ? "bg-[#0f172a] border-gray-800"
+              ? "bg-[#292f37] border-gray-800"
               : "bg-gray-100 border-gray-200"
           }`}
         >
@@ -878,7 +883,7 @@ useEffect(() => {
     <span className={`${theme === "dark" ? "opacity-0 text-black" : "opacity-100 text-black"}`}>
       Dark
     </span>
-    <span className={`${theme === "dark" ? "opacity-100 text-white" : "opacity-40 text-black"}`}>
+    <span className={`${theme === "dark" ? "opacity-100 text-white" : "opacity-0 text-black"}`}>
       Light
     </span>
   </div>
