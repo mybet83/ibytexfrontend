@@ -79,7 +79,7 @@ export default function CryptoMarquee() {
   ];
 
   return (
- <section className="py-12 bg-black overflow-hidden max-md:py-8">
+ <section className="py-12  overflow-hidden max-md:py-8">
      
 
       <div

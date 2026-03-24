@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 const API = process.env.REACT_APP_API_URL;
 
-const PayoutMethods = () => {
+const PayoutMethods = ({theme}) => {
   const [methods, setMethods] = useState([]);
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -94,12 +94,16 @@ return (
   <div className="space-y-10 max-md:space-y-5">
 
     {/* ================= HEADER ================= */}
-    <div className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-r from-[#0f172a] to-[#111827] p-8 flex justify-between items-center shadow-xl max-md:p-3">
+<div className={`relative overflow-hidden rounded-xl border p-8 flex justify-between items-center shadow-xl max-md:p-3
+  ${theme === "dark"
+    ? " bg-[#191d23] border-white/10 text-white"
+    : "bg-white border-gray-200 text-black"}
+`}>
 
-      <div className="absolute -top-20 -left-20 w-72 h-72 bg-cyan-500/10 blur-[120px] rounded-full"></div>
+      <div className="absolute -top-20 -left-20 w-72 h-72  rounded-full"></div>
 
       <div className="relative z-10">
-        <h1 className="text-3xl font-bold text-white tracking-tight max-md:text-2xl">
+        <h1 className="text-3xl font-bold  tracking-tight max-md:text-2xl">
           Payout Methods
         </h1>
         <p className="text-gray-400 text-sm mt-2 max-md:text-[12px] max-md:w-[80%]">
@@ -123,9 +127,13 @@ return (
 
     {/* ================= EMPTY STATE ================= */}
     {methods.length === 0 && (
-      <div className="bg-[#111827]/70 backdrop-blur-xl border border-gray-800 rounded-3xl p-16 text-center relative overflow-hidden">
+<div className={`backdrop-blur-xl border rounded-3xl p-16 text-center relative overflow-hidden
+  ${theme === "dark"
+    ? "bg-[#111827]/70 border-gray-800 text-white"
+    : "bg-white border-gray-200 text-black"}
+`}>
 
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-500/5"></div>
+        <div className="absolute inset-0 bg-[#191d23]"></div>
 
         <div className="relative z-10">
           <div className="text-5xl mb-6">🏦</div>
@@ -147,14 +155,11 @@ return (
       {methods.map((item) => (
         <div
           key={item._id}
-          className="group relative overflow-hidden rounded-xl 
-          border border-white/10 
-          bg-gradient-to-br from-[#111827]/90 to-[#0f172a]/90
-          backdrop-blur-xl p-8
-          transition-all duration-500
-          hover:-translate-y-2
-          hover:shadow-[0_0_40px_rgba(34,211,238,0.2)] max-md:p-3"
-        >
+         className={`group relative overflow-hidden rounded-xl border backdrop-blur-xl p-8 transition-all duration-500 max-md:p-3
+  ${theme === "dark"
+    ? "bg-[#191d23] border-white/10 text-white"
+    : "bg-white border-gray-200 text-black"}
+`}>
 
           {/* Glow Hover Effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition duration-500"></div>
@@ -207,8 +212,11 @@ return (
     {open && (
       <div className="fixed inset-0  backdrop-blur-sm flex items-center justify-center z-50">
 
-        <div className="relative bg-gradient-to-br from-[#0f172a] to-[#111827]
-        w-[450px] p-10 rounded-3xl border border-white/10 shadow-2xl space-y-6">
+      <div className={`relative w-[450px] p-10 rounded-3xl shadow-2xl space-y-6
+  ${theme === "dark"
+    ? "bg-gradient-to-br from-[#0f172a] to-[#111827] border-white/10 text-white"
+    : "bg-white border-gray-200 text-black"}
+`}>
 
           <div className="absolute -top-20 -right-20 w-72 h-72 bg-cyan-500/10 blur-[120px] rounded-full"></div>
 
@@ -240,7 +248,7 @@ return (
                   ${
                     type === t
                       ? "bg-gradient-to-r from-cyan-500 to-blue-500"
-                      : "bg-[#111827] border border-gray-700"
+                      : "bg-[#59637a64] border border-gray-700"
                   }`}
                 >
                   {t}
@@ -280,12 +288,16 @@ return (
 );
 };
 
-const Input = ({ placeholder, value, onChange }) => (
+const Input = ({ placeholder, value, onChange ,theme  }) => (
   <input
     placeholder={placeholder}
     value={value}
     onChange={(e) => onChange(e.target.value)}
-    className="w-full px-4 py-3 rounded-lg bg-[#111827] border border-gray-700 focus:border-cyan-500 outline-none transition"
+  className={`w-full px-4 py-3 rounded-lg border outline-none transition
+  ${theme === "dark"
+    ? "bg-[#111827] border-gray-700 text-white"
+    : "bg-gray-100 border-gray-300 text-black"}
+`}
   />
 );
 

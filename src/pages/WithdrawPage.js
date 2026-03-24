@@ -7,10 +7,12 @@ import "react-toastify/dist/ReactToastify.css";
 import CountUp from "react-countup";
 import Confetti from "react-confetti";
 import { useRef } from "react";
+import { Wallet, Clock, Lock } from "lucide-react";
+
 
 const API = process.env.REACT_APP_API_URL;
 
-export default function WithdrawPage({ onWithdrawSuccess }) {
+export default function WithdrawPage({ onWithdrawSuccess , theme = "dark" }){
   const [amount, setAmount] = useState("");
   const [available, setAvailable] = useState(0);
   const [withdrawals, setWithdrawals] = useState([]);
@@ -24,6 +26,9 @@ const previousBalance = useRef(0);
 const [pendingAmount, setPendingAmount] = useState(0);
 const [lockedAmount, setLockedAmount] = useState(0);
  const [approvedWithdraw, setApprovedWithdraw] = useState(0);
+ const isStep1Done = Number(amount) > 0;
+const isStep2Done = selectedMethod && selectedMethod._id;
+const isStep3Done = isStep1Done && isStep2Done;
 
   const token = localStorage.getItem("token");
 
@@ -161,16 +166,57 @@ setAvailable(newBalance);
     document.title = "iBytex | Fast, Secure Payout"
   },[])
 
+
+ const StatCard = ({ title, value, icon, green, yellow, red, theme }) => {
+  return (
+    <div
+      className={`p-4 rounded-2xl border border-white/10 flex justify-between items-center max-md:p-2
+    ${theme === "dark" 
+  ? "bg-[#191d23] backdrop-blur-xl" 
+  : "bg-white shadow-sm"}
+      `}
+    >
+      {/* LEFT SIDE (ICON) */}
+      <div className="flex items-center gap-5">
+        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 max-md:h-8 max-md:w-8">
+          {icon}
+        </div>
+      </div>
+
+      {/* RIGHT SIDE (TEXT) */}
+      <div>
+        <p className="text-xs text-gray-400 text-end mb-1 uppercase tracking-wider max-md:text-[10px]">
+          {title}
+        </p>
+
+        <h2
+          className={`text-xl font-semibold text-end
+            ${green && "text-emerald-400"}
+            ${yellow && "text-yellow-400"}
+            ${red && "text-red-400"}
+          `}
+        >
+          {value}
+        </h2>
+      </div>
+    </div>
+  );
+};
+
   /* ================= UI ================= */
 
   return (
-    <div className="min-h-screen  text-white relative overflow-hidden ">
+  <div
+  className={`min-h-screen relative overflow-hidden 
+  ${theme === "dark" ? "bg-[#0B0F14] text-white" : "bg-gray-100 text-black"}
+`}
+>
       {showConfetti && <Confetti recycle={false} numberOfPieces={300} />}
       <ToastContainer theme="dark" />
 
       {/* HEADER */}
-      <div className="mb-12 max-md:mb-5">
-        <h1 className="text-4xl font-bold max-md:text-2xl">Withdraw Funds</h1>
+      <div className="mb-5">
+        <h1 className="text-2xl font-bold max-md:text-2xl">Withdraw Funds</h1>
         <p className="text-gray-400 mt-2 max-md:text-[14px]">
           Transfer funds securely to your payout method.
         </p>
@@ -178,129 +224,290 @@ setAvailable(newBalance);
 
       {/* BALANCE CARD */}
 {/* BALANCE GRID */}
-<div className="grid md:grid-cols-3 gap-6 mb-12 max-md:grid-cols-2 max-md:gap-4 max-md:mb-5">
+<div className="grid md:grid-cols-3 max-md:grid-cols-2 gap-4 mb-5">
 
   {/* AVAILABLE BALANCE */}
-  <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-6 rounded-xl shadow-lg max-md:p-3">
-    <p className="text-gray-400 text-sm uppercase tracking-wider max-md:text-xs">
-      Available Balance
-    </p>
-
-    {balanceLoading ? (
-      <p className="text-yellow-400 text-xl font-semibold mt-4  max-md:mt-2 ">
-        Loading...
-      </p>
-    ) : (
-      <h2 className="text-3xl font-bold text-emerald-400 mt-2 max-md:text-2xl">
-        ₹{" "}
-   {!hasAnimated.current ? (
-  <CountUp
-    start={0}
-    end={available}
-    duration={1}
-    separator=","
-    onEnd={() => {
-      hasAnimated.current = true;
-    }}
+  <StatCard
+    title="Available Balance"
+    theme={theme}
+    green
+    icon={<Wallet className="text-emerald-400 w-[20px] h-[20px] max-md:w-[16px] max-md:h-[16px]" />}
+    value={
+      balanceLoading ? (
+        <span className="text-yellow-400">Loading...</span>
+      ) : (
+        <>
+          ₹{" "}
+          {!hasAnimated.current ? (
+            <CountUp
+              start={0}
+              end={available}
+              duration={1}
+              separator=","
+              onEnd={() => {
+                hasAnimated.current = true;
+              }}
+            />
+          ) : (
+            available.toLocaleString()
+          )}
+        </>
+      )
+    }
   />
-) : (
-  available.toLocaleString()
-)}
-      </h2>
-    )}
-  </div>
 
   {/* PENDING WITHDRAWALS */}
-  <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-6 rounded-xl shadow-lg max-md:p-3">
-    <p className="text-gray-400 text-sm uppercase tracking-wider max-md:text-xs ">
-      Pending Withdrawals
-    </p>
-
-    <h2 className="text-3xl font-bold text-yellow-400 mt-2 max-md:text-2xl">
-      ₹ {pendingAmount.toLocaleString()}
-    </h2>
-  </div>
+  <StatCard
+    title="Pending Withdrawals"
+    theme={theme}
+    yellow
+    icon={<Clock  className="text-yellow-400 w-[20px] h-[20px] max-md:w-[16px] max-md:h-[16px]"  />}
+    value={`₹ ${pendingAmount.toLocaleString()}`}
+  />
 
   {/* LOCKED BALANCE */}
-  <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-6 rounded-xl shadow-lg max-md:p-3">
-    <p className="text-gray-400 text-sm uppercase tracking-wider max-md:text-xs">
-      Locked Balance
-    </p>
-
-    <h2 className="text-3xl font-bold text-red-400 mt-2 max-md:text-2xl">
-        ₹ {Number(approvedWithdraw).toLocaleString()}
-    </h2>
-  </div>
+  <StatCard
+    title="Locked Balance"
+    theme={theme}
+    red
+    icon={<Lock className="text-red-400 w-[20px] h-[20px] max-md:w-[16px] max-md:h-[16px]"  />}
+    value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
+  />
 
 </div>
       {/* WITHDRAW SECTION */}
-      <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-8 rounded-xl shadow-2xl mb-16 max-md:p-5 max-md:mb-5">
-        <div className="grid md:grid-cols-2 gap-10 max-md:gap-5 ">
-          <div>
-            <label className="text-gray-400 text-sm uppercase tracking-wide max-md:text-xs ">
-              Withdraw Amount
-            </label>
+<div className="grid lg:grid-cols-[60%_40%] gap-6">
 
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="Enter amount"
-              className="w-full mt-3 bg-[#111827] border border-white/10 rounded-xl p-4 text-lg focus:outline-none focus:border-yellow-500 transition max-md:text-[14px]"
-            />
+  {/* ================= LEFT SIDE ================= */}
+<div
+  className={`rounded-2xl p-6 border max-md:p-3
+  ${theme === "dark" 
+    ? "bg-[#191d23] border-white/10" 
+    : "bg-white border-gray-200"}
+`}
+>
+  <div className="flex gap-6">
+
+    {/* ================= STEPPER ================= */}
+    <div className="flex flex-col items-center pt-4">
+
+      {[1, 2, 3].map((step, i) => {
+        const done =
+          step === 1
+            ? isStep1Done
+            : step === 2
+            ? isStep2Done
+            : isStep3Done;
+
+        return (
+          <div key={step} className="flex flex-col items-center">
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all
+              ${
+                done
+                  ? "bg-green-500 text-white scale-110"
+                  : "bg-white/10 text-gray-400"
+              }`}
+            >
+              {done ? "✓" : step}
+            </div>
+
+            {step !== 3 && (
+              <div className="w-[2px] h-16 bg-white/10"></div>
+            )}
           </div>
+        );
+      })}
+    </div>
 
-          <div>
-            <h3 className="text-gray-400 text-sm uppercase tracking-wide mb-3 max-md:text-xs">
-              Select Payment Method
-            </h3>
+    {/* ================= CONTENT ================= */}
+    <div className="flex-1">
 
-            <div className="grid gap-4">
-              {paymentMethods.map((method) => (
+      {/* STEP 1 */}
+      <div className="mb-6">
+        <h2 className="text-sm text-gray-400 mb-2">Withdraw Amount</h2>
+
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Enter amount"
+          className={`w-full p-4 rounded-xl border placeholder:text-[12px]
+          ${theme === "dark"
+            ? " bg-[#0b0e11] border-white/10 text-white"
+            : "bg-gray-100 border-gray-300 text-black"}
+          `}
+        />
+      </div>
+
+      {/* STEP 2 */}
+      <div className="mb-6">
+        <h2 className="text-sm text-gray-400 mb-4">Withdraw To</h2>
+
+        {/* TABS */}
+        <div className="flex gap-4 mb-4">
+          <button
+            onClick={() => setSelectedMethod({ type: "UPI" })}
+            className={`px-4 py-2 rounded-lg text-sm
+            ${
+              selectedMethod?.type === "UPI"
+                ? "bg-yellow-500 text-black"
+                : "bg-white/5 text-gray-400"
+            }`}
+          >
+            UPI ID
+          </button>
+
+          <button
+            onClick={() => setSelectedMethod({ type: "BANK" })}
+            className={`px-4 py-2 rounded-lg text-sm
+            ${
+              selectedMethod?.type === "BANK"
+                ? "bg-yellow-500 text-black"
+                : "bg-white/5 text-gray-400"
+            }`}
+          >
+            Bank Account
+          </button>
+        </div>
+
+        {/* UPI */}
+        {selectedMethod?.type === "UPI" && (
+          <div className="space-y-3">
+            {paymentMethods
+              .filter((m) => m.type === "UPI")
+              .map((method) => (
                 <div
                   key={method._id}
                   onClick={() => setSelectedMethod(method)}
-                  className={`p-5 rounded-2xl cursor-pointer border transition-all ${
+                  className={`p-4 rounded-xl border cursor-pointer
+                  ${
                     selectedMethod?._id === method._id
-                      ? "border-yellow-500 bg-yellow-500/10"
-                      : "border-white/10 bg-[#111827]"
-                  }`}
+                      ? "border-yellow-400 ring-2 ring-yellow-400 bg-yellow-400/10"
+                      : "border-white/10 bg-[#0b0e11]"
+                  }
+                `}
                 >
-                  <p className="font-semibold text-lg max-md:text-xs">
-                    {method.type === "UPI" ? "UPI ID" : "Bank Account"}
-                  </p>
-
-                  {method.type === "UPI" ? (
-                    <p className="text-gray-400 mt-1 max-md:text-[14px]">
-                      {method.upiId}
-                    </p>
-                  ) : (
-                    <>
-                      <p className="text-gray-400 mt-1 max-md:text-[14px]">
-                        {method.bankName}
-                      </p>
-                      <p className="text-gray-400 max-md:text-[14px]">
-                        {method.accountNumber}
-                      </p>
-                    </>
-                  )}
+                  {method.upiId}
                 </div>
               ))}
-            </div>
           </div>
-        </div>
+        )}
 
-        <button
-          type="button"
-          onClick={handleWithdraw}
-          className="mt-12 w-full py-4 rounded-xl font-bold text-black text-lg max-md:text-[16px] max-md:mt-5"
-          style={{
-            background: "linear-gradient(135deg, #F5C56B 0%, #D4A017 100%)",
-          }}
-        >
-          Request Withdrawal
-        </button>
+        {/* BANK */}
+        {selectedMethod?.type === "BANK" && (
+          <div className="space-y-3">
+            {paymentMethods
+              .filter((m) => m.type !== "UPI")
+              .map((method) => (
+                <div
+                  key={method._id}
+                  onClick={() => setSelectedMethod(method)}
+                  className={`p-4 rounded-xl border cursor-pointer
+                  ${
+                    selectedMethod?._id === method._id
+                      ? "border-yellow-400 ring-2 ring-yellow-400 bg-yellow-400/10"
+                      : "border-white/10 bg-[#0b0e11]"
+                  }
+                `}
+                >
+                  <p>{method.bankName}</p>
+                  <p className="text-sm text-gray-400">
+                    {method.accountNumber}
+                  </p>
+                </div>
+              ))}
+          </div>
+        )}
       </div>
+
+      {/* STEP 3 */}
+      <button
+        onClick={handleWithdraw}
+        className="w-full py-4 rounded-xl font-bold text-black max-md:text-[12px]"
+        style={{
+          background: "linear-gradient(135deg, #F5C56B 0%, #D4A017 100%)",
+        }}
+      >
+        Request Withdrawal
+      </button>
+
+    </div>
+  </div>
+</div>
+
+  {/* ================= RIGHT SIDE ================= */}
+<div
+  className={`rounded-2xl p-6 border h-fit
+  ${theme === "dark"
+    ? "bg-[#191d23] border-white/10"
+    : "bg-white border-gray-200"}
+`}
+>
+  <h2 className="text-lg font-semibold mb-5">
+    Process to Withdraw INR
+  </h2>
+
+  <div className="space-y-5">
+
+    {/* STEP 1 */}
+    <div className="flex items-start gap-4">
+      <div className="w-7 h-7 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-sm font-bold">
+        1
+      </div>
+      <p className="text-gray-300 text-sm">
+        Enter your withdrawal amount
+      </p>
+    </div>
+
+    {/* STEP 2 */}
+    <div className="flex items-start gap-4">
+      <div className="w-7 h-7 rounded-full bg-yellow-500/20 text-yellow-400  flex items-center justify-center text-sm font-bold">
+        2
+      </div>
+      <p className="text-gray-300 text-sm">
+        Select UPI ID or Bank Account
+      </p>
+    </div>
+
+    {/* STEP 3 */}
+    <div className="flex items-start gap-4">
+      <div className="w-7 h-7 rounded-full bg-yellow-500/20 text-yellow-400  flex items-center justify-center text-sm font-bold">
+        3
+      </div>
+      <p className="text-gray-300 text-sm">
+        Choose your payment method details
+      </p>
+    </div>
+
+    {/* STEP 4 */}
+    <div className="flex items-start gap-4">
+      <div className="w-7 h-7 rounded-full bg-yellow-500/20 text-yellow-400  flex items-center justify-center text-sm font-bold">
+        4
+      </div>
+      <p className="text-gray-300 text-sm">
+        Click on Request Withdrawal button
+      </p>
+    </div>
+
+    {/* STEP 5 */}
+    <div className="flex items-start gap-4">
+      <div className="w-7 h-7 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-sm font-bold">
+        5
+      </div>
+      <p className="text-gray-300 text-sm">
+        Our team will verify and transfer INR to your account
+      </p>
+    </div>
+
+  </div>
+
+  {/* FOOTER */}
+  <div className="mt-6 pt-4 border-t border-gray-500 text-xs text-gray-500 text-center">
+    iBytex - Fast & Secure Withdrawal
+  </div>
+</div>
+</div>
 
 
 
@@ -312,55 +519,90 @@ setAvailable(newBalance);
 
 
       {/* HISTORY */}
-      <div>
-        <h3 className="text-2xl font-semibold mb-8 max-md:text-2xl max-md:mb-5">Withdrawal History</h3>
+<div>
+  <h3 className="text-2xl font-semibold mt-5 px-3 mb-5">
+    Withdrawal History
+  </h3>
 
-        {historyLoading ? (
-          <p className="text-gray-400">Loading history...</p>
-        ) : (
-          <div className="space-y-5">
-            {withdrawals.map((w) => (
-              <div
-                key={w._id}
-                className="backdrop-blur-xl bg-white/5 border border-white/10 p-6 rounded-2xl flex justify-between items-center max-md:p-3"
-              >
-                <div>
+  {historyLoading ? (
+    <p className="text-gray-400 px-3">Loading history...</p>
+  ) : (
+    <div
+      className={`rounded-2xl border overflow-hidden
+      ${theme === "dark"
+        ? "bg-[#191d23] border-white/10"
+        : "bg-white border-gray-200"}
+      `}
+    >
+      {withdrawals.map((w, index) => (
+        <div
+          key={w._id}
+          className={`grid grid-cols-3 items-center px-6 py-5 transition-all max-md:px-3 max-md:py-2
+          ${theme === "dark"
+            ? ""
+            : ""}
+          ${index !== withdrawals.length - 1 ? "border-b border-white/10" : ""}
+          `}
+        >
+          {/* LEFT */}
+          <div>
+            <p className="text-sm font-medium">
+              Withdraw ₹ {w.amount}
+            </p>
 
-
-<p className="text-xs text-yellow-400 mt-1 break-all max-md:w-[90%]">
-  Withdrawal ID: {w._id}
-</p>
-              <p className="text-xl font-semibold max-md:text-[14px]">
-  Amount - ₹ {w.amount}
-</p>
-
-<p className="text-sm text-gray-400 mt-1 max-md:text-[12px]">
-  {new Date(w.createdAt).toLocaleString()}
-</p>
-
-                  {w.status === "APPROVED" && w.adminUtrNumber && (
-                    <p className="text-blue-400 text-sm mt-1 max-md:text-[12px]">
-                      UTR Number: {w.adminUtrNumber}
-                    </p>
-                  )}
-                </div>
-
-                <div
-                  className={`px-6 py-2 rounded-full text-sm font-semibold max-md:text-[10px] max-md:px-3 max-md:py-1 ${
-                    w.status === "APPROVED"
-                      ? "bg-green-500/20 text-green-400"
-                      : w.status === "REJECTED"
-                        ? "bg-red-500/20 text-red-400"
-                        : "bg-yellow-500/20 text-yellow-400"
-                  }`}
-                >
-                  {w.status}
-                </div>
-              </div>
-            ))}
+            <p className="text-xs text-gray-400 mt-1">
+              {new Date(w.createdAt).toLocaleString()}
+            </p>
           </div>
-        )}
-      </div>
+
+          {/* CENTER (IMPORTANT FIX) */}
+          <div className="text-center">
+            {w.status === "APPROVED" && w.adminUtrNumber ? (
+              <>
+              <p className="text-yellow-400 text-sm max-md:text-[10px]">
+                UTR: <span className="text-white"></span>
+              </p>
+              <p className="text-gray-200 max-md:text-[12px]">
+                  {w.adminUtrNumber}
+              </p>
+              </>
+            ) : (
+              <p className="text-gray-400 text-sm max-md:text-[10px]">
+                Waiting for approval...
+              </p>
+            )}
+          </div>
+
+          {/* RIGHT */}
+          <div className="flex items-center justify-end gap-2 flex-right">
+            
+            {/* AMOUNT */}
+            <div className="flex flex-col text-end  justify-end">
+            <p className="text-red-400 font-semibold px-3">
+              -₹{w.amount}
+            </p>
+
+            {/* STATUS */}
+            <span
+              className={`px-3 py-1 rounded-full text-xs max-md:text-[8px] font-semibold max-md:px-2 text-center
+              ${
+                w.status === "APPROVED"
+                  ? "bg-green-500/20 text-green-400"
+                  : w.status === "REJECTED"
+                  ? "bg-red-500/20 text-red-400"
+                  : "bg-yellow-500/20 text-yellow-400"
+              }
+            `}
+            >
+              {w.status}
+            </span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
     </div>
   );
 }

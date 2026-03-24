@@ -34,10 +34,7 @@ function App() {
 
           <Routes>
 
-            <Route
-              path="/"
-              element={<Navigate to="/home" />}
-            />
+        <Route path="/" element={<Home />} />
 
             <Route element={<Layout />}>
               <Route path="/home" element={<Home />} />

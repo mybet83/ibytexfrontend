@@ -3,16 +3,21 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { io } from "socket.io-client";
-import AccountStatement from "./AccountStatement";
+import {
+  HiCash,
+  HiArrowDown,
+  HiCurrencyRupee,
+  HiLockClosed,
+} from "react-icons/hi";
 
 const API = process.env.REACT_APP_API_URL;
 
-const WalletPage = ({ setActivePage }) => {
+const WalletPage = ({ setActivePage, theme }) => {
   const [totalSold, setTotalSold] = useState(0);
   const [totalWithdraw, setTotalWithdraw] = useState(0);
   const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
-const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
   const [hasAnimated, setHasAnimated] = useState(false);
   const [pendingWithdraw, setPendingWithdraw] = useState(0);
 
@@ -23,112 +28,111 @@ const userId = localStorage.getItem("userId");
 
   /* ================= FETCH WALLET ================= */
 
-const fetchWalletData = async () => {
-  try {
-    const [ordersRes, withdrawRes] = await Promise.all([
-      axios.get(`${API}/api/orders/my`, {
-        headers: { Authorization: `Bearer ${token}` },
-      }),
-      axios.get(`${API}/api/withdrawal/my`, {
-        headers: { Authorization: `Bearer ${token}` },
-      }),
-    ]);
+  const fetchWalletData = async () => {
+    try {
+      const [ordersRes, withdrawRes] = await Promise.all([
+        axios.get(`${API}/api/orders/my`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get(`${API}/api/withdrawal/my`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
 
-    /* ================= ORDERS ================= */
+      /* ================= ORDERS ================= */
 
-    const completedOrders = ordersRes.data.filter(
-      (o) => o.status === "COMPLETED"
-    );
+      const completedOrders = ordersRes.data.filter(
+        (o) => o.status === "COMPLETED",
+      );
 
-    const soldINR = completedOrders.reduce(
-      (acc, curr) =>
-        acc + Number(curr.usdtAmount || 0) * Number(curr.rate || 0),
-      0
-    );
+      const soldINR = completedOrders.reduce(
+        (acc, curr) =>
+          acc + Number(curr.usdtAmount || 0) * Number(curr.rate || 0),
+        0,
+      );
 
-    /* ================= WITHDRAWALS ================= */
+      /* ================= WITHDRAWALS ================= */
 
-    const approvedWithdrawals = withdrawRes.data.filter(
-      (w) => w.status === "APPROVED"
-    );
+      const approvedWithdrawals = withdrawRes.data.filter(
+        (w) => w.status === "APPROVED",
+      );
 
-    const pendingWithdrawals = withdrawRes.data.filter(
-      (w) => w.status === "PENDING"
-    );
+      const pendingWithdrawals = withdrawRes.data.filter(
+        (w) => w.status === "PENDING",
+      );
 
-    const approvedTotal = approvedWithdrawals.reduce(
-      (acc, curr) => acc + Number(curr.amount),
-      0
-    );
+      const approvedTotal = approvedWithdrawals.reduce(
+        (acc, curr) => acc + Number(curr.amount),
+        0,
+      );
 
-    const pendingTotal = pendingWithdrawals.reduce(
-      (acc, curr) => acc + Number(curr.amount),
-      0
-    );
+      const pendingTotal = pendingWithdrawals.reduce(
+        (acc, curr) => acc + Number(curr.amount),
+        0,
+      );
 
-    /* ================= RECENT ACTIVITY ================= */
+      /* ================= RECENT ACTIVITY ================= */
 
-    const sellActivity = ordersRes.data.map((o) => ({
-      id: o._id,
-      type: "SELL",
-      amount: o.usdtAmount,
-      inr: Number(o.usdtAmount || 0) * Number(o.rate || 0),
-      status: o.status,
-      date: o.createdAt,
-      adminNotes: o.adminNotes || null,
-    }));
+      const sellActivity = ordersRes.data.map((o) => ({
+        id: o._id,
+        type: "SELL",
+        amount: o.usdtAmount,
+        inr: Number(o.usdtAmount || 0) * Number(o.rate || 0),
+        status: o.status,
+        date: o.createdAt,
+        adminNotes: o.adminNotes || null,
+      }));
 
-    const withdrawActivity = withdrawRes.data.map((w) => ({
-      id: w._id,
-      type: "WITHDRAW",
-      amount: w.amount,
-      status: w.status,
-      date: w.createdAt,
-      utrNumber: w.adminUtrNumber || null,
-    }));
+      const withdrawActivity = withdrawRes.data.map((w) => ({
+        id: w._id,
+        type: "WITHDRAW",
+        amount: w.amount,
+        status: w.status,
+        date: w.createdAt,
+        utrNumber: w.adminUtrNumber || null,
+      }));
 
-    const combined = [...sellActivity, ...withdrawActivity]
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 6);
+      const combined = [...sellActivity, ...withdrawActivity]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 6);
 
-    /* ================= SET STATE ================= */
+      /* ================= SET STATE ================= */
 
-    previousSold.current = totalSold;
-    previousWithdraw.current = totalWithdraw;
+      previousSold.current = totalSold;
+      previousWithdraw.current = totalWithdraw;
 
-    setTotalSold(soldINR);
-    setTotalWithdraw(approvedTotal);
-    setPendingWithdraw(pendingTotal);
+      setTotalSold(soldINR);
+      setTotalWithdraw(approvedTotal);
+      setPendingWithdraw(pendingTotal);
 
-    setRecentActivity(combined);
+      setRecentActivity(combined);
 
-    setLoading(false);
+      setLoading(false);
 
-    if (!hasAnimated) {
-      setHasAnimated(true);
+      if (!hasAnimated) {
+        setHasAnimated(true);
+      }
+    } catch (err) {
+      console.log("Wallet fetch failed");
     }
-
-  } catch (err) {
-    console.log("Wallet fetch failed");
-  }
-};
-
-    useEffect(() => {
-      document.title = "iBytex | Fast, Secure & Transparent Trading";
-    },[])
+  };
 
   useEffect(() => {
-  const socket = io(API);
+    document.title = "iBytex | Fast, Secure & Transparent Trading";
+  }, []);
 
-  socket.emit("join", userId); // join room
+  useEffect(() => {
+    const socket = io(API);
 
-  socket.on("wallet_update", (data) => {
-    setTotalSold(data.totalSold);
-    setTotalWithdraw(data.totalWithdraw);
-  });
+    socket.emit("join", userId); // join room
 
-  return () => socket.disconnect();
-}, []);
+    socket.on("wallet_update", (data) => {
+      setTotalSold(data.totalSold);
+      setTotalWithdraw(data.totalWithdraw);
+    });
+
+    return () => socket.disconnect();
+  }, []);
 
   /* INITIAL LOAD */
   useEffect(() => {
@@ -141,8 +145,8 @@ const fetchWalletData = async () => {
     return () => clearInterval(interval);
   }, []);
 
-const availableBalance = totalSold - totalWithdraw - pendingWithdraw;
-const lockedBalance = totalWithdraw;
+  const availableBalance = totalSold - totalWithdraw - pendingWithdraw;
+  const lockedBalance = totalWithdraw;
 
   /* Smooth Number Render */
   const renderNumber = (value) => {
@@ -155,61 +159,98 @@ const lockedBalance = totalWithdraw;
     return value.toLocaleString();
   };
 
+  const StatCard = ({ title, value, icon, green, yellow, red, theme }) => {
+  return (
+    <div
+      className={`p-4 rounded-2xl border border-white/10 flex justify-between items-center
+      ${theme === "dark" ? "bg-[#191D23]" : "bg-white"}
+      `}
+    >
+      {/* LEFT SIDE (ICON + TEXT) */}
+      <div className="flex items-center gap-5 ">
+        
+        {/* ICON */}
+        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+          {icon}
+        </div>
+      </div>
+        {/* TEXT */}
+        <div>
+          <p className="text-xs text-gray-400 text-end mb-1">{title}</p>
+
+          <h2
+            className={`text-xl font-semibold text-end
+            ${green && "text-emerald-400"}
+            ${yellow && "text-yellow-400"}
+            ${red && "text-red-400"}
+            `}
+          >
+            {value}
+          </h2>
+        </div>
+
+    </div>
+  );
+};
+
   /* ================= UI ================= */
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-white max-md:p-0">
-      <h1 className="text-2xl font-bold mb-6 max-md:mb-4">Wallet</h1>
+    <div
+      className={`min-h-screen max-md:p-0 ${
+        theme === "dark" ? "bg-[#0D0F11] text-white" : "bg-[#F1F3F4] text-black"
+      }`}
+    >
+      <h1 className="text-2xl font-bold mb-3 max-md:mb-4 px-3">Wallet</h1>
 
       {/* ===== BALANCE CARDS ===== */}
-      <div className="grid md:grid-cols-4 gap-6 mb-8 max-md:grid-cols-2 max-md:mb-4 max-md:gap-4">
+<div className="grid md:grid-cols-4 gap-5 mb-5 max-md:grid-cols-2">
 
-        {/* Total Earned */}
-        <motion.div whileHover={{ y: -4 }}
-          className="bg-[#111827] p-6 rounded-2xl border border-white/10 max-md:p-3">
-          <p className="text-gray-400 text-sm max-md:text-xs">Total Earned</p>
-          <h2 className="text-3xl font-bold mt-2 max-md:text-2xl">
-            ₹ {renderNumber(totalSold)}
-          </h2>
-        </motion.div>
+  <StatCard
+    title="Total Earned"
+    value={`₹ ${renderNumber(totalSold)}`}
+    icon={<HiCurrencyRupee className="text-xl text-emerald-400" />}
+    theme={theme}
+  />
 
-        {/* Available */}
-        <motion.div whileHover={{ y: -4 }}
-          className="bg-[#111827] p-6 rounded-2xl border border-white/10 max-md:p-3">
-          <p className="text-emerald-300 text-sm max-md:text-xs">Available Balance</p>
-          <h2 className="text-3xl font-bold mt-2 text-emerald-400 max-md:text-2xl" >
-            ₹ {renderNumber(availableBalance)}
-          </h2>
-        </motion.div>
-        <motion.div
- whileHover={{ y: -4 }}
- className="bg-[#111827] p-6 rounded-2xl border border-white/10 max-md:p-3"
->
- <p className="text-yellow-300 text-sm max-md:text-xs">
-   Pending Withdrawal
- </p>
+  <StatCard
+    title="Available Balance"
+    value={`₹ ${renderNumber(availableBalance)}`}
+    icon={<HiCash className="text-xl text-emerald-400" />}
+    green
+    theme={theme}
+  />
 
- <h2 className="text-3xl font-bold mt-2 text-yellow-400 max-md:text-2xl">
-   ₹ {renderNumber(pendingWithdraw)}
- </h2>
-</motion.div>
+  <StatCard
+    title="Pending Withdrawal"
+    value={`₹ ${renderNumber(pendingWithdraw)}`}
+    icon={<HiArrowDown className="text-xl text-yellow-400" />}
+    yellow
+    theme={theme}
+  />
 
-        {/* Locked */}
-        <motion.div whileHover={{ y: -4 }}
-          className="bg-[#111827] p-6 rounded-2xl border border-white/10 max-md:p-3">
-          <p className="text-red-300 text-sm max-md:text-xs">Locked (Withdrawn)</p>
-          <h2 className="text-3xl font-bold mt-2 text-red-400 max-md:text-2xl">
-            ₹ {renderNumber(lockedBalance)}
-          </h2>
-        </motion.div>
-      
-      </div>
+  <StatCard
+    title="Locked Withdrawn"
+    value={`₹ ${renderNumber(lockedBalance)}`}
+    icon={<HiLockClosed className="text-xl text-red-400" />}
+    red
+    theme={theme}
+  />
+
+</div>
 
       {/* ===== ACTION BUTTONS ===== */}
-      <div className="flex gap-4 mb-10 max-md:mb-5 max-md:justify-between max-md:mt-5">
+      <div className="flex gap-4 mb-5 px-5 justify-end max-md:mt-5 max-md:justify-between">
+             <button
+          onClick={() => setActivePage("withdraw")}
+          className={`px-6 py-3 rounded-xl font-semibold text-[12px] ${theme === "dark" ? "bg-[#1f2937]" : "bg-white"}`}
+        >
+          Withdraw
+        </button>
+
         <button
           onClick={() => setActivePage("deposit")}
-          className="px-6 py-3 rounded-xl font-semibold text-black max-md:text-[14px]"
+          className="px-6 py-3 rounded-xl font-semibold text-black text-[12px] "
           style={{
             background: "linear-gradient(135deg, #F5C56B 0%, #D4A017 100%)",
           }}
@@ -217,83 +258,107 @@ const lockedBalance = totalWithdraw;
           Sell USDT
         </button>
 
-        <button
-          onClick={() => setActivePage("withdraw")}
-          className="px-6 py-3 rounded-xl font-semibold bg-[#1f2937] max-md:text-[14px]"
-        >
-          Withdraw
-        </button>
+   
       </div>
 
       {/* ===== RECENT TRANSACTIONS ===== */}
-      <div className="bg-[#111827] rounded-2xl border border-white/10 p-6">
-        <h2 className="text-lg font-semibold mb-4 max-md:text-base">Recent Transactions</h2>
+ <div
+  className={`rounded-2xl p-6 border backdrop-blur-xl
+  ${theme === "dark"
+      ? "bg-[#191D23] border-white/10 text-white"
+      : "bg-white border-gray-200 text-black"
+  }`}
+>
+  <div className="flex justify-between items-center mb-4">
+    <h2 className="text-lg font-semibold">Recent Transactions</h2>
+  </div>
 
-        {recentActivity.length === 0 ? (
-          <p className="text-gray-400 text-sm">No recent activity</p>
-        ) : (
-          <div className="space-y-4">
-            {recentActivity.map((item) => (
-              <div
-                key={item.id}
-                className="flex justify-between items-center border-b border-gray-700 pb-3"
-              >
-                <div className="flex flex-col">
-                  <div className="flex gap-3">
-                    <p className="font-semibold max-md:text-[14px]">
-                      {item.type === "SELL"
-                        ? `Sold ${item.amount} USDT`
-                        : `Withdraw ₹ ${item.amount}`}
-                    </p>
+  {recentActivity.length === 0 ? (
+    <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-sm`}>
+      No recent activity
+    </p>
+  ) : (
+    <div className="space-y-4">
+      {recentActivity.map((item) => (
+        <div
+          key={item.id}
+          className={`grid grid-cols-3 items-center pb-4 border-b
+          ${theme === "dark" ? "border-white/10" : "border-gray-200"}
+          `}
+        >
+          
+          {/* LEFT */}
+          <div>
+            <p className="font-semibold text-sm">
+              {item.type === "SELL"
+                ? `Sold ${item.amount} USDT`
+                : `Withdraw ₹ ${item.amount}`}
+            </p>
 
-                    {item.type === "SELL" && (
-                      <p className="text-green-400 text-base max-md:text-[14px]" >
-                        ₹ {item.inr.toLocaleString()}
-                      </p>
-                    )}
-                  </div>
-
-                  {item.type === "WITHDRAW" && item.utrNumber && (
-                    <p className="text-base text-blue-400 mt-1 max-md:text-[12px]">
-                      UTR Number : {item.utrNumber}
-                    </p>
-                  )}
-
-                  {item.adminNotes && (
-                    <div className="mt-2 bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 rounded-lg ">
-                      <p className="text-xs text-yellow-400 font-semibold max-md:text-[10px]">
-                        Admin Note
-                      </p>
-                      <p className="text-xs text-gray-300 mt-1">
-                        {item.adminNotes}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col items-end gap-3">
-                  <span
-                    className={`text-xs px-3 py-1 rounded-full max-md:text-[8px] ${
-                      item.status === "COMPLETED" ||
-                      item.status === "APPROVED"
-                        ? "bg-green-500/20 text-green-400 "
-                        : item.status === "REJECTED"
-                        ? "bg-red-500/20 text-red-400"
-                        : "bg-yellow-500/20 text-yellow-400"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-
-                  <p className="text-sm text-gray-400 max-md:text-[10px]">
-                    {new Date(item.date).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            ))}
+            <p className={`text-xs mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+              {new Date(item.date).toLocaleString()}
+            </p>
           </div>
-        )}
-      </div>
+
+          {/* CENTER */}
+          <div className="flex flex-col items-center justify-center text-center text-xs">
+
+            {item.type === "WITHDRAW" && item.utrNumber && (
+              <p className="text-yellow-400 font-medium">
+                UTR: <br></br> <span className="font-bold text-gray-400">{item.utrNumber}</span>
+              </p>
+            )}
+
+            {item.adminNotes && (
+              <p className="text-yellow-400 mt-1">
+                Admin: <br></br> <span className="font-bold text-gray-400">{item.adminNotes}</span>
+              </p>
+            )}
+
+            {item.status === "PENDING" && (
+              <p className="text-gray-400 mt-1 text-[11px]">
+                Waiting for approval...
+              </p>
+            )}
+
+          </div>
+
+          {/* RIGHT */}
+          <div className="flex flex-col items-end gap-2">
+
+            {/* AMOUNT */}
+            {item.type === "SELL" ? (
+              <p className="text-green-400 font-semibold">
+                +₹{item.inr}
+              </p>
+            ) : (
+              <p className="text-red-400 font-semibold">
+                -₹{item.amount}
+              </p>
+            )}
+
+            {/* STATUS */}
+            <span
+              className={`text-[10px] px-3 py-1 rounded-full font-medium
+              ${
+                item.status === "COMPLETED" || item.status === "APPROVED"
+                  ? "bg-green-500/20 text-green-400"
+                  : item.status === "REJECTED"
+                  ? "bg-red-500/20 text-red-400"
+                  : "bg-yellow-500/20 text-yellow-400"
+              }`}
+            >
+              {item.status === "PENDING"
+                ? "PENDING"
+                : item.status}
+            </span>
+
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
     </div>
   );
 };

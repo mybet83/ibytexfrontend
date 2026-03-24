@@ -12,20 +12,29 @@ export default function Navbar() {
   const [atTop, setAtTop] = useState(true);
   const [user, setUser] = useState(null);
 
-  const { dark, setDark } = useContext(ThemeContext);
+
 
   const { scrollY } = useScroll();
   const lastY = useRef(0);
   const scrollTimeout = useRef(null);
-  const location = useLocation();
+const location = useLocation();
 
-  /* ================= LOGOUT ON HOME ================= */
+const isLandingPage = location.pathname === "/";
+const isHomePage = location.pathname === "/home";
+
   useEffect(() => {
-    if (location.pathname === "/home") {
+  if (location.pathname === "/home") {
+    const hasLoggedOut = sessionStorage.getItem("logout_done");
+
+    if (!hasLoggedOut) {
       localStorage.removeItem("user");
       setUser(null);
+      sessionStorage.setItem("logout_done", "true");
     }
-  }, [location.pathname]);
+  } else {
+    sessionStorage.removeItem("logout_done");
+  }
+}, [location.pathname]);
 
   /* ================= LOAD USER ================= */
   useEffect(() => {
@@ -66,7 +75,7 @@ export default function Navbar() {
       <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-1 max-md:px-0">
 
         {/* Logo */}
-       <Link to="/home">
+       <Link to="/">
   <img src="/logot.png" alt="logo" className="w-16 cursor-pointer" />
 </Link>
 
@@ -79,7 +88,7 @@ export default function Navbar() {
             onMouseEnter={() => setActiveDropdown("crypto")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="flex items-center gap-1 hover:text-yellow-400 transition">
+            <button className="flex items-center gap-1 text-white hover:text-yellow-400 transition">
               Crypto Trading
               <motion.div
                 animate={{ rotate: activeDropdown === "crypto" ? 180 : 0 }}
@@ -111,11 +120,11 @@ export default function Navbar() {
             </motion.div>
           </div>
 
-          <Link to="/home" className="hover:text-yellow-400">
+          <Link to="/home" className="hover:text-yellow-400 text-white">
             Markets
           </Link>
 
-          <Link to="/about" className="hover:text-yellow-400">
+          <Link to="/about" className="hover:text-yellow-400 text-white">
             About Us
           </Link>
         </div>
@@ -125,28 +134,29 @@ export default function Navbar() {
 
           {/* THEME TOGGLE */}
         
+{isLandingPage || isHomePage ? (
+  // 👉 Landing + Home → ALWAYS Login button
+  <>
+    <Link to="/login" className="text-gray-300 hover:text-white text-sm">
+      Login
+    </Link>
 
-          {user ? (
-            <HeaderUserMenu />
-          ) : (
-            <>
-              <Link to="/login" className="text-gray-300 hover:text-white text-sm">
-                Login
-              </Link>
-
-              <Link
-                to="/signup"
-                className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold"
-              >
-                Get Started
-              </Link>
-            </>
-          )}
+    <Link
+      to="/signup"
+      className="px-5 py-2 rounded-full bg-gold-gradient text-black font-semibold"
+    >
+      Get Started
+    </Link>
+  </>
+) : (
+  // 👉 Only dashboard pages → show user
+  user ? <HeaderUserMenu /> : null
+)}
         </div>
 
         {/* Mobile Button */}
         <button
-          className="lg:hidden w-10 h-10 flex items-center justify-center text-2xl"
+          className="lg:hidden w-10 h-10 flex items-center text-white justify-center text-2xl"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           ☰
@@ -209,26 +219,27 @@ export default function Navbar() {
 
           {/* THEME TOGGLE MOBILE */}
           
+{!isLandingPage && (
+  user ? (
+    <HeaderUserMenu mobile />
+  ) : (
+    <>
+      <Link
+        to="/login"
+        className="px-4 py-2 border border-gray-500 rounded-md text-center"
+      >
+        Login
+      </Link>
 
-          {user ? (
-            <HeaderUserMenu mobile />
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="px-4 py-2 border border-gray-500 rounded-md text-center"
-              >
-                Login
-              </Link>
-
-              <Link
-                to="/signup"
-                className="px-4 py-2 rounded-md bg-gold-gradient text-black text-center font-semibold"
-              >
-                Get Started
-              </Link>
-            </>
-          )}
+      <Link
+        to="/signup"
+        className="px-4 py-2 rounded-md bg-gold-gradient text-black text-center font-semibold"
+      >
+        Get Started
+      </Link>
+    </>
+  )
+)}
         </div>
       </motion.div>
     </motion.nav>

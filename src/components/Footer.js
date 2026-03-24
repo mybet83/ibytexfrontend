@@ -110,37 +110,26 @@ We conduct regular vulnerability scans and penetration testing in accordance wit
             </div>
 
  <div>
-  <h4 className="text-white font-semibold mb-6">Community</h4>
+  <h4 className="text-white font-semibold mb-6">Join Our Channel</h4>
 
   {/* TELEGRAM */}
-  <button
-    onClick={() => {
-      if (token) {
-        window.open("https://t.me/iBytex_PayCh", "_blank");
-      } else {
-        navigate("/login");
-      }
-    }}
-    className="flex items-center gap-2 border border-blue-500/30 px-5 py-2 rounded-lg text-blue-400 hover:bg-blue-500/10 transition mb-3"
+  <a
+      href="https://t.me/iBytex_PayCh"
+    className="flex items-center gap-2 border border-blue-500/30 px-5 py-2 rounded-lg text-blue-400 hover:bg-blue-500/10 transition mb-3 max-w-[200px]"
   >
     <FaTelegramPlane size={18} />
     Join Telegram
-  </button>
+  </a>
 
   {/* WHATSAPP */}
-  <button
-    onClick={() => {
-      if (token) {
-        window.open("https://wa.me/918057678348", "_blank");
-      } else {
-        navigate("/login");
-      }
-    }}
-    className="flex items-center gap-2 border border-green-500/30 px-5 py-2 rounded-lg text-green-400 hover:bg-green-500/10 transition mb-5"
+  <a
+       href="https://wa.me/918057678348"
+
+    className="flex items-center gap-2 border border-green-500/30 px-5 py-2 rounded-lg text-green-400 hover:bg-green-500/10 transition mb-5 max-w-[200px]"
   >
     <FaWhatsapp size={18} />
     Join WhatsApp
-  </button>
+  </a>
 
   {/* SOCIAL ICONS */}
   <div className="flex items-center gap-6 mt-4 text-gray-400">

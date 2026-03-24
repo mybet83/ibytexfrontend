@@ -9,6 +9,7 @@ import Navbar from "../components/Navbar";
 import CryptoLogos from "../components/CryptoLogos";
 import HeroSequence from "../components/HeroSequence";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+import SupportButton from "../components/SupportButton";
 import Tilt from "react-parallax-tilt";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
@@ -998,9 +999,8 @@ grid lg:grid-cols-2 gap-6 items-center mx-auto">
 
 
 
-
-
-      <Footer />
+<Footer />
+<SupportButton />
     </div>
   );
 };

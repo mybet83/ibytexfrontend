@@ -3,7 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-export default function PlaceOrder() {
+export default function PlaceOrder({theme}) {
   const [usdt, setUsdt] = useState("");
   const [rate, setRate] = useState(0);
   const [receipt, setReceipt] = useState(null);
@@ -82,17 +82,27 @@ const totalINR = amount ? (amount * rate).toFixed(2) : "--";
 
   return (
     <>
-      <div className="min-h-screen  text-white ">
+    <div
+  className={`min-h-screen ${
+    theme === "dark"
+      ? "bg-[#0D0F11] text-white"
+      : "bg-[#F1F3F4] text-black"
+  }`}
+>
         {/* HEADER */}
-        <div className="flex justify-between items-center max-w-7xl mx-auto mb-10 max-md:mb-5">
-          <h1 className="text-2xl font-semibold ">Sell USDT</h1>
+        <div className="flex justify-between items-center max-w-7xl mx-auto mb-5 ">
+          <h1 className="text-2xl font-semibold px-3 ">Sell USDT</h1>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto max-md:gap-6">
           {/* LEFT SIDE */}
           <div className="lg:col-span-2 space-y-6">
             {/* TRADE BOX */}
-            <div className="bg-[#161a1e] border border-gray-800 rounded-xl p-6">
+            <div className={`border rounded-xl p-6 max-md:p-3
+${theme === "dark"
+  ? "bg-[#161a1e] border-gray-800"
+  : "bg-white border-gray-200"}
+`}>
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
                   <label className="text-gray-400 text-xs ">Amount (USDT)</label>
@@ -101,8 +111,11 @@ const totalINR = amount ? (amount * rate).toFixed(2) : "--";
                     type="number"
                     value={amount}
                     onChange={handleAmountChange}
-                    className="w-full  bg-[#0b0e11] border border-gray-700 
-               rounded-lg px-4 py-3 text-white outline-none"
+             className={`w-full border rounded-lg px-4 py-3 outline-none
+${theme === "dark"
+  ? "bg-[#0b0e11] border-gray-700 text-white"
+  : "bg-gray-100 border-gray-300 text-black"}
+`}
                     placeholder="Enter amount"
                   />
 
@@ -113,16 +126,26 @@ const totalINR = amount ? (amount * rate).toFixed(2) : "--";
 
                 <div>
                   <p className="text-xs text-gray-400 mb-2">Live Rate</p>
-                  <div className="bg-[#0b0e11] border border-gray-700 px-4 py-3 rounded-lg text-white font-semibold">
+                  <div className={`px-4 py-3 rounded-lg font-semibold
+${theme === "dark"
+  ? "bg-[#0b0e11] border border-gray-700 text-white"
+  : "bg-gray-100 border border-gray-300 text-black"}
+`}>
                     ₹ {rate}
                   </div>
                 </div>
 
                 <div>
                   <p className="text-xs text-gray-400 mb-2">You Receive</p>
-                  <div className="bg-[#0b0e11] border border-gray-700 px-4 py-3 rounded-lg text-green-400 font-semibold">
-                    ₹ {totalINR}
-                  </div>
+               <div
+  className={`px-4 py-3 rounded-lg font-semibold
+  ${theme === "dark"
+    ? "bg-[#0b0e11] border border-gray-700 text-green-400"
+    : "bg-gray-100 border border-gray-300 text-green-600"}
+`}
+>
+  ₹ {totalINR}
+</div>
         <button
   onClick={() => {
     if (!amount || parseFloat(amount) < 50) {
@@ -144,12 +167,18 @@ const totalINR = amount ? (amount * rate).toFixed(2) : "--";
             {/* WALLET SECTION */}
           {/* PROCESS INFO / WALLET SECTION */}
 {!showWallet ? (
-  <div className="relative bg-gradient-to-br from-[#161a1e] to-[#111417] border border-gray-800 rounded-2xl p-8 overflow-hidden">
+  <div className={`relative rounded-2xl p-8 overflow-hidden border max-md:p-4
+${theme === "dark"
+  ? "bg-gradient-to-br from-[#161a1e] to-[#111417] border-gray-800"
+  : "bg-white border-gray-200"}
+`}>
 
     {/* Glow Effect */}
     <div className="absolute -top-10 -right-10 w-40 h-40 bg-yellow-500/10 blur-3xl rounded-full"></div>
 
-    <h2 className="text-lg font-semibold text-white mb-6">
+    <h2 className={`text-lg font-semibold mb-5 ${
+    theme === "dark" ? "text-white" : "text-black"
+  }`}>
       Process to Sell USDT
     </h2>
 
@@ -159,14 +188,14 @@ const totalINR = amount ? (amount * rate).toFixed(2) : "--";
         <div className="w-7 h-7 flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">
           1
         </div>
-        <p>Select minimum <span className="text-white font-medium">50 USDT</span></p>
+        <p>Select minimum 50 USDT</p>
       </div>
 
       <div className="flex items-start gap-3">
         <div className="w-7 h-7 flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">
           2
         </div>
-        <p>Click on <span className="text-white font-medium">Process</span> button</p>
+        <p>Click on Process button</p>
       </div>
 
       <div className="flex items-start gap-3">
@@ -180,18 +209,18 @@ const totalINR = amount ? (amount * rate).toFixed(2) : "--";
         <div className="w-7 h-7 flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">
           4
         </div>
-        <p>Upload screenshot and click <span className="text-white font-medium">Place Order</span></p>
+        <p>Upload screenshot and click Place Order</p>
       </div>
       <div className="flex items-start gap-3">
         <div className="w-7 h-7 flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">
           5
         </div>
-        <p>Our Team Will Verify And You Recive <span className="text-white font-medium">INR In Your Wallet</span></p>
+        <p>Our Team Will Verify And You Recive INR In Your Wallet</p>
       </div>
 
     </div>
 
-    <div className="mt-6 text-xs text-gray-500 border-t border-gray-800 pt-4">
+    <div className="mt-6 text-xs text-gray-500 border-t border-gray-800 pt-4 max-md:text-center">
       iBytex - Real Time USDT Trade
     </div>
 
@@ -226,8 +255,12 @@ const totalINR = amount ? (amount * rate).toFixed(2) : "--";
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="bg-[#161a1e] border border-gray-800 rounded-xl p-6 space-y-6">
-            <div className="border border-dashed border-gray-700 rounded-lg p-5 text-center relative bg-[#0b0e11]">
+          <div className={`rounded-xl p-6 space-y-6 border
+${theme === "dark"
+  ? "bg-[#161a1e] border-gray-800"
+  : "bg-white border-gray-200"}
+`}>
+            <div className={ ` border border-dashed  rounded-lg p-5 text-center relative  ${theme === "dark" ? "bg-[#0b0e11] border-gray-700" : "bg-gray-100 border-gray-300"}`}>
               <input
                 type="file"
                 accept="image/*"

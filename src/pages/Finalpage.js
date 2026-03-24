@@ -9,7 +9,7 @@ import WithdrawPageComponent from "./WithdrawPage";
 import WalletPage from "../components/WalletPage";
 import SettingsPage from "../components/SettingsPage";
 import { useLocation } from "react-router-dom";
-import { messaging, getToken } from "../firebase";  // agar firebase.js src me hai
+import { messaging, getToken } from "../firebase"; // agar firebase.js src me hai
 import {
   HiHome,
   HiCash,
@@ -21,16 +21,18 @@ import {
   HiCurrencyRupee,
   HiArrowUp,
   HiLockClosed,
-
 } from "react-icons/hi";
 import { FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 import { MdSupportAgent } from "react-icons/md";
+import UsdtGraph from "../components/UsdtGraph";
+import StatsWidget from "../components/DashboardGraphs";
+import RecentActivityCard from "../components/RecentActivityCard";
 
 
 const API = process.env.REACT_APP_API_URL;
 
 const DashboardLayout = () => {
-const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
   const [rate, setRate] = useState(0);
@@ -41,74 +43,87 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
   const [recentOrders, setRecentOrders] = useState([]);
   const [approvedWithdraw, setApprovedWithdraw] = useState(0);
   const [recentActivity, setRecentActivity] = useState([]);
-
- const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
-const [pendingWithdraw, setPendingWithdraw] = useState(0);
+  const [pendingWithdraw, setPendingWithdraw] = useState(0);
   const user = JSON.parse(localStorage.getItem("user"));
 
   const location = useLocation();
 
   const availableBalance = Math.max(
-  totalSold - approvedWithdraw - pendingWithdraw,
-  0
-); 
+    totalSold - approvedWithdraw - pendingWithdraw,
+    0,
+  );
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
 
-
-useEffect(() => {
-  const setupFCM = async () => {
-    try {
-      if (!("serviceWorker" in navigator)) return;
-
-      const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
-
-      const permission = await Notification.requestPermission();
-
-      if (permission !== "granted") return;
-
-      const fcmToken = await getToken(messaging, {
-        vapidKey: "BKRiFrLs3dKcSKGuZ4uV7Tn5s6jg34pmRQXN2Rp7QctRq3AO94iFcCDzUbAteokJvJ__8xvzwL1yKhSQzn5xCJg",
-        serviceWorkerRegistration: registration,
-      });
-
-      if (!fcmToken) return;
-
-      const jwt = localStorage.getItem("token");
-
-      await fetch(`${API}/api/auth/save-fcm-token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({ fcmToken }),
-      });
-
-      console.log("FCM Saved Successfully");
-     
-    } catch (err) {
-      console.log("FCM setup failed:", err);
-    }
+  const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
   };
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
 
-  setupFCM();
-}, []);
+  useEffect(() => {
+    const setupFCM = async () => {
+      try {
+        if (!("serviceWorker" in navigator)) return;
 
+        const registration = await navigator.serviceWorker.register(
+          "/firebase-messaging-sw.js",
+        );
+
+        const permission = await Notification.requestPermission();
+
+        if (permission !== "granted") return;
+
+        const fcmToken = await getToken(messaging, {
+          vapidKey:
+            "BKRiFrLs3dKcSKGuZ4uV7Tn5s6jg34pmRQXN2Rp7QctRq3AO94iFcCDzUbAteokJvJ__8xvzwL1yKhSQzn5xCJg",
+          serviceWorkerRegistration: registration,
+        });
+
+        if (!fcmToken) return;
+
+        const jwt = localStorage.getItem("token");
+
+        await fetch(`${API}/api/auth/save-fcm-token`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: JSON.stringify({ fcmToken }),
+        });
+
+        console.log("FCM Saved Successfully");
+      } catch (err) {
+        console.log("FCM setup failed:", err);
+      }
+    };
+
+    setupFCM();
+  }, []);
 
   /* ================= FETCH ================= */
-   useEffect(() => {
-  if (window.innerWidth >= 768) {
-    setSidebarOpen(true);
-  }
-}, []);
+  useEffect(() => {
+    if (window.innerWidth >= 768) {
+      setSidebarOpen(true);
+    }
+  }, []);
 
-useEffect(() => {
-  if (location.state?.openOrders) {
-    setActivePage("orders");
-  }
-}, [location.state]);
-
+  useEffect(() => {
+    if (location.state?.openOrders) {
+      setActivePage("orders");
+    }
+  }, [location.state]);
 
   const fetchUserOrders = async () => {
     try {
@@ -177,29 +192,29 @@ useEffect(() => {
     } catch {}
   };
 
-const fetchApprovedWithdrawals = async () => {
-  const token = localStorage.getItem("token");
+  const fetchApprovedWithdrawals = async () => {
+    const token = localStorage.getItem("token");
 
-  const res = await axios.get(`${API}/api/withdrawal/my`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+    const res = await axios.get(`${API}/api/withdrawal/my`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  const approved = res.data.filter((w) => w.status === "APPROVED");
-  const pending = res.data.filter((w) => w.status === "PENDING");
+    const approved = res.data.filter((w) => w.status === "APPROVED");
+    const pending = res.data.filter((w) => w.status === "PENDING");
 
-  const approvedTotal = approved.reduce(
-    (acc, curr) => acc + Number(curr.amount),
-    0
-  );
+    const approvedTotal = approved.reduce(
+      (acc, curr) => acc + Number(curr.amount),
+      0,
+    );
 
-  const pendingTotal = pending.reduce(
-    (acc, curr) => acc + Number(curr.amount),
-    0
-  );
+    const pendingTotal = pending.reduce(
+      (acc, curr) => acc + Number(curr.amount),
+      0,
+    );
 
-  setApprovedWithdraw(approvedTotal);
-  setPendingWithdraw(pendingTotal);
-};
+    setApprovedWithdraw(approvedTotal);
+    setPendingWithdraw(pendingTotal);
+  };
 
   const fetchRecentActivity = async () => {
     const token = localStorage.getItem("token");
@@ -251,13 +266,13 @@ const fetchApprovedWithdrawals = async () => {
     fetchRecentActivity();
   };
 
-  const WithdrawPage = () => {
-    return <WithdrawPageComponent />;
-  };
+const WithdrawPage = () => {
+  return <WithdrawPageComponent theme={theme} />;
+};
 
   useEffect(() => {
     document.title = "iBytex | Enterprise-Grade Crypto Exchange";
-  },[])
+  }, []);
 
   // First load
   useEffect(() => {
@@ -319,15 +334,20 @@ const fetchApprovedWithdrawals = async () => {
   }, [activePage]);
 
   const handlePageChange = (page) => {
-  setActivePage(page);
+    setActivePage(page);
 
-  // mobile me sidebar auto close
-  if (window.innerWidth < 768) {
-    setSidebarOpen(false);
-  }
-};
+    // mobile me sidebar auto close
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+  };
 
 
+useEffect(() => {
+  fetch("/api/dashboard")
+    .then(res => res.json())
+    .then(res => setData(res));
+}, []);
 
   // Dashboard live refresh
 
@@ -345,7 +365,7 @@ const fetchApprovedWithdrawals = async () => {
 
   /* ================= BTC ================= */
 
-  const StatCard = ({ title, value, green, badge, icon }) => {
+  const StatCard = ({ title, value, green, badge, icon  }) => {
     const numericValue = Number(String(value).replace(/[^0-9.-]+/g, ""));
 
     const hasRupee = String(value).includes("₹");
@@ -353,17 +373,21 @@ const fetchApprovedWithdrawals = async () => {
 
     return (
       <div
-        className="relative bg-white/5 backdrop-blur-xl 
+        className={`relative bg-[#191D23] backdrop-blur-xl 
                     border border-white/10 
                     p-4 rounded-2xl 
                     transition-all duration-300 
                     hover:-translate-y-1 
-                    hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] max-md:p-3"
+                    hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] max-md:p-3 ${
+                      theme === "dark"
+                        ? "bg-[#0D0F11] text-white"
+                        : "bg-[#Ffff] text-black"
+                    }`}
       >
         {/* TITLE + BADGE */}
         <div className="flex items-center justify-between">
           <div
-            className="w-14 h-14 flex items-center justify-center 
+            className="w-8 h-8 flex items-center justify-center 
         rounded-xl bg-white/5 border border-white/10 max-md:w-8 max-md:h-8 "
           >
             {icon}
@@ -377,10 +401,10 @@ const fetchApprovedWithdrawals = async () => {
             <span
               className="  text-[8px] px-2 py-1 
                            bg-red-500 text-white 
-                           rounded-full animate-pulse absolute top-2 right-2      max-md:top-auto
+                           rounded-full animate-pulse absolute bottom-3 left-4      max-md:top-auto
     max-md:right-auto
     max-md:bottom-2
-    max-md:left-3"
+    max-md:left-3 "
             >
               {badge}
             </span>
@@ -388,10 +412,11 @@ const fetchApprovedWithdrawals = async () => {
         </div>
 
         {/* VALUE WITH COUNTUP */}
-        <h2
-          className={`text-3xl font-bold  tracking-tight max-md:text-xl justify-end items-end text-end
-        ${green ? "text-emerald-400" : "text-white"}`}
-        >
+    <h2
+  className={`text-xl font-bold tracking-tight max-md:text-xl text-end
+  ${green ? "text-emerald-400" : theme === "dark" ? "text-white" : "text-black"}
+  `}
+>
           {hasRupee && "₹ "}
 
           {!hasAnimated ? (
@@ -407,9 +432,21 @@ const fetchApprovedWithdrawals = async () => {
   };
 
   return (
-    <div className="h-screen flex bg-[#0b0f19] text-white overflow-hidden">
+    <div
+      className={`h-screen flex overflow-hidden ${
+        theme === "dark" ? "bg-[#0D0F11] text-white" : "bg-[#F1F3F4] text-black"
+      }`}
+    >
       {/* MOBILE HEADER */}
-      <div className="md:hidden fixed top-0 left-0 w-full h-16 bg-[#0b0f19] border-b border-gray-800 flex items-center justify-between px-2 z-50">
+   <div
+  className={`md:hidden fixed top-0 left-0 w-full h-16 flex items-center justify-between px-2 z-50
+  ${
+    theme === "dark"
+      ? "bg-[#111827] border-b border-gray-800 text-white"
+      : "bg-white border-b border-gray-200 text-black"
+  }
+`}
+>
         <img src="/logot.png" alt="logo" className="w-14 h-14" />
         <button onClick={() => setSidebarOpen(true)} className="text-[30px]">
           ☰
@@ -420,27 +457,37 @@ const fetchApprovedWithdrawals = async () => {
       <div
         className={`
     fixed md:relative top-0 right-0 md:right-auto
-    h-screen bg-[#111827] border-l md:border-r border-gray-800
+    h-screen 
     transition-all duration-300 ease-in-out
-    flex flex-col z-40
+    flex flex-col z-40 
 
-    w-64
+    w-52
     ${sidebarOpen ? "translate-x-0  transition-all duration-300 ease-in-out" : "translate-x-full  transition-all duration-300 ease-in-out"}
 
     md:translate-x-0
-    ${sidebarOpen ? "md:w-64  transition-all duration-300 ease-in-out" : "md:w-20  transition-all duration-300 ease-in-out"}
+    ${sidebarOpen ? "md:w-52  transition-all duration-300 ease-in-out" : "md:w-20  transition-all duration-300 ease-in-out"}
+    ${
+      theme === "dark" ? "bg-[#191D23] text-white " : "bg-[#FFFFFF] text-black "
+    }
+    
   `}
       >
         {/* LOGO */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-800 group relative">
+        <div
+          className={`flex items-center justify-between p-4 border-b group relative max-md:pb-0 ${
+            theme === "dark"
+              ? "border-gray-800 text-yellow-400"
+              : "border-[#e1dcdc] "
+          }
+    
+  `}
+        >
           <div
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="flex items-center gap- cursor-pointer"
           >
             <img src="/logot.png" alt="logo" className="w-12 h-12" />
-            {sidebarOpen && (
-              <h1 className="text-xl font-bold text-yellow-400">iBytex</h1>
-            )}
+            {sidebarOpen && <h1 className="text-xl font-bold ">iBytex</h1>}
           </div>
 
           {sidebarOpen && (
@@ -460,13 +507,14 @@ const fetchApprovedWithdrawals = async () => {
         </div>
 
         {/* MENU */}
-        <nav className="p-4 space-y-3 flex-1">
+        <nav className="p-4 space-y-3 flex-1 text-[12px]">
           <SidebarItem
             label="Dashboard"
             icon={<HiHome />}
             open={sidebarOpen}
             active={activePage === "dashboard"}
             onClick={() => handlePageChange("dashboard")}
+            theme={theme}
           />
           <SidebarItem
             label="Wallet"
@@ -474,6 +522,7 @@ const fetchApprovedWithdrawals = async () => {
             open={sidebarOpen}
             active={activePage === "wallet"}
             onClick={() => handlePageChange("wallet")}
+            theme={theme}
           />
           <SidebarItem
             label="Sell USDT"
@@ -481,14 +530,16 @@ const fetchApprovedWithdrawals = async () => {
             open={sidebarOpen}
             active={activePage === "deposit"}
             onClick={() => handlePageChange("deposit")}
+            theme={theme}
           />
           <SidebarItem
             label="Withdrawal"
             icon={<HiArrowUp />}
             open={sidebarOpen}
             active={activePage === "withdraw"}
+            theme={theme}
             onClick={() => {
-             handlePageChange((prev) =>
+              handlePageChange((prev) =>
                 prev === "withdraw" ? prev : "withdraw",
               );
               setTimeout(() => {
@@ -502,6 +553,7 @@ const fetchApprovedWithdrawals = async () => {
             open={sidebarOpen}
             active={activePage === "orders"}
             onClick={() => handlePageChange("orders")}
+            theme={theme}
           />
           <SidebarItem
             label="Payment Method"
@@ -509,156 +561,212 @@ const fetchApprovedWithdrawals = async () => {
             open={sidebarOpen}
             active={activePage === "payment-method"}
             onClick={() => handlePageChange("payment-method")}
+            theme={theme}
           />
           {/* ================= CUSTOMER SUPPORT ================= */}
-{/* CUSTOMER SUPPORT DROPDOWN */}
-<div>
-  <div
-    onClick={() => setSupportOpen(!supportOpen)}
-    active={activePage === "supportOpen"}
-    className="group flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#1f2937] cursor-pointer"
-  >
-    <span className="text-lg">
-      <MdSupportAgent />
-    </span>
+          {/* CUSTOMER SUPPORT DROPDOWN */}
+          <div>
+            <div
+              onClick={() => setSupportOpen(!supportOpen)}
+              active={activePage === "supportOpen"}
+              className={`group flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-[12px] ${
+                theme === "dark" ? "hover:bg-[#1f2937] " : "hover:bg-gray-200 "
+              }`}
+            >
+              <span className="text-base">
+                <MdSupportAgent />
+              </span>
 
-    {sidebarOpen && (
-      <span className="flex-1">Customer Support</span>
-    )}
+              {sidebarOpen && <span className="flex-1">Customer Support</span>}
 
-    {sidebarOpen && (
-      <span
-        className={`transition-transform duration-300 ${
-          supportOpen ? "rotate-90" : ""
-        }`}
-      >
-        ▶
-      </span>,
-      <span
-  className={`transition-transform  duration-300 ${
-    supportOpen ? "-rotate-90" : ""
-  }`}
->
-  ◀
-</span>
-    )}
-  </div>
+              {sidebarOpen &&
+                ((
+                  <span
+                    className={`transition-transform duration-300 ${
+                      supportOpen ? "rotate-90" : ""
+                    }`}
+                  >
+                    ▶
+                  </span>
+                ),
+                (
+                  <span
+                    className={`transition-transform  duration-300 ${
+                      supportOpen ? "-rotate-90" : ""
+                    }`}
+                  >
+                    ◀
+                  </span>
+                ))}
+            </div>
 
-  {/* DROPDOWN CONTENT */}
-  <div
-    className={`overflow-hidden transition-all duration-300 ${
-      supportOpen ? "max-h-40 mt-2" : "max-h-0"
-    }`}
-  >
-    <div className="ml-8 space-y-2 ">
+            {/* DROPDOWN CONTENT */}
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                supportOpen ? "max-h-40 mt-2" : "max-h-0"
+              }`}
+            >
+              <div className="ml-4 space-y-2 ">
+                {/* TELEGRAM */}
+                <div
+                  onClick={() => {
+                    const token = localStorage.getItem("token");
+                    if (token) {
+                      window.open("https://t.me/iBytex_Pay", "_blank");
+                    } else {
+                      window.location.href = "/login";
+                    }
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-500/10 cursor-pointer text-blue-400 text-[12px]"
+                >
+                  <FaTelegramPlane />
+                  {sidebarOpen && "Telegram Support"}
+                </div>
 
-      {/* TELEGRAM */}
-      <div
-        onClick={() => {
-          const token = localStorage.getItem("token");
-          if (token) {
-            window.open("https://t.me/iBytex_PayCh", "_blank");
-          } else {
-            window.location.href = "/login";
-          }
-        }}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-500/10 cursor-pointer text-blue-400 text-sm"
-      >
-        <FaTelegramPlane />
-        {sidebarOpen && "Telegram Support"}
-      </div>
-
-      {/* WHATSAPP */}
-      <div
-        onClick={() => {
-          const token = localStorage.getItem("token");
-          if (token) {
-         window.open("https://wa.me/918057678348", "_blank");
-          } else {
-            window.location.href = "/login";
-          }
-        }}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-500/10 cursor-pointer text-green-400 text-sm"
-      >
-        <FaWhatsapp />
-        {sidebarOpen && "WhatsApp Support"}
-      </div>
-
-    </div>
-  </div>
-</div>
+                {/* WHATSAPP */}
+                <div
+                  onClick={() => {
+                    const token = localStorage.getItem("token");
+                    if (token) {
+                      window.open("https://wa.me/918057678348", "_blank");
+                    } else {
+                      window.location.href = "/login";
+                    }
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-green-500/10 cursor-pointer text-green-400 text-[12px]"
+                >
+                  <FaWhatsapp />
+                  {sidebarOpen && "WhatsApp Support"}
+                </div>
+              </div>
+            </div>
+          </div>
           <SidebarItem
             label="Settings"
             icon={<HiCog />}
             open={sidebarOpen}
             active={activePage === "settings"}
-         onClick={() => handlePageChange("settings")}
+            onClick={() => handlePageChange("settings")}
+            theme={theme}
           />
         </nav>
 
         {/* PROFILE */}
-        <div className="p-4 md:border-t border-gray-800 relative max-md:bottom-14 max-md:border-b">
-          <button
-            onClick={() => setProfileOpen(!profileOpen)}
-            className="w-full flex items-center gap-3 hover:bg-[#1f2937] p-2 rounded-lg"
-          >
-            <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center text-black font-bold">
-              {user?.email?.charAt(0)?.toUpperCase()}
-            </div>
+    <div
+  className={`p-4 md:border-t relative max-md:bottom-14 max-md:border-b
+  ${
+    theme === "dark"
+      ? "border-gray-800 text-white"
+      : "border-gray-200 text-black hover:bg-gray-200"
+  }`}
+>
+  <button
+    onClick={() => setProfileOpen(!profileOpen)}
+    className={`w-full flex items-center gap-3 p-2 rounded-lg
+    ${
+      theme === "dark"
+        ? "hover:bg-[#1f2937] max-md:hover:bg-[#1f293700]"
+        : "hover:bg-gray-200 max-md:hover:bg-[#1f293700]"
+    }`}
+  >
+    <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center text-black font-bold">
+      {user?.email?.charAt(0)?.toUpperCase()}
+    </div>
 
-            {sidebarOpen && (
-              <div>
-                <p className="text-sm font-semibold">{user?.name}</p>
-              </div>
-            )}
-          </button>
+    {sidebarOpen && (
+      <div>
+        <p className="text-sm font-semibold">{user?.name}</p>
+      </div>
+    )}
+  </button>
 
-          {profileOpen && (
-            <div className="absolute bottom-16 left-4 w-56 bg-[#111827] border border-gray-700 rounded-xl shadow-xl py-2 z-50">
-              <button
-                onClick={() => (window.location.href = "/login")}
-                className="w-full text-left px-4 py-2 hover:bg-[#1f2937]"
-              >
-                🔄 Sign another account
-              </button>
+  {profileOpen && (
+    <div
+      className={`absolute bottom-16 left-4 w-56 rounded-xl shadow-xl py-2 z-50
+      ${
+        theme === "dark"
+          ? "bg-[#111827] border border-gray-700 text-white"
+          : "bg-white border border-gray-200 text-black"
+      }`}
+    >
+      <button
+        onClick={() => (window.location.href = "/login")}
+        className={`w-full text-left px-4 py-2
+        ${
+          theme === "dark"
+            ? "hover:bg-[#1f2937]"
+            : "hover:bg-gray-100"
+        }`}
+      >
+        🔄 Sign another account
+      </button>
 
-              <button
-                onClick={() => {
-                  localStorage.removeItem("user");
-                  window.location.href = "/home";
-                }}
-                className="w-full text-left px-4 py-2 text-red-400 hover:bg-[#1f2937]"
-              >
-                🚪 Logout
-              </button>
-              <div className="px-4 py-3 mt-2 border-t border-gray-700">
-                <div className="bg-[#0f172a] rounded-lg p-3 space-y-2 border border-gray-800">
-                  <div className="text-xs">
-                    <p className="text-gray-400">Email</p>
-                    <p className="text-white font-medium break-all">
-                      {user?.email}
-                    </p>
-                  </div>
-                  <div className="text-xs">
-                    <p className="text-gray-400">Account ID</p>
-                    <p className="text-yellow-400 font-semibold">
-                      {user?.accountId || "Not Assigned"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+      <button
+        onClick={() => {
+          localStorage.removeItem("user");
+          window.location.href = "/";
+        }}
+        className={`w-full text-left px-4 py-2 text-red-400
+        ${
+          theme === "dark"
+            ? "hover:bg-[#1f2937]"
+            : "hover:bg-gray-100"
+        }`}
+      >
+        🚪 Logout
+      </button>
+
+      <div
+        className={`px-4 py-3 mt-2 border-t
+        ${
+          theme === "dark"
+            ? "border-gray-700"
+            : "border-gray-200"
+        }`}
+      >
+        <div
+          className={`rounded-lg p-3 space-y-2 border
+          ${
+            theme === "dark"
+              ? "bg-[#0f172a] border-gray-800"
+              : "bg-gray-100 border-gray-200"
+          }`}
+        >
+          <div className="text-xs">
+            <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+              Email
+            </p>
+            <p className={`font-medium break-all ${theme === "dark" ? "text-white" : "text-black"}`}>
+              {user?.email}
+            </p>
+          </div>
+
+          <div className="text-xs">
+            <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+              Account ID
+            </p>
+            <p className="text-yellow-400 font-semibold">
+              {user?.accountId || "Not Assigned"}
+            </p>
+          </div>
         </div>
+      </div>
+    </div>
+  )}
+</div>
       </div>
 
       {/* ================= MOBILE BOTTOM NAV ================= */}
-      <div
-        className="md:hidden fixed bottom-0 left-0 w-full 
-bg-[#111827] border-t border-gray-800 
-flex justify-around items-center 
-py-2 z-50"
-      >
+<div
+  className={`md:hidden fixed bottom-0 left-0 w-full 
+  flex justify-around items-center py-2 z-50
+  ${
+    theme === "dark"
+      ? "bg-[#111827] border-t border-gray-800 text-white"
+      : "bg-white border-t border-gray-200 text-black"
+  }
+`}
+>
         <BottomItem
           icon={<HiHome />}
           label="Home"
@@ -718,46 +826,87 @@ py-2 z-50"
         className={`
         flex-1 overflow-y-auto transition-all duration-300  pb-24 md:pb-6
         ${sidebarOpen ? "md:ml" : "md:ml"}
-        pt-20 md:pt-8 p-6
+        pt-20 md:pt-4 p-5
         `}
       >
         {activePage === "dashboard" && (
           <>
             {/* TOP BANNER */}
-            <div className="mb-8 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 flex justify-between items-center shadow-xl max-md:flex-col max-md:p-4 max-md:mb-[1.25rem]">
-              {/* Glow Background */}
+<div className="flex justify-between items-start mb-5 ">
 
-              <div className="absolute -top-20 -left-20 w-72 h-72 bg-blue-hero   blur-[120px] rounded-full"></div>
+  {/* LEFT MAIN HEADER */}
+  <div
+    className={`relative overflow-hidden rounded-2xl border border-white/10 backdrop-blur-2xl p-3 flex justify-between px-3 items-center shadow-xl w-full ${
+      theme === "dark" ? "bg-[#191D23]" : "bg-white"
+    }`}
+  >
+    {/* LEFT TEXT */}
+    <div>
+      <h1 className={`text-2xl font-sn font-bold max-sm:w-[90%]  ${theme === "dark" ? "text-white" : "text-black/70"}`}>
+        Welcome Back, <span className="text-yellow-500 "> {user?.name} 👋 </span>
+      </h1>
 
-              <div className="relative z-10">
-                <h1 className="text-3xl font-bold text-white font-sn bg-clip-text text-transparent max-md:text-[1.5rem]">
-                  Welcome Back, {user?.name} 👋
-                </h1>
-                <p className="text-gray-400 text-sm mt-1">
-                  Trade Smart. Trade Secure.
-                </p>
-              </div>
+      <p className="italic font-light 
+        bg-gradient-to-r from-yellow-400 to-blue-400 
+        bg-clip-text text-transparent text-sm mt-1">
+        Trade Smart. Trade Secure.
+      </p>
+    </div>
 
-              <div className="relative z-10 flex flex-col items-end max-md:hidden">
-                <span className="text-xs text-gray-400 mb-1">
-                  Live USDT Price
-                </span>
+    {/* RIGHT PRICE */}
 
-                <div className="flex items-center gap-3">
-                  <span className="  px-2 py-1 text-[8px] bg-red-500 rounded-full animate-pulse shadow-lg">
-                    LIVE
-                  </span>
 
-                  <span className="text-2xl font-bold text-emerald-400 drop-shadow-lg">
-                    ₹ {rate}
-                  </span>
-                </div>
-              </div>
-            </div>
+
+  {/* 🔥 THEME BUTTON (OUTSIDE) */}
+<div
+  onClick={toggleTheme}
+  className="relative w-[90px] h-[40px] cursor-pointer select-none 
+  max-sm:w-[80px] max-sm:h-[32px]"
+>
+  {/* BACKGROUND */}
+  <div
+    className={`absolute inset-0 rounded-full backdrop-blur-xl border shadow-inner
+    ${
+      theme === "dark"
+        ? "bg-white/10 border-white/20"
+        : "bg-black/10 border-gray-300"
+    }`}
+  ></div>
+
+  {/* TEXT (HIDE IN MOBILE) */}
+  <div className="absolute inset-0 flex items-center justify-between px-4 text-sm font-medium max-sm:hidden">
+    <span className={`${theme === "dark" ? "opacity-0 text-black" : "opacity-100 text-black"}`}>
+      Dark
+    </span>
+    <span className={`${theme === "dark" ? "opacity-100 text-white" : "opacity-40 text-black"}`}>
+      Light
+    </span>
+  </div>
+
+  {/* TOGGLE CIRCLE */}
+  <div
+    className={`absolute bottom-[5px] rounded-full 
+    backdrop-blur-2xl border flex items-center justify-center
+    shadow-[0_8px_20px_rgba(0,0,0,0.3)]
+    transition-all duration-500
+
+    w-[30px] h-[30px] text-lg
+    max-sm:w-[22px] max-sm:h-[22px] max-sm:text-sm
+
+    ${
+      theme === "dark"
+        ? "left-[4px] bg-white/20 border-white/30"
+        : "left-[54px] max-sm:left-[34px] bg-black/20 border-gray-300"
+    }
+    `}
+  >
+    {theme === "dark" ? "☀️" : "🌙"}
+  </div>
+</div>
+</div>
+</div>
 
             {/* MARKET TICKER */}
-
-       
 
             {/* STAT CARDS */}
             <div className="grid grid-cols-4 gap-4  max-lg:grid-cols-2 max-md:mb-5">
@@ -766,31 +915,62 @@ py-2 z-50"
                 value={`₹ ${rate}`}
                 green
                 badge="LIVE"
-                icon={<HiCurrencyRupee className="text-2xl text-emerald-400" />}
+                icon={<HiCurrencyRupee className="text-xl text-emerald-400" />}
               />
 
               <StatCard
                 title="USDT Trade"
                 value={`${todayTrade} USDT`}
-                icon={<HiCurrencyDollar className="text-2xl text-blue-400" />}
+                icon={<HiCurrencyDollar className="text-xl text-blue-400" />}
               />
 
               <StatCard
                 title="Available Balance"
                 value={`₹ ${Number(availableBalance).toLocaleString()}`}
                 green
-                icon={<HiCash className="text-2xl text-emerald-400" />}
+                icon={<HiCash className="text-xl text-emerald-400" />}
               />
 
               <StatCard
                 title="Locked Withdrawn"
                 value={`₹ ${Number(approvedWithdraw).toLocaleString()}`}
-                icon={<HiLockClosed className="text-2xl text-yellow-400" />}
+                icon={<HiLockClosed className="text-xl text-yellow-400" />}
               />
             </div>
+<div className="grid grid-cols-1 lg:grid-cols-[40%_58%] gap-6 mt-5 items-stretch">
+
+  {/* GRAPH */}
+  <div className="h-full">
+    <UsdtGraph liveRate={rate} theme={theme} />
+  </div>
+
+  {/* ACTIVITY */}
+  <div className="h-full">
+    <RecentActivityCard
+      data={recentActivity}
+      theme={theme}
+      onViewAll={() => setActivePage("orders")}
+    />
+  </div>
+
+</div>
+     <StatsWidget
+  availableBalance={availableBalance}
+  lockedAmount={approvedWithdraw}
+  usdtTrade={todayTrade}
+  theme={theme}
+/>
+
+
+
+
+
+
+
+   
 
             {/* RECENT ACTIVITY */}
-            <div className="mt-8 max-md:mt-5">
+            {/* <div className="mt-8 max-md:mt-5">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold max-md:text-[16px]">
                   Recent Activity
@@ -811,9 +991,9 @@ py-2 z-50"
                   {recentActivity.map((item) => (
                     <div
                       key={item.id}
-                      className="group relative overflow-hidden rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#111827]/80 to-[#0f172a]/80 border border-white/10 transition-all duration-500 hover:-translate-y-2  "
+                      className="group relative overflow-hidden rounded-3xl backdrop-blur-xl bg-[#191D23] border border-white/10 transition-all duration-500 hover:-translate-y-2  "
                     >
-                      {/* LEFT COLOR STRIP */}
+             
                       <div
                         className={`absolute left-0 top-0 h-full w-1 max-md:w-[2px] max-md:opacity-50 ${
                           item.type === "SELL"
@@ -832,7 +1012,7 @@ max-md:gap-0
 
 "
                       >
-                        {/* LEFT SECTION */}
+  
                         <div
                           className="
 flex gap-6 flex-1 
@@ -840,7 +1020,7 @@ max-md:flex-col
 max-md:gap-3
 "
                         >
-                          {/* ICON */}
+
                           <div
                             className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold max-md:w-12 max-md:h-9  max-md:text-[12px]  ${
                               item.type === "SELL"
@@ -851,7 +1031,7 @@ max-md:gap-3
                             {item.type === "SELL" ? "S" : "W"}
                           </div>
 
-                          {/* CONTENT BLOCK */}
+                 
                           <div
                             className="
 flex flex-col gap-3 
@@ -866,7 +1046,7 @@ max-md:flex-col
 max-md:items-start 
 "
                             >
-                              {/* TITLE */}
+                          
                               <h3 className="text-lg font-semibold tracking-wide flex">
                                 {item.type === "SELL"
                                   ? `Sell ${item.amount} USDT`
@@ -876,7 +1056,7 @@ max-md:items-start
                                 {new Date(item.date).toLocaleString()}
                               </p>
 
-                              {/* AMOUNT */}
+                          
                               {item.type === "SELL" && (
                                 <div className="text-emerald-400 font-medium text-sm max-md:text-xs">
                                   How Much Amount Recived ₹ {item.inr}
@@ -901,7 +1081,7 @@ max-md:items-start
                                 </span>
                               </div>
                             </div>
-                            {/* ADMIN NOTE */}
+            
                             {item.adminNotes && item.adminNotes !== "" && (
                               <div className="mt-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 px-4 py-2 max-md:mt-0 w-full md:w-fit md:min-w-[180px] max-md:px-3 max-md:py-1">
                                 <p className="text-yellow-400 text-xs font-semibold mb-1">
@@ -913,7 +1093,7 @@ max-md:items-start
                               </div>
                             )}
 
-                            {/* WITHDRAW UTR NUMBER */}
+                   
                             {item.type === "WITHDRAW" &&
                               item.adminUtrNumber && (
                                 <div className="mt-3 rounded-xl border border-cyan-500/30 bg-cyan-500/5 px-4 py-3 w-fit min-w-[180px] max-md:px-3 max-md:py-1">
@@ -926,11 +1106,11 @@ max-md:items-start
                                 </div>
                               )}
 
-                            {/* DATE + STATUS ROW */}
+                    
                           </div>
                         </div>
 
-                        {/* RIGHT BUTTON */}
+                    
                         <div
                           className="
 ml-6 flex flex-col items-end gap-3 
@@ -958,38 +1138,48 @@ max-md:items-center
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
           </>
         )}
 
-        {activePage === "wallet" && (
-          <WalletPage setActivePage={setActivePage} />
-        )}
 
-        {activePage === "deposit" && <DepositPage />}
-        {activePage === "withdraw" && <WithdrawPage />}
-        {activePage === "orders" && <OrdersPage />}
-        {activePage === "payment-method" && <Payment />}
-        {activePage === "settings" && <SettingsPage user={user} />}
+     {activePage === "wallet" && (
+  <WalletPage setActivePage={setActivePage} theme={theme} />
+)}
+
+ 
+        {activePage === "deposit" && <DepositPage theme={theme} />}
+        {activePage === "withdraw" && <WithdrawPage theme={theme}/>}
+        {activePage === "orders" && <OrdersPage theme={theme} />}
+        {activePage === "payment-method" && <Payment theme={theme}/>}
+        {activePage === "settings" && <SettingsPage user={user}  theme={theme}/>}
       </div>
 
       {/* ================= SUPPORT ASSISTANT ================= */}
 
-
-
       {/* POPUP MODAL */}
-
     </div>
   );
 };
 
 /* COMPONENTS */
-
-const SidebarItem = ({ label, icon, open, onClick, active }) => (
+const SidebarItem = ({ label, icon, open, onClick, active, theme }) => (
   <div
     onClick={onClick}
-    className={`group flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer relative
-    ${active ? "bg-yellow-400/10 text-yellow-400" : "hover:bg-[#1f2937]"}`}
+    className={`group flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer relative transition-all duration-200
+
+    ${
+      theme === "dark"
+        ? "text-gray-300 hover:bg-[#1f2937] hover:text-white"
+        : "text-gray-700 hover:bg-gray-200 hover:text-black"
+    }
+
+    ${
+      active
+        ? "bg-yellow-400/20 text-yellow-500 font-semibold hover:translate-x-0"
+        : ""
+    }
+    `}
   >
     <span className="text-lg">{icon}</span>
 
@@ -1003,20 +1193,63 @@ const SidebarItem = ({ label, icon, open, onClick, active }) => (
   </div>
 );
 
-const StatCard = ({ title, value, green }) => (
-  <div className="bg-[#111827] p-6 rounded-2xl border border-gray-800">
-    <p className="text-gray-400 text-sm">{title}</p>
-    <h2
-      className={`text-3xl font-bold mt-2 ${green ? "text-emerald-400" : ""}`}
+
+
+
+
+
+
+const StatCard = ({ title, value, green, badge, icon , theme}) => {
+  return (
+    <div
+      className={`relative 
+      bg-gradient-to-br from-[#0f172a] to-[#020617]
+      border border-white/10 
+      px-4 py-3 rounded-xl
+      transition-all duration-300 
+      hover:scale-[1.02]
+      ${
+        theme === "dark"
+          ? "text-white"
+          : "bg-white text-black border-gray-200"
+      }`}
     >
-      {value}
-    </h2>
-  </div>
-);
+      {/* TOP */}
+      <div className="flex items-center justify-between mb-2">
+        
+        {/* ICON */}
+        <div className="w-6 h-6 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 text-sm">
+          {icon}
+        </div>
 
-const DepositPage = () => <PlaceOrder />;
+        {/* TITLE */}
+        <p className="text-gray-400 text-xs tracking-wide text-right">
+          {title}
+        </p>
 
-const OrdersPage = () => <UserOrderStaus />;
-const Payment = () => <PaymentMethod />;
+        {badge && (
+          <span className="text-[8px] px-2 py-1 bg-red-500 text-white rounded-full absolute top-2 right-2">
+            {badge}
+          </span>
+        )}
+      </div>
+
+      {/* VALUE */}
+      <h2
+        className={`text-xl font-semibold tracking-tight text-right ${
+          green ? "text-emerald-400" : ""
+        }`}
+      >
+        {value}
+      </h2>
+    </div>
+  );
+};
+
+
+const DepositPage = ({ theme }) => <PlaceOrder theme={theme} />;
+
+const OrdersPage = ({ theme }) => <UserOrderStaus theme={theme} />;
+const Payment = ({theme }) => <PaymentMethod theme={theme}/>;
 
 export default DashboardLayout;
